@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation - Library", "P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6773A4DC-4368-4283-A283-7E5FB4D25066}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.Client.Common", "src\JoberMQ.Client.Common\JoberMQ.Client.Common.csproj", "{249A26C9-CB7D-440E-925A-B2B1F7136113}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{75450E30-8614-457B-A604-1D9153E02659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75450E30-8614-457B-A604-1D9153E02659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75450E30-8614-457B-A604-1D9153E02659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{249A26C9-CB7D-440E-925A-B2B1F7136113}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{249A26C9-CB7D-440E-925A-B2B1F7136113}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{249A26C9-CB7D-440E-925A-B2B1F7136113}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{249A26C9-CB7D-440E-925A-B2B1F7136113}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,6 +41,7 @@ Global
 		{75450E30-8614-457B-A604-1D9153E02659} = {79CB695E-A334-41A1-A508-3E42032D97E3}
 		{2058E2F9-31B7-43E4-A559-61DE41BE9053} = {A4AAA401-E7CB-436C-9F17-C47731B5AD0C}
 		{79CB695E-A334-41A1-A508-3E42032D97E3} = {A4AAA401-E7CB-436C-9F17-C47731B5AD0C}
+		{249A26C9-CB7D-440E-925A-B2B1F7136113} = {2058E2F9-31B7-43E4-A559-61DE41BE9053}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49CD25B3-E433-4F77-827E-4AD2DA834E0A}
