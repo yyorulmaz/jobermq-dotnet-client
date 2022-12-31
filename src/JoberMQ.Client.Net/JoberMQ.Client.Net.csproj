@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Quartz" Version="3.3.3" />
+		<PackageReference Include="CronExpressionDescriptor" Version="2.16.0" />
+
+		<PackageReference Include="GenRep" Version="0.3.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqLite" Version="6.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(Configuration)' == 'Release'">
+
+		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</Compile>
+
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(Configuration)' == 'Debug'">
+
+		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</Compile>
+
+	</ItemGroup>
+	
+</Project>
