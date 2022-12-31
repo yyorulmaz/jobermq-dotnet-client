@@ -1,9 +1,9 @@
-﻿using JoberMQ.Client.Common.Constants;
-using JoberMQ.Client.Common.Enums.Protocol;
+﻿using JoberMQ.Client.Common.Enums.Protocol;
 using JoberMQ.Client.Common.Models.Config;
 using JoberMQ.Client.Net.Abstract.Connect;
 using JoberMQ.Client.Net.Abstract.Factory;
 using JoberMQ.Client.Net.Concrete.Connect;
+using JoberMQ.Client.Net.Constants;
 
 namespace JoberMQ.Client.Net.Concrete.Factory
 {
