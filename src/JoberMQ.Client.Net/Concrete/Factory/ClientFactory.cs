@@ -1,5 +1,5 @@
 ﻿using JoberMQ.Client.Common.Models.Config;
-using JoberMQ.Client.Common.StatusCode.Factories;
+using JoberMQ.Common.StatusCode.Factories;
 using JoberMQ.Client.Net.Abstract.Client;
 using JoberMQ.Client.Net.Abstract.Connect;
 using JoberMQ.Client.Net.Abstract.Factory;

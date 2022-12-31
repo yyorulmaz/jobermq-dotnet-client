@@ -25,8 +25,13 @@
 
 	<ItemGroup Condition=" '$(Configuration)' == 'Release'">
 
-		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+		<Compile Include="..\JoberMQ.Common\**\*.cs" Exclude="..\JoberMQ.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Common\obj\**;..\JoberMQ.Common\bin\**">
 			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</Compile>
+
+		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+			<Link>Commonold\%(RecursiveDir)%(Filename)%(Extension)</Link>
 			<Visible>false</Visible>
 		</Compile>
 
@@ -34,8 +39,13 @@
 
 	<ItemGroup Condition=" '$(Configuration)' == 'Debug'">
 
-		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+		<Compile Include="..\JoberMQ.Common\**\*.cs" Exclude="..\JoberMQ.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Common\obj\**;..\JoberMQ.Common\bin\**">
 			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</Compile>
+
+		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
+			<Link>Commonold\%(RecursiveDir)%(Filename)%(Extension)</Link>
 			<Visible>false</Visible>
 		</Compile>
 
