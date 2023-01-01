@@ -1,5 +1,5 @@
 ﻿using GenRep.Contract;
-using JoberMQ.Client.Common.Dbos;
+using JoberMQ.Common.Dbos;
 
 namespace JoberMQ.Client.Net.Abstract.DBREALY
 {

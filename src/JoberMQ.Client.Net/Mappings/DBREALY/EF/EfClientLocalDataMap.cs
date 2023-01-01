@@ -1,11 +1,6 @@
-﻿using JoberMQ.Client.Common.Dbos;
-using JoberMQ.Client.Net.Mappings.Base;
+﻿using JoberMQ.Client.Net.Mappings.Base;
+using JoberMQ.Common.Dbos;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JoberMQ.Client.Net.Mappings.DBREALY.EF
 {

@@ -1,5 +1,5 @@
-﻿using JoberMQ.Client.Common.Enums.Routing;
-using JoberMQ.Client.Common.Models.Builder;
+﻿using JoberMQ.Common.Enums.Routing;
+using JoberMQ.Common.Models.Builder;
 
 namespace JoberMQ.Client.Net.Extensions
 {

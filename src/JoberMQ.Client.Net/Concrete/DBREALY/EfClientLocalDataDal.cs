@@ -1,6 +1,6 @@
 ﻿using GenRep.EntityFramework;
-using JoberMQ.Client.Common.Dbos;
 using JoberMQ.Client.Net.Abstract.DBREALY;
+using JoberMQ.Common.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace JoberMQ.Client.Net.Concrete.DBREALY.EF

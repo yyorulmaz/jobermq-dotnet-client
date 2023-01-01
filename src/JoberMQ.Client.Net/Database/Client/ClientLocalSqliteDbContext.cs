@@ -1,5 +1,5 @@
-﻿using JoberMQ.Client.Common.Dbos;
-using JoberMQ.Client.Net.Mappings.DBREALY.EF;
+﻿using JoberMQ.Client.Net.Mappings.DBREALY.EF;
+using JoberMQ.Common.Dbos;
 using Microsoft.EntityFrameworkCore;
 
 namespace JoberMQ.Client.Net.Database.Client

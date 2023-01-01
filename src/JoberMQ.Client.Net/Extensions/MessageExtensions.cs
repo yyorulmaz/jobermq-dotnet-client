@@ -1,9 +1,9 @@
-﻿using JoberMQ.Client.Common.Enums.Transport;
-using JoberMQ.Client.Common.Models.Builder;
-using JoberMQ.Client.Common.Models.Message;
-using JoberMQ.Client.Common.Models.Option;
-using JoberMQ.Client.Common.Models.Routing;
-using JoberMQ.Client.Net.Operations;
+﻿using JoberMQ.Client.Net.Operations;
+using JoberMQ.Common.Enums.Transport;
+using JoberMQ.Common.Models.Builder;
+using JoberMQ.Common.Models.Message;
+using JoberMQ.Common.Models.Option;
+using JoberMQ.Common.Models.Routing;
 using System.Linq.Expressions;
 
 namespace JoberMQ.Client.Net.Extensions

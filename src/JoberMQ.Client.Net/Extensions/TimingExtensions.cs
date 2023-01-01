@@ -1,5 +1,5 @@
-﻿using JoberMQ.Client.Common.Enums.Timing;
-using JoberMQ.Client.Common.Models.Builder;
+﻿using JoberMQ.Common.Enums.Timing;
+using JoberMQ.Common.Models.Builder;
 
 namespace JoberMQ.Client.Net.Extensions
 {

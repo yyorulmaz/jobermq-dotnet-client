@@ -1,4 +1,4 @@
-﻿using JoberMQ.Client.Common.Models.Login;
+﻿using JoberMQ.Common.Models.Response;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
@@ -44,7 +44,7 @@ namespace JoberMQ.Client.Net.Operations
                 {
                     IsSuccess = false,
                     StatusCode = "0.0.12",
-                    Message = Factory.StatusCodeService.GetStatusMessage("0.0.12"),
+                    Message = JoberMQClient.StatusCode.GetStatusMessage("0.0.12"),
                     Token = null
                 };
             }

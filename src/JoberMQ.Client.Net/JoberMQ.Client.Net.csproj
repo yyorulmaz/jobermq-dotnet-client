@@ -11,7 +11,6 @@
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Quartz" Version="3.3.3" />
 		<PackageReference Include="CronExpressionDescriptor" Version="2.16.0" />
 
 		<PackageReference Include="GenRep" Version="0.3.2" />
@@ -21,6 +20,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="TimerFramework" Version="0.0.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(Configuration)' == 'Release'">

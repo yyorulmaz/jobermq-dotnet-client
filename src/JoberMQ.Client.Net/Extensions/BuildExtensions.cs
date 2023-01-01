@@ -1,4 +1,4 @@
-﻿using JoberMQ.Client.Common.Models.Builder;
+﻿using JoberMQ.Common.Models.Builder;
 
 namespace JoberMQ.Client.Net.Extensions
 {

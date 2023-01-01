@@ -1,0 +1,44 @@
+﻿using JoberMQ.Client.Net.Abstraction.Client;
+using JoberMQ.Client.Net.Abstraction.Configuration;
+using JoberMQ.Client.Net.Abstraction.Connect;
+using JoberMQ.Client.Net.Constants;
+using JoberMQ.Client.Net.Factories.Configuration;
+using JoberMQ.Client.Net.Factories.Connection;
+using JoberMQ.Client.Net.Implementation.Client.Default;
+using JoberMQ.Common.StatusCode.Abstraction;
+using JoberMQ.Common.StatusCode.Factories;
+using System.Configuration;
+
+namespace JoberMQ.Client.Net
+{
+    internal class JoberMQClient
+    {
+        internal static IConfiguration Configuration;
+        internal static IStatusCode StatusCode;
+        public static IConfiguration GetConfiguration()
+            => Factories.Configuration.ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
+
+        public IClient CreateClient()
+            => DefaultCreateClient(null);
+        public IClient CreateClient(IConfiguration configuration)
+            => DefaultCreateClient(configuration);
+
+        private IClient DefaultCreateClient(IConfiguration configuration)
+        {
+            if (configuration == null)
+                Configuration = ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
+            else
+                Configuration = configuration;
+
+            StatusCode = StatusCodeFactory.Create(Configuration.StatusCodeFactory, Configuration.StatusCodeDatas, Configuration.StatusCodeMessageLanguage);
+
+            IConnection connection = ConnectionFactory.Create(Configuration);
+            IClient client = new DfClient(Configuration, connection);
+
+            var connect = connection.ConnectAsync().Result;
+
+            return client;
+        }
+
+    }
+}
