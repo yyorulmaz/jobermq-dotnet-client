@@ -11,19 +11,19 @@ using System.Configuration;
 
 namespace JoberMQ.Client.Net
 {
-    internal class JoberMQClient
+    public class JoberMQClient
     {
         internal static IConfiguration Configuration;
         internal static IStatusCode StatusCode;
         public static IConfiguration GetConfiguration()
             => Factories.Configuration.ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
 
-        public IClient CreateClient()
+        public static IClient CreateClient()
             => DefaultCreateClient(null);
-        public IClient CreateClient(IConfiguration configuration)
+        public static IClient CreateClient(IConfiguration configuration)
             => DefaultCreateClient(configuration);
 
-        private IClient DefaultCreateClient(IConfiguration configuration)
+        private static IClient DefaultCreateClient(IConfiguration configuration)
         {
             if (configuration == null)
                 Configuration = ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
