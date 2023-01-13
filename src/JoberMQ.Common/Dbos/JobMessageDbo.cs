@@ -16,7 +16,7 @@ namespace JoberMQ.Common.Dbos
         #endregion
 
         #region 1 - PRODUCER
-        public string ProducerClientId { get; set; }
+        public string ProducerClientKey { get; set; }
         public string ProducerClientGroupKey { get; set; }
         #endregion
 
@@ -36,7 +36,7 @@ namespace JoberMQ.Common.Dbos
         public string EventName { get; set; }
 
         public RoutingTypeEnum RoutingType { get; set; }
-        public string ConsumerClientId { get; set; }
+        public string ConsumerClientKey { get; set; }
         public string ConsumerClientGroupKey { get; set; }
         public string QueueName { get; set; }
         public string QueueKey { get; set; }

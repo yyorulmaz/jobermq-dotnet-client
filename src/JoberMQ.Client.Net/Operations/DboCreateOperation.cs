@@ -18,7 +18,7 @@ namespace JoberMQ.Client.Net.Operations
             #endregion
 
             #region 1 - PRODUCER
-            jobDataDbo.ProducerClientId = jobBuilderData.ProducerClientId;
+            jobDataDbo.ProducerClientKey = jobBuilderData.ProducerClientKey;
             jobDataDbo.ProducerClientGroupKey = jobBuilderData.ProducerClientGroupKey;
             #endregion
 
@@ -89,7 +89,7 @@ namespace JoberMQ.Client.Net.Operations
                 jobDataDetail.TransportType = item.JobTransportType;
                 jobDataDetail.EventName = item.EventName;
                 jobDataDetail.RoutingType = item.Routing.RoutingType;
-                jobDataDetail.ConsumerClientId = item.Routing.ClientId;
+                jobDataDetail.ConsumerClientKey = item.Routing.ClientKey;
                 jobDataDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
                 jobDataDetail.QueueName = item.Routing.QueueName;
                 jobDataDetail.QueueKey = item.Routing.Key;
@@ -128,7 +128,7 @@ namespace JoberMQ.Client.Net.Operations
                 jobDataDetail.TransportType = item.JobTransportType;
                 jobDataDetail.EventName = item.EventName;
                 jobDataDetail.RoutingType = item.Routing.RoutingType;
-                jobDataDetail.ConsumerClientId = item.Routing.ClientId;
+                jobDataDetail.ConsumerClientKey = item.Routing.ClientKey;
                 jobDataDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
                 jobDataDetail.QueueName = item.Routing.QueueName;
                 jobDataDetail.QueueKey = item.Routing.Key;

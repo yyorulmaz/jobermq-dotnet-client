@@ -32,7 +32,7 @@ namespace JoberMQ.Common.Dbos
         #endregion
 
         #region 1 - PRODUCER
-        public string ProducerClientId { get; set; }
+        public string ProducerClientKey { get; set; }
         public string ProducerClientGroupKey { get; set; }
         #endregion
 

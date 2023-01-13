@@ -35,7 +35,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         private readonly IConnection connection;
         private readonly bool isOfflineMode;
         private readonly ITimer offlineTimer;
-        private readonly string clientId;
+        private readonly string clientKey;
         private readonly string clientGroupKey;
         private readonly bool textMessageReceiveAutoCompleted;
         private bool isClientActive = false;
@@ -43,7 +43,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         #endregion
 
         #region PROPERTY
-        public string ClientId => clientId;
+        public string ClientKey => clientKey;
         public string ClientGroupKey => clientGroupKey;
 
         public IConnection Connection => connection;
@@ -54,7 +54,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         #region CONSRUCTOR
         internal DfClient(IConfiguration config, IConnection connection)
         {
-            this.clientId = config.ClientKey;
+            this.clientKey = config.ClientKey;
             this.clientGroupKey = config.ClientGroupKey;
             this.connection = connection;
             this.isOfflineMode = config.IsOfflineMode;
@@ -300,7 +300,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         }
         public async Task<JobDataAddResponseModel> Publish(JobBuilderModel JobBuilder)
         {
-            JobBuilder.ProducerClientId = this.ClientId;
+            JobBuilder.ProducerClientKey = this.ClientKey;
             JobBuilder.ProducerClientGroupKey = this.ClientGroupKey;
 
             if (JobBuilder.TimingType != TimingTypeEnum.Trigger)
@@ -335,29 +335,29 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
         #region CONSUMER
         // DECLARE CONSUME
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialRemove);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupAdd);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupRemove);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueAdd, queueName, key);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueRemove, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueAdd, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueRemove, queueName, key);
 
 
         // DECLARE CONSUME ERROR
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialAdd);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialRemove);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupAdd);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupRemove);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueAdd, queueName, key);
-        public async Task<DeclareConsumeResponseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueRemove, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueAdd, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueRemove, queueName, key);
 
 
 
         // EVENT SUB
-        public async Task<EventSubscribeResponseModel> EventSubscribeClientAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventSubscribeClient, eventName);
-        public async Task<EventSubscribeResponseModel> EventUnSubscribeClientAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventUnSubscribeClient, eventName);
-        public async Task<EventSubscribeResponseModel> EventSubscribeClientGroupKeyAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventSubscribeClientGroupKey, eventName);
-        public async Task<EventSubscribeResponseModel> EventUnSubscribeClientGroupKeyAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventUnSubscribeClientGroupKey, eventName);
+        public async Task<ResponseBaseModel> EventSubscribeClientAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventSubscribeClient, eventName);
+        public async Task<ResponseBaseModel> EventUnSubscribeClientAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventUnSubscribeClient, eventName);
+        public async Task<ResponseBaseModel> EventSubscribeClientGroupKeyAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventSubscribeClientGroupKey, eventName);
+        public async Task<ResponseBaseModel> EventUnSubscribeClientGroupKeyAsync(string eventName) => await EventSubAsync(DeclareEventTypeEnum.EventUnSubscribeClientGroupKey, eventName);
 
 
 
@@ -494,7 +494,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             result.IsSuccess = false;
             return result;
         }
-        private async Task<EventSubscribeResponseModel> EventSubAsync(DeclareEventTypeEnum declareEventType, string eventName)
+        private async Task<ResponseBaseModel> EventSubAsync(DeclareEventTypeEnum declareEventType, string eventName)
         {
             var declareEventModel = new DeclareEventModel();
             declareEventModel.DeclareEventType = declareEventType;
@@ -507,7 +507,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
 
 
-            var result = new EventSubscribeResponseModel();
+            var result = new ResponseBaseModel();
 
             if (connection.IsConnect)
             {
@@ -516,7 +516,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                 if (result.IsSuccess == false)
                 {
                     var resultLocalData = await OfflineOperation.AddLocalData(PushDataTypeEnum.EventSub, null, serialize);
-                    result = new EventSubscribeResponseModel
+                    result = new ResponseBaseModel
                     {
                         IsOnline = resultLocalData.IsOnline,
                         IsSuccess = resultLocalData.IsSuccess,
@@ -531,7 +531,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             else if (IsOfflineMode)
             {
                 var resultLocalData = await OfflineOperation.AddLocalData(PushDataTypeEnum.EventSub, null, serialize);
-                result = new EventSubscribeResponseModel
+                result = new ResponseBaseModel
                 {
                     IsOnline = resultLocalData.IsOnline,
                     IsSuccess = resultLocalData.IsSuccess,
@@ -546,7 +546,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
             return result;
         }
-        private async Task<DeclareConsumeResponseModel> DeclareConsumeAsync(DeclareConsumeTypeEnum declareConsumeType, string queueName = null, string key = null)
+        private async Task<ResponseBaseModel> DeclareConsumeAsync(DeclareConsumeTypeEnum declareConsumeType, string queueName = null, string key = null)
         {
             switch (declareConsumeType)
             {
@@ -602,7 +602,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
 
 
-            var result = new DeclareConsumeResponseModel();
+            var result = new ResponseBaseModel();
 
             if (connection.IsConnect)
             {
@@ -610,7 +610,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                 if (result.IsSuccess == false)
                 {
                     var resultLocalData = await OfflineOperation.AddLocalData(PushDataTypeEnum.DeclareConsume, null, serialize);
-                    result = new DeclareConsumeResponseModel
+                    result = new ResponseBaseModel
                     {
                         IsOnline = resultLocalData.IsOnline,
                         IsSuccess = resultLocalData.IsSuccess,
@@ -625,7 +625,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             else if (IsOfflineMode)
             {
                 var resultLocalData = await OfflineOperation.AddLocalData(PushDataTypeEnum.DeclareConsume, null, serialize);
-                result = new DeclareConsumeResponseModel
+                result = new ResponseBaseModel
                 {
                     IsOnline = resultLocalData.IsOnline,
                     IsSuccess = resultLocalData.IsSuccess,
@@ -653,13 +653,13 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     IsSuccess = false,
                 };
         }
-        private async Task<JobDataGetResponseModel> JobGetAsync(Guid jobId)
+        private async Task<ResponseBaseModel> JobGetAsync(Guid jobId)
         {
             if (connection.IsConnect == true)
                 //return await connection.PushData<PushDataResponseJobGetModel>(((int)PushDataTypeEnum.JobDataGet), jobId.ToString());
                 return await connection.JobDataGet(jobId.ToString());
             else
-                return new JobDataGetResponseModel
+                return new ResponseBaseModel
                 {
                     IsOnline = false,
                     IsSuccess = false,

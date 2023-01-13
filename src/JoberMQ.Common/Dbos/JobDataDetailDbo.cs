@@ -34,7 +34,7 @@ namespace JoberMQ.Common.Dbos
         public string EventName { get; set; }
 
         public RoutingTypeEnum RoutingType { get; set; } 
-        public string ConsumerClientId { get; set; }
+        public string ConsumerClientKey { get; set; }
         public string ConsumerClientGroupKey { get; set; }
         public string QueueName { get; set; }
         public string QueueKey { get; set; }

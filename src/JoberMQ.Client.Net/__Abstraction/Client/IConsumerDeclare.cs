@@ -1,21 +1,22 @@
-﻿using JoberMQ.Common.Models.Response;
+﻿using JoberMQ.Common.Models.Base;
+using JoberMQ.Common.Models.Response;
 
 namespace JoberMQ.Client.Net.Abstraction.Client
 {
     public interface IConsumerDeclare : IDisposable
     {
-        public Task<DeclareConsumeResponseModel> DeclareConsumeSpecialAddAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeSpecialRemoveAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeGroupAddAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeGroupRemoveAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key);
-        public Task<DeclareConsumeResponseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key);
-        
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorSpecialAddAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorSpecialRemoveAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorGroupAddAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorGroupRemoveAsync();
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key);
-        public Task<DeclareConsumeResponseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key);
+        public Task<ResponseBaseModel> DeclareConsumeSpecialAddAsync();
+        public Task<ResponseBaseModel> DeclareConsumeSpecialRemoveAsync();
+        public Task<ResponseBaseModel> DeclareConsumeGroupAddAsync();
+        public Task<ResponseBaseModel> DeclareConsumeGroupRemoveAsync();
+        public Task<ResponseBaseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key);
+        public Task<ResponseBaseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key);
+                    
+        public Task<ResponseBaseModel> DeclareConsumeErrorSpecialAddAsync();
+        public Task<ResponseBaseModel> DeclareConsumeErrorSpecialRemoveAsync();
+        public Task<ResponseBaseModel> DeclareConsumeErrorGroupAddAsync();
+        public Task<ResponseBaseModel> DeclareConsumeErrorGroupRemoveAsync();
+        public Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key);
+        public Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key);
     }
 }

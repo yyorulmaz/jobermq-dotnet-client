@@ -7,7 +7,7 @@ namespace JoberMQ.Client.Net.Abstraction.Connect
     {
         #region PROPERTY
         public string Endpoint { get; }
-        public string ClientId { get; }
+        public string ClientKey { get; }
         public string ClientGroupKey { get; }
         public string ConnectionId { get; }
         public bool IsConnect { get; }
@@ -30,9 +30,9 @@ namespace JoberMQ.Client.Net.Abstraction.Connect
         public Task<JobDataAddResponseModel> JobDataAdd(string data);
         public Task<ResponseBaseModel> JobMessageStarted(string data);
         public Task<ResponseBaseModel> JobMessageCompleted(string data);
-        public Task<JobDataGetResponseModel> JobDataGet(string data);
-        public Task<DeclareConsumeResponseModel> DeclareConsume(string data);
-        public Task<EventSubscribeResponseModel> EventSubscribe(string data);
+        public Task<ResponseBaseModel> JobDataGet(string data);
+        public Task<ResponseBaseModel> DeclareConsume(string data);
+        public Task<ResponseBaseModel> EventSubscribe(string data);
         public Task<ResponseBaseModel> DataProtection(string data);
         #endregion
 

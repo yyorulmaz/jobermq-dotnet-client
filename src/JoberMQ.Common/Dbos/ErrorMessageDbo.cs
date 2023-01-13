@@ -20,7 +20,7 @@ namespace JoberMQ.Common.Dbos
 
         #region 8 - CONSUMER ERROR
         internal RoutingTypeEnum RoutingType { get; set; }
-        internal string ConsumerClientId { get; set; }
+        internal string ConsumerClientKey { get; set; }
         internal string ConsumerClientGroupKey { get; set; }
         internal string QueueName { get; set; }
         internal string QueueKey { get; set; }

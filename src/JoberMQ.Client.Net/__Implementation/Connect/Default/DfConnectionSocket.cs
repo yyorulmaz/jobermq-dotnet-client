@@ -16,7 +16,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
     internal class DfConnectionSocket : IConnection
     {
         #region PROPERTY HELPER
-        private string clientId;
+        private string clientKey;
         private string clientGroupKey;
         private int connectionRetryTimeout;
         private bool isOfflineClient;
@@ -34,7 +34,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
         #region PROPERTY
         public string Endpoint => roundRobin.GetEndRoundRobinData().HostName;
-        public string ClientId => clientId;
+        public string ClientKey => clientKey;
         public string ClientGroupKey => clientGroupKey;
         public string ConnectionId => hubConn.ConnectionId;
         public bool IsConnect => hubConn == null ? false : hubConn.State == HubConnectionState.Connected ? true : false;
@@ -60,7 +60,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
             roundRobin = RoundRobinFactory.Create<ServerEndpointModel>(config.RoundRobinFactory);
             roundRobin.Add(roundRobinData, 1);
 
-            clientId = config.ClientKey;
+            clientKey = config.ClientKey;
             clientGroupKey = config.ClientGroupKey;
             connectionRetryTimeout = config.ConnectionRetryTimeout;
             isOfflineClient = config.IsOfflineMode;
@@ -71,7 +71,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
         #endregion
 
         #region TOKEN
-        public ResponseLoginModel GetToken(string endpoint) => new LoginOperation().AuthenticateAsync(endpoint, userName, password, ClientId).Result;
+        public ResponseLoginModel GetToken(string endpoint) => new LoginOperation().AuthenticateAsync(endpoint, userName, password, ClientKey).Result;
         #endregion
 
         #region CONNECT
@@ -284,7 +284,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                     options.AccessTokenProvider = () => Task.FromResult(token);
 
                     options.Headers.Add("ClientType", ClientTypeEnum.Normal.ToString());
-                    options.Headers.Add("ClientId", clientId);
+                    options.Headers.Add("ClientKey", clientKey);
                     options.Headers.Add("ClientGroupKey", clientGroupKey);
                     options.Headers.Add("IsOfflineClient", isOfflineClient.ToString());
                 })
@@ -300,7 +300,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                     options.AccessTokenProvider = () => Task.FromResult(token);
 
                     options.Headers.Add("ClientType", ClientTypeEnum.Normal.ToString());
-                    options.Headers.Add("ClientId", clientId);
+                    options.Headers.Add("ClientKey", clientKey);
                     options.Headers.Add("ClientGroupKey", clientGroupKey);
                     options.Headers.Add("IsOfflineClient", isOfflineClient.ToString());
                 })
@@ -383,37 +383,37 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                 return new ResponseBaseModel { IsOnline = false, IsSuccess = false };
             }
         }
-        public async Task<JobDataGetResponseModel> JobDataGet(string data)
+        public async Task<ResponseBaseModel> JobDataGet(string data)
         {
             try
             {
-                return await hubConn.InvokeAsync<JobDataGetResponseModel>("JobDataGet", data);
+                return await hubConn.InvokeAsync<ResponseBaseModel>("JobDataGet", data);
             }
             catch (Exception)
             {
-                return new JobDataGetResponseModel { IsOnline = false, IsSuccess = false };
+                return new ResponseBaseModel { IsOnline = false, IsSuccess = false };
             }
         }
-        public async Task<DeclareConsumeResponseModel> DeclareConsume(string data)
+        public async Task<ResponseBaseModel> DeclareConsume(string data)
         {
             try
             {
-                return await hubConn.InvokeAsync<DeclareConsumeResponseModel>("DeclareConsume", data);
+                return await hubConn.InvokeAsync<ResponseBaseModel>("DeclareConsume", data);
             }
             catch (Exception)
             {
-                return new DeclareConsumeResponseModel { IsOnline = false, IsSuccess = false };
+                return new ResponseBaseModel { IsOnline = false, IsSuccess = false };
             }
         }
-        public async Task<EventSubscribeResponseModel> EventSubscribe(string data)
+        public async Task<ResponseBaseModel> EventSubscribe(string data)
         {
             try
             {
-                return await hubConn.InvokeAsync<EventSubscribeResponseModel>("EventSubscribe", data);
+                return await hubConn.InvokeAsync<ResponseBaseModel>("EventSubscribe", data);
             }
             catch (Exception)
             {
-                return new EventSubscribeResponseModel { IsOnline = false, IsSuccess = false };
+                return new ResponseBaseModel { IsOnline = false, IsSuccess = false };
             }
         }
         public async Task<ResponseBaseModel> DataProtection(string data)

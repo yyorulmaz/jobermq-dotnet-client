@@ -22,13 +22,13 @@ namespace JoberMQ.Client.Net.Operations
         //    };
         //}
 
-        public async Task<ResponseLoginModel> AuthenticateAsync(string endpoint, string user, string pass, string clientId)
+        public async Task<ResponseLoginModel> AuthenticateAsync(string endpoint, string user, string pass, string clientKey)
         {
             HttpClient HttpClient = new HttpClient();
             //var request = new HttpRequestMessage(HttpMethod.Post, new Uri(BaseAddress, "account/login"));
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri(endpoint));
             var encoding = Encoding.GetEncoding("iso-8859-1");
-            HttpClient.DefaultRequestHeaders.Add("clientId", clientId);
+            HttpClient.DefaultRequestHeaders.Add("clientKey", clientKey);
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes($"{user}:{pass}")));
 
             try
@@ -49,12 +49,12 @@ namespace JoberMQ.Client.Net.Operations
                 };
             }
         }
-        //public async Task<string> AuthenticateAsync(string endpoint, string user, string pass, string clientId)
+        //public async Task<string> AuthenticateAsync(string endpoint, string user, string pass, string clientKey)
         //{
         //    //var request = new HttpRequestMessage(HttpMethod.Post, new Uri(BaseAddress, "account/login"));
         //    var request = new HttpRequestMessage(HttpMethod.Post, new Uri(endpoint));
         //    var encoding = Encoding.GetEncoding("iso-8859-1");
-        //    HttpClient.DefaultRequestHeaders.Add("clientId", clientId);
+        //    HttpClient.DefaultRequestHeaders.Add("clientKey", clientKey);
         //    HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes($"{user}:{pass}")));
 
         //    try

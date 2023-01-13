@@ -8,6 +8,6 @@ namespace JoberMQ.Common.Models.Routing
 {
     public class RoutingSpecialModel
     {
-        public string ClientId { get; set; }
+        public string ClientKey { get; set; }
     }
 }

@@ -5,15 +5,15 @@ namespace JoberMQ.Client.Net.Operations
 {
     internal class RoutingOperation
     {
-        internal static RoutingModel GetRoutingSpecial(string clientId) => new RoutingModel
+        internal static RoutingModel GetRoutingSpecial(string clientKey) => new RoutingModel
         {
             RoutingType = RoutingTypeEnum.Special,
-            ClientId = clientId
+            ClientKey = clientKey
         };
         internal static RoutingModel GetRoutingSpecial(RoutingSpecialModel routingSpecial) => new RoutingModel
         {
             RoutingType = RoutingTypeEnum.Special,
-            ClientId = routingSpecial.ClientId
+            ClientKey = routingSpecial.ClientKey
         };
 
         internal static RoutingModel GetRoutingGroup(string clientGroupKey) => new RoutingModel
