@@ -1,7 +1,7 @@
-﻿using JoberMQ.Client.Net.Abstract.DBREALY;
-using JoberMQ.Client.Net.Concrete.DBREALY.EF;
+﻿using JoberMQ.Client.Net.Abstraction.DBREALY;
 using JoberMQ.Client.Net.Database.Client;
 using JoberMQ.Client.Net.Helpers;
+using JoberMQ.Client.Net.Implementation.DBREALY;
 using JoberMQ.Common.Dbos;
 using JoberMQ.Common.Enums.Data;
 using JoberMQ.Common.Models.LocalData;

@@ -1,9 +1,9 @@
 ﻿using GenRep.EntityFramework;
-using JoberMQ.Client.Net.Abstract.DBREALY;
+using JoberMQ.Client.Net.Abstraction.DBREALY;
 using JoberMQ.Common.Dbos;
 using Microsoft.EntityFrameworkCore;
 
-namespace JoberMQ.Client.Net.Concrete.DBREALY.EF
+namespace JoberMQ.Client.Net.Implementation.DBREALY
 {
     internal class EfClientLocalDataDal : EfRepository<ClientLocalDataDbo>, IClientLocalDataDal
     {
