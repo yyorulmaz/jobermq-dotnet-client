@@ -8,9 +8,9 @@ namespace JoberMQ.Client.Net.Helpers
 {
     internal class MethodHelper
     {
-        public static async Task<MethodReturnDataModel<byte[]>> MethodRun(Expression<Action> methodCall) => await MethodRunner(MethodProperty(methodCall));
-        public static async Task<MethodReturnDataModel<byte[]>> MethodRun(MethodPropertyModel methodProperty) => await MethodRunner(methodProperty);
-        public static async Task<MethodReturnDataModel<byte[]>> MethodRun(string methodPropertyJson) => await MethodRunner(MethodPropertyDeserializeObject(methodPropertyJson));
+        public static async Task<MethodReturnModel<byte[]>> MethodRun(Expression<Action> methodCall) => await MethodRunner(MethodProperty(methodCall));
+        public static async Task<MethodReturnModel<byte[]>> MethodRun(MethodPropertyModel methodProperty) => await MethodRunner(methodProperty);
+        public static async Task<MethodReturnModel<byte[]>> MethodRun(string methodPropertyJson) => await MethodRunner(MethodPropertyDeserialize(methodPropertyJson));
 
 
         public static MethodPropertyModel MethodProperty(Expression<Action> methodCall)
@@ -41,7 +41,7 @@ namespace JoberMQ.Client.Net.Helpers
 
             return methodProperty;
         }
-        public static MethodPropertyModel MethodPropertyDeserializeObject(string methodPropertyJson)
+        public static MethodPropertyModel MethodPropertyDeserialize(string methodPropertyJson)
         {
             return JsonConvert.DeserializeObject<MethodPropertyModel>(methodPropertyJson);
         }
@@ -55,9 +55,9 @@ namespace JoberMQ.Client.Net.Helpers
         }
 
 
-        private static async Task<MethodReturnDataModel<byte[]>> MethodRunner(MethodPropertyModel methodProperty)
+        private static async Task<MethodReturnModel<byte[]>> MethodRunner(MethodPropertyModel methodProperty)
         {
-            var returnData = new MethodReturnDataModel<byte[]>();
+            var returnData = new MethodReturnModel<byte[]>();
 
             try
             {

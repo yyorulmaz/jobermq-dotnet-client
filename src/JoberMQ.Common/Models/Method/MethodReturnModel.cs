@@ -1,6 +1,6 @@
 ﻿namespace JoberMQ.Common.Models.Method
 {
-    internal class MethodReturnDataModel<T>
+    internal class MethodReturnModel<T>
     {
         public bool IsOperationSuccess { get; set; } = true;
         public string StatusCode { get; set; } = "0";
