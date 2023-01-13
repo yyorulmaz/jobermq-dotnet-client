@@ -1,8 +1,8 @@
 ﻿using JoberMQ.Common.Enums.Client;
 using JoberMQ.Common.Enums.Protocol;
-using JoberMQ.Common.RoundRobin.Enums;
 using JoberMQ.Common.StatusCode.Enums;
 using JoberMQ.Common.StatusCode.Models;
+using JoberMQ.Library.RoundRobin.Enums;
 using System.Collections.Concurrent;
 
 namespace JoberMQ.Client.Net.Abstraction.Configuration
