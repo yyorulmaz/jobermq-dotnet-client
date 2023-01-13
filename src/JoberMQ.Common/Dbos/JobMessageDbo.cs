@@ -1,8 +1,8 @@
-﻿using JoberMQ.Common.Database.Base;
-using JoberMQ.Common.Enums.Message;
+﻿using JoberMQ.Common.Enums.Message;
 using JoberMQ.Common.Enums.Routing;
 using JoberMQ.Common.Enums.Status;
 using JoberMQ.Common.Enums.Transport;
+using JoberMQ.Library.Database.Base;
 using System;
 
 namespace JoberMQ.Common.Dbos

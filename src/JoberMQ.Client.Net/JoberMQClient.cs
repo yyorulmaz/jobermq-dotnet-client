@@ -5,9 +5,8 @@ using JoberMQ.Client.Net.Constants;
 using JoberMQ.Client.Net.Factories.Configuration;
 using JoberMQ.Client.Net.Factories.Connection;
 using JoberMQ.Client.Net.Implementation.Client.Default;
-using JoberMQ.Common.StatusCode.Abstraction;
-using JoberMQ.Common.StatusCode.Factories;
-using System.Configuration;
+using JoberMQ.Library.StatusCode.Abstraction;
+using JoberMQ.Library.StatusCode.Factories;
 
 namespace JoberMQ.Client.Net
 {

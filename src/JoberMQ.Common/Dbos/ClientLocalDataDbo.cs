@@ -1,5 +1,5 @@
-﻿using JoberMQ.Common.Database.Base;
-using JoberMQ.Common.Enums.Data;
+﻿using JoberMQ.Common.Enums.Data;
+using JoberMQ.Library.Database.Base;
 using System;
 
 namespace JoberMQ.Common.Dbos

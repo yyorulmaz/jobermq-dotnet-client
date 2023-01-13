@@ -2,10 +2,10 @@
 using JoberMQ.Client.Net.Concrete.DBREALY.EF;
 using JoberMQ.Client.Net.Database.Client;
 using JoberMQ.Client.Net.Helpers;
-using JoberMQ.Common.Database.Enums;
 using JoberMQ.Common.Dbos;
 using JoberMQ.Common.Enums.Data;
 using JoberMQ.Common.Models.LocalData;
+using JoberMQ.Library.Database.Enums;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JoberMQ.Client.Net.Operations

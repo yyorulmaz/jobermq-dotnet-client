@@ -1,4 +1,4 @@
-﻿using JoberMQ.Common.Database.Base;
+﻿using JoberMQ.Library.Database.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
