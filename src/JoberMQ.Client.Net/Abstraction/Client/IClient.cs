@@ -2,7 +2,7 @@
 
 namespace JoberMQ.Client.Net.Abstraction.Client
 {
-    public interface IClient : IProducer, IConsumer, IClientOffline, IDisposable
+    public interface IClient : IProducer, IConsumer, IOffline, IDisposable
     {
         public bool IsClientActive { get; }
         public string ClientKey { get; }

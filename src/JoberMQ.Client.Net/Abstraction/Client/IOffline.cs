@@ -1,6 +1,6 @@
 ﻿namespace JoberMQ.Client.Net.Abstraction.Client
 {
-    public interface IClientOffline : IDisposable
+    public interface IOffline : IDisposable
     {
         public bool IsOfflineMode { get; }
     }

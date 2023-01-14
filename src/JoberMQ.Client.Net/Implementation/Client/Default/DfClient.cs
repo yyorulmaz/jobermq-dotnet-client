@@ -125,7 +125,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             {
                 foreach (var item in ConsumeDatas)
                 {
-                    var result = DeclareConsumeAsync(item.Value.DeclareConsumeType, item.Value.QueueName, item.Value.Key).Result;
+                    var result = DeclareConsumeAsync(item.Value.DeclareConsumeType, item.Value.QueueKey, item.Value.Key).Result;
                 }
 
                 for (int i = 0; i < DataProtections.Length; i++)
@@ -334,22 +334,25 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         #endregion
 
         #region CONSUMER
+        public DeclareConsumeModel DeclareConsume()
+            => new DeclareConsumeModel();
+
         // DECLARE CONSUME
-        public async Task<ResponseBaseModel> DeclareConsumeSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd);
-        public async Task<ResponseBaseModel> DeclareConsumeSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeSpecialRemove);
-        public async Task<ResponseBaseModel> DeclareConsumeGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupAdd);
-        public async Task<ResponseBaseModel> DeclareConsumeGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeGroupRemove);
-        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueAdd, queueName, key);
-        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeQueueRemove, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.SpecialAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.SpecialRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.GroupAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.GroupRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.QueueAdd, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.QueueRemove, queueName, key);
 
 
         // DECLARE CONSUME ERROR
-        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialAdd);
-        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialRemove);
-        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupAdd);
-        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorGroupRemove);
-        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueAdd, queueName, key);
-        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.DeclareConsumeErrorQueueRemove, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorSpecialAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorSpecialRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorSpecialRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupAddAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorGroupAdd);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorGroupRemoveAsync() => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorGroupRemove);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyAddAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorQueueAdd, queueName, key);
+        public async Task<ResponseBaseModel> DeclareConsumeErrorQueueKeyRemoveAsync(string queueName, string key) => await DeclareConsumeAsync(DeclareConsumeTypeEnum.ErrorQueueRemove, queueName, key);
 
 
 
@@ -550,49 +553,49 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         {
             switch (declareConsumeType)
             {
-                case DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd:
+                case DeclareConsumeTypeEnum.SpecialAdd:
                     ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeSpecialRemove:
-                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd.ToString(), out var xxxxx);
+                case DeclareConsumeTypeEnum.SpecialRemove:
+                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.SpecialAdd.ToString(), out var xxxxx);
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeGroupAdd:
+                case DeclareConsumeTypeEnum.GroupAdd:
                     ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeGroupRemove:
-                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.DeclareConsumeGroupAdd.ToString(), out var yyyyy);
+                case DeclareConsumeTypeEnum.GroupRemove:
+                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.GroupAdd.ToString(), out var yyyyy);
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeQueueAdd:
-                    ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType, QueueName = queueName, Key = key });
+                case DeclareConsumeTypeEnum.QueueAdd:
+                    ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType, QueueKey = queueName, Key = key });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeQueueRemove:
-                    ConsumeDatas.TryRemove(ConsumeDatas.FirstOrDefault(x => x.Value.QueueName == queueName && x.Value.Key == key));
+                case DeclareConsumeTypeEnum.QueueRemove:
+                    ConsumeDatas.TryRemove(ConsumeDatas.FirstOrDefault(x => x.Value.QueueKey == queueName && x.Value.Key == key));
                     break;
 
 
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialAdd:
+                case DeclareConsumeTypeEnum.ErrorSpecialAdd:
                     ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorSpecialRemove:
-                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.DeclareConsumeSpecialAdd.ToString(), out var aaaa);
+                case DeclareConsumeTypeEnum.ErrorSpecialRemove:
+                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.SpecialAdd.ToString(), out var aaaa);
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorGroupAdd:
+                case DeclareConsumeTypeEnum.ErrorGroupAdd:
                     ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorGroupRemove:
-                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.DeclareConsumeGroupAdd.ToString(), out var bbbb);
+                case DeclareConsumeTypeEnum.ErrorGroupRemove:
+                    ConsumeDatas.TryRemove(DeclareConsumeTypeEnum.GroupAdd.ToString(), out var bbbb);
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorQueueAdd:
-                    ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType, QueueName = queueName, Key = key });
+                case DeclareConsumeTypeEnum.ErrorQueueAdd:
+                    ConsumeDatas.TryAdd(declareConsumeType.ToString(), new DeclareConsumeModel { DeclareConsumeType = declareConsumeType, QueueKey = queueName, Key = key });
                     break;
-                case DeclareConsumeTypeEnum.DeclareConsumeErrorQueueRemove:
-                    ConsumeDatas.TryRemove(ConsumeDatas.FirstOrDefault(x => x.Value.QueueName == queueName && x.Value.Key == key));
+                case DeclareConsumeTypeEnum.ErrorQueueRemove:
+                    ConsumeDatas.TryRemove(ConsumeDatas.FirstOrDefault(x => x.Value.QueueKey == queueName && x.Value.Key == key));
                     break;
             }
 
             var declareConsumeModel = new DeclareConsumeModel();
             declareConsumeModel.DeclareConsumeType = declareConsumeType;
-            declareConsumeModel.QueueName = queueName;
+            declareConsumeModel.QueueKey = queueName;
             declareConsumeModel.Key = key;
 
             var serialize = JsonConvert.SerializeObject(declareConsumeModel);

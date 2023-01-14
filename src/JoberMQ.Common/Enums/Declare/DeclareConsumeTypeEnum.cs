@@ -1,19 +1,19 @@
 ﻿namespace JoberMQ.Common.Enums.Declare
 {
-    internal enum DeclareConsumeTypeEnum
+    public enum DeclareConsumeTypeEnum
     {
-        DeclareConsumeSpecialAdd = 1,
-        DeclareConsumeSpecialRemove = 2,
-        DeclareConsumeGroupAdd = 3,
-        DeclareConsumeGroupRemove = 4,
-        DeclareConsumeQueueAdd = 5,
-        DeclareConsumeQueueRemove = 6,
+        SpecialAdd = 1,
+        SpecialRemove = 2,
+        GroupAdd = 3,
+        GroupRemove = 4,
+        QueueAdd = 5,
+        QueueRemove = 6,
 
-        DeclareConsumeErrorSpecialAdd = 7,
-        DeclareConsumeErrorSpecialRemove = 8,
-        DeclareConsumeErrorGroupAdd = 9,
-        DeclareConsumeErrorGroupRemove = 10,
-        DeclareConsumeErrorQueueAdd = 11,
-        DeclareConsumeErrorQueueRemove = 12,
+        ErrorSpecialAdd = 7,
+        ErrorSpecialRemove = 8,
+        ErrorGroupAdd = 9,
+        ErrorGroupRemove = 10,
+        ErrorQueueAdd = 11,
+        ErrorQueueRemove = 12,
     }
 }
