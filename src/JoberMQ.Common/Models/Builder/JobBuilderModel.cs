@@ -1,5 +1,5 @@
 ﻿using JoberMQ.Common.Enums.Routing;
-using JoberMQ.Common.Enums.Run;
+using JoberMQ.Common.Enums.Publisher;
 using JoberMQ.Common.Enums.Timing;
 using JoberMQ.Common.Models.Message;
 using JoberMQ.Common.Models.Option;
@@ -16,7 +16,7 @@ namespace JoberMQ.Common.Models.Builder
         #endregion
 
         #region 2 - RUN
-        public RunTypeEnum JobRunType { get; set; }
+        public PublisherTypeEnum PublisherType { get; set; }
         #endregion
 
         #region 3 - GENERAL

@@ -6,10 +6,10 @@ using System;
 
 namespace JoberMQ.Common.Dbos
 {
-    internal class JobDataDetailDbo : DboPropertyGuidBase, IDboBase
+    internal class JobDetailDbo : DboPropertyGuidBase, IDboBase
     {
         #region CONSTRUCTOR
-        public JobDataDetailDbo()
+        public JobDetailDbo()
         {
             Name = "";
             Description = "";

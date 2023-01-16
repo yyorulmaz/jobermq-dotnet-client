@@ -8,7 +8,6 @@ using JoberMQ.Common.Enums.Data;
 using JoberMQ.Common.Enums.Declare;
 using JoberMQ.Common.Enums.Message;
 using JoberMQ.Common.Enums.Routing;
-using JoberMQ.Common.Enums.Run;
 using JoberMQ.Common.Enums.Timing;
 using JoberMQ.Common.Models.Base;
 using JoberMQ.Common.Models.Builder;
@@ -22,6 +21,7 @@ using JoberMQ.Library.Database.Enums;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using TimerFramework;
+using JoberMQ.Common.Enums.Publisher;
 
 namespace JoberMQ.Client.Net.Implementation.Client.Default
 {
@@ -238,7 +238,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     {
                         if (checkCount != checkCounter)
                         {
-                            var deserialize = JsonConvert.DeserializeObject<JobDataDbo>(localData.Data);
+                            var deserialize = JsonConvert.DeserializeObject<JobDbo>(localData.Data);
                             var checkJob = await JobGetAsync(deserialize.Id);
                             //if (checkJob.JobData != null)
                             if (checkJob.IsSuccess == true)
@@ -286,12 +286,12 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         {
             #region JOB BUILDER DATA
             var jobTimingType = TimingTypeEnum.Now;
-            var jobRunType = RunTypeEnum.Standart;
+            var jobRunType = PublisherTypeEnum.Standart;
             var ErrorMessageRoutingType = RoutingTypeEnum.None;
 
             var builder = new JobBuilderMessageDataModel();
             builder.JobBuilder.TimingType = jobTimingType;
-            builder.JobBuilder.JobRunType = jobRunType;
+            builder.JobBuilder.PublisherType = jobRunType;
             builder.JobBuilder.Option = option;
             builder.JobBuilder.ErrorMessageRoutingType = ErrorMessageRoutingType;
             #endregion
@@ -374,7 +374,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             if (String.IsNullOrEmpty(obj))
                 return;
 
-            var consumerMessage = JsonConvert.DeserializeObject<JobMessageDbo>(obj);
+            var consumerMessage = JsonConvert.DeserializeObject<MessageDbo>(obj);
 
             _ = Task.Run(() =>
             {

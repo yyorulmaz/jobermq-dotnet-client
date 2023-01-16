@@ -8,146 +8,146 @@ namespace JoberMQ.Client.Net.Operations
 {
     internal class DboCreateOperation
     {
-        internal static JobDataDbo JobDataDboCreate(JobBuilderModel jobBuilderData)
+        internal static JobDbo JobDataDboCreate(JobBuilderModel jobBuilderData)
         {
-            var jobDataDbo = new JobDataDbo();
-            jobDataDbo.Details = new List<JobDataDetailDbo>();
+            var jobDbo = new JobDbo();
+            jobDbo.Details = new List<JobDetailDbo>();
 
             #region 0 - BASE
-            jobDataDbo.Id = Guid.NewGuid();
+            jobDbo.Id = Guid.NewGuid();
             #endregion
 
             #region 1 - PRODUCER
-            jobDataDbo.ProducerClientKey = jobBuilderData.ProducerClientKey;
-            jobDataDbo.ProducerClientGroupKey = jobBuilderData.ProducerClientGroupKey;
+            jobDbo.ProducerClientKey = jobBuilderData.ProducerClientKey;
+            jobDbo.ProducerClientGroupKey = jobBuilderData.ProducerClientGroupKey;
             #endregion
 
             #region 2 - RUN
-            jobDataDbo.RunType = jobBuilderData.JobRunType;
+            jobDbo.PublisherType = jobBuilderData.PublisherType;
             #endregion
 
             #region 3 - GENERAL
             if (jobBuilderData.Option != null)
             {
-                jobDataDbo.Name = jobBuilderData.Option.Name;
-                jobDataDbo.Description = jobBuilderData.Option.Description;
-                jobDataDbo.GeneralData = jobBuilderData.Option.GeneralData;
+                jobDbo.Name = jobBuilderData.Option.Name;
+                jobDbo.Description = jobBuilderData.Option.Description;
+                jobDbo.GeneralData = jobBuilderData.Option.GeneralData;
             }
             #endregion
 
             #region 4 - TIMING
-            jobDataDbo.TimingType = jobBuilderData.TimingType;
-            jobDataDbo.ScheduleType = jobBuilderData.ScheduleType;
+            jobDbo.TimingType = jobBuilderData.TimingType;
+            jobDbo.ScheduleType = jobBuilderData.ScheduleType;
 
             if (jobBuilderData.TimingType == TimingTypeEnum.Schedule && jobBuilderData.ScheduleType == ScheduleTypeEnum.Delayed)
-                jobDataDbo.CronTime = CronHelper.DateToCron(DateTime.Now.AddSeconds(jobBuilderData.DelayedSecond.Value));
+                jobDbo.CronTime = CronHelper.DateToCron(DateTime.Now.AddSeconds(jobBuilderData.DelayedSecond.Value));
             else if (jobBuilderData.TimingType == TimingTypeEnum.Schedule && jobBuilderData.ScheduleType == ScheduleTypeEnum.Recurrent)
-                jobDataDbo.CronTime = jobBuilderData.CronTime;
+                jobDbo.CronTime = jobBuilderData.CronTime;
             else
-                jobDataDbo.CronTime = null;
+                jobDbo.CronTime = null;
 
-            jobDataDbo.ExecuteCountMax = jobBuilderData.ExecuteCountMax;
-            jobDataDbo.CreatedCount = 0;
-            jobDataDbo.IsCountMax = false;
+            jobDbo.ExecuteCountMax = jobBuilderData.ExecuteCountMax;
+            jobDbo.CreatedCount = 0;
+            jobDbo.IsCountMax = false;
             #endregion
 
             #region 5 - TRIGGER
-            jobDataDbo.IsTrigger = false;
-            jobDataDbo.ErrorWorkflowStop = jobBuilderData.ErrorWorkflowStop;
-            jobDataDbo.TriggerJobId = jobBuilderData.TriggerJobId;
-            jobDataDbo.TriggerGroupsId = jobBuilderData.TriggerGroupsId;
+            jobDbo.IsTrigger = false;
+            jobDbo.ErrorWorkflowStop = jobBuilderData.ErrorWorkflowStop;
+            jobDbo.TriggerJobId = jobBuilderData.TriggerJobId;
+            jobDbo.TriggerGroupsId = jobBuilderData.TriggerGroupsId;
             #endregion
 
             #region 5 - CHILD
             foreach (var item in jobBuilderData.MultipleMethods)
             {
-                var jobDataDetail = new JobDataDetailDbo();
+                var jobDetail = new JobDetailDbo();
 
                 #region 0 - BASE
-                jobDataDetail.Id = Guid.NewGuid();
+                jobDetail.Id = Guid.NewGuid();
                 #endregion
 
                 #region 3 - GENERAL
                 if (item.Option != null)
                 {
-                    jobDataDetail.Name = item.Option.Name;
-                    jobDataDetail.Description = item.Option.Description;
-                    jobDataDetail.GeneralData = item.Option.GeneralData;
+                    jobDetail.Name = item.Option.Name;
+                    jobDetail.Description = item.Option.Description;
+                    jobDetail.GeneralData = item.Option.GeneralData;
                 }
                 #endregion
 
                 #region 6 - MESSAGE
-                jobDataDetail.MessageType = MessageTypeEnum.Method;
-                jobDataDetail.Message = MethodHelper.MethodPropertySerialize(item.MethodCall);
+                jobDetail.MessageType = MessageTypeEnum.Method;
+                jobDetail.Message = MethodHelper.MethodPropertySerialize(item.MethodCall);
                 #endregion
 
                 #region 7 - CHILD
-                jobDataDetail.JobDataId = jobDataDbo.Id;
+                jobDetail.JobDataId = jobDbo.Id;
                 #endregion
 
                 #region 8 - CONSUMER
-                jobDataDetail.TransportType = item.JobTransportType;
-                jobDataDetail.EventName = item.EventName;
-                jobDataDetail.RoutingType = item.Routing.RoutingType;
-                jobDataDetail.ConsumerClientKey = item.Routing.ClientKey;
-                jobDataDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
-                jobDataDetail.QueueName = item.Routing.QueueName;
-                jobDataDetail.QueueKey = item.Routing.Key;
+                jobDetail.TransportType = item.JobTransportType;
+                jobDetail.EventName = item.EventName;
+                jobDetail.RoutingType = item.Routing.RoutingType;
+                jobDetail.ConsumerClientKey = item.Routing.ClientKey;
+                jobDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
+                jobDetail.QueueName = item.Routing.QueueName;
+                jobDetail.QueueKey = item.Routing.Key;
                 #endregion
 
-                jobDataDbo.Details.Add(jobDataDetail);
+                jobDbo.Details.Add(jobDetail);
             }
 
             foreach (var item in jobBuilderData.MultipleMessages)
             {
-                var jobDataDetail = new JobDataDetailDbo();
+                var jobDetail = new JobDetailDbo();
 
                 #region 0 - BASE
-                jobDataDetail.Id = Guid.NewGuid();
+                jobDetail.Id = Guid.NewGuid();
                 #endregion
 
                 #region 3 - GENERAL
                 if (item.Option != null)
                 {
-                    jobDataDetail.Name = item.Option.Name;
-                    jobDataDetail.Description = item.Option.Description;
-                    jobDataDetail.GeneralData = item.Option.GeneralData;
+                    jobDetail.Name = item.Option.Name;
+                    jobDetail.Description = item.Option.Description;
+                    jobDetail.GeneralData = item.Option.GeneralData;
                 }
                 #endregion
 
                 #region 6 - MESSAGE
-                jobDataDetail.MessageType = MessageTypeEnum.Text;
-                jobDataDetail.Message = item.Message;
+                jobDetail.MessageType = MessageTypeEnum.Text;
+                jobDetail.Message = item.Message;
                 #endregion
 
                 #region 7 - CHILD
-                jobDataDetail.JobDataId = jobDataDbo.Id;
+                jobDetail.JobDataId = jobDbo.Id;
                 #endregion
 
                 #region 8 - CONSUMER
-                jobDataDetail.TransportType = item.JobTransportType;
-                jobDataDetail.EventName = item.EventName;
-                jobDataDetail.RoutingType = item.Routing.RoutingType;
-                jobDataDetail.ConsumerClientKey = item.Routing.ClientKey;
-                jobDataDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
-                jobDataDetail.QueueName = item.Routing.QueueName;
-                jobDataDetail.QueueKey = item.Routing.Key;
+                jobDetail.TransportType = item.JobTransportType;
+                jobDetail.EventName = item.EventName;
+                jobDetail.RoutingType = item.Routing.RoutingType;
+                jobDetail.ConsumerClientKey = item.Routing.ClientKey;
+                jobDetail.ConsumerClientGroupKey = item.Routing.ClientGroupKey;
+                jobDetail.QueueName = item.Routing.QueueName;
+                jobDetail.QueueKey = item.Routing.Key;
                 #endregion
 
-                jobDataDbo.Details.Add(jobDataDetail);
+                jobDbo.Details.Add(jobDetail);
             }
             #endregion
 
             #region 9 - CONSUMER ERROR
-            jobDataDbo.ErrorMessageRoutingType = jobBuilderData.ErrorMessageRoutingType;
+            jobDbo.ErrorMessageRoutingType = jobBuilderData.ErrorMessageRoutingType;
             #endregion
 
             #region 10 - STATUS
-            jobDataDbo.IsCompleted = false;
-            jobDataDbo.IsError = false;
+            jobDbo.IsCompleted = false;
+            jobDbo.IsError = false;
             #endregion
 
-            return jobDataDbo;
+            return jobDbo;
         }
     }
 }

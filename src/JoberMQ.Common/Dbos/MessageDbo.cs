@@ -7,10 +7,10 @@ using System;
 
 namespace JoberMQ.Common.Dbos
 {
-    internal class JobMessageDbo : DboPropertyGuidBase, IDboBase
+    internal class MessageDbo : DboPropertyGuidBase, IDboBase
     {
         #region CONSTRUCTOR
-        public JobMessageDbo()
+        public MessageDbo()
         {
         }
         #endregion

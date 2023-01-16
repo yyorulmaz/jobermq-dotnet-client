@@ -1,5 +1,5 @@
-﻿using JoberMQ.Common.Enums.Routing;
-using JoberMQ.Common.Enums.Run;
+﻿using JoberMQ.Common.Enums.Publisher;
+using JoberMQ.Common.Enums.Routing;
 using JoberMQ.Common.Enums.Timing;
 using JoberMQ.Library.Database.Base;
 using System;
@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace JoberMQ.Common.Dbos
 {
-    internal class JobDataDbo : DboPropertyGuidBase, IDboBase
+    internal class JobDbo : DboPropertyGuidBase, IDboBase
     {
         #region CONSTRUCTOR
-        public JobDataDbo()
+        public JobDbo()
         {
             Name = "";
             Description = "";
@@ -37,7 +37,7 @@ namespace JoberMQ.Common.Dbos
         #endregion
 
         #region 2 - RUN
-        public RunTypeEnum RunType { get; set; }
+        public PublisherTypeEnum PublisherType { get; set; }
         #endregion
 
         #region 3 - GENERAL
@@ -82,7 +82,7 @@ namespace JoberMQ.Common.Dbos
         #endregion
 
         #region 99 - CHILD PARENT
-        public ICollection<JobDataDetailDbo> Details { get; set; }
+        public ICollection<JobDetailDbo> Details { get; set; }
         #endregion
     }
 }
