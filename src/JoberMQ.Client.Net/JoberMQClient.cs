@@ -1,43 +1,30 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Abstraction.Connect;
-using JoberMQ.Client.Net.Constants;
-using JoberMQ.Client.Net.Factories.Configuration;
-using JoberMQ.Client.Net.Factories.Connection;
-using JoberMQ.Client.Net.Implementation.Client.Default;
-using JoberMQ.Library.StatusCode.Abstraction;
-using JoberMQ.Library.StatusCode.Factories;
+using JoberMQ.Client.Net.Enums.Configuration;
+using JoberMQ.Client.Net.Factories.Client;
 
 namespace JoberMQ.Client.Net
 {
     public class JoberMQClient
     {
-        internal static IConfiguration Configuration;
-        internal static IStatusCode StatusCode;
         public static IConfiguration GetConfiguration()
-            => Factories.Configuration.ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
+            => Factories.Configuration.ConfigurationFactory.Create(ConfigurationFactoryEnum.Default);
 
-        public static IClient CreateClient()
-            => DefaultCreateClient(null);
-        public static IClient CreateClient(IConfiguration configuration)
-            => DefaultCreateClient(configuration);
+        public static IClient CreateClient(string clientKey, string clientGroupKey)
+            => DefaultCreateClient(clientKey, clientGroupKey, null);
+        public static IClient CreateClient(string clientKey, string clientGroupKey, IConfiguration configuration)
+            => DefaultCreateClient(clientKey, clientGroupKey, configuration);
 
-        private static IClient DefaultCreateClient(IConfiguration configuration)
+        private static IClient DefaultCreateClient(string clientKey, string clientGroupKey, IConfiguration configuration)
         {
+            IConfiguration config;
+
             if (configuration == null)
-                Configuration = ConfigurationFactory.CreateConfiguration(ClientConst.ConfigurationFactory);
+                config = GetConfiguration();
             else
-                Configuration = configuration;
+                config = configuration;
 
-            StatusCode = StatusCodeFactory.Create(Configuration.StatusCodeFactory, Configuration.StatusCodeDatas, Configuration.StatusCodeMessageLanguage);
-
-            IConnection connection = ConnectionFactory.Create(Configuration);
-            IClient client = new DfClient(Configuration, connection);
-
-            var connect = connection.ConnectAsync().Result;
-
-            return client;
+            return ClientFactory.Create(clientKey, clientGroupKey, configuration);
         }
-
     }
 }

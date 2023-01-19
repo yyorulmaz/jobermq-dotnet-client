@@ -1,48 +1,42 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Constants;
-using JoberMQ.Common.Enums.Client;
-using JoberMQ.Common.Enums.Protocol;
-using JoberMQ.Library.RoundRobin.Enums;
-using JoberMQ.Library.StatusCode.Enums;
-using JoberMQ.Library.StatusCode.Models;
-using System.Collections.Concurrent;
+using JoberMQ.Client.Net.Enums.Account;
+using JoberMQ.Client.Net.Enums.Client;
+using JoberMQ.Client.Net.Enums.Endpoint;
+using JoberMQ.Client.Net.Enums.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JoberMQ.Client.Net.Implementation.Configuration.Default
 {
-    public class DfConfiguration : IConfiguration
+    internal class DfConfiguration : IConfiguration
     {
         ClientFactoryEnum clientFactory = ClientConst.ClientFactory;
-        ClientFactoryEnum IConfiguration.ClientFactory { get => clientFactory; set => clientFactory = value; }
+        public ClientFactoryEnum ClientFactory => clientFactory;
+        ConnectProtocolEnum connectProtocol = ClientConst.ConnectProtocol;
+        public ConnectProtocolEnum ConnectProtocol => connectProtocol;
 
-        string clientKey = Guid.NewGuid().ToString();
-        string IConfiguration.ClientKey { get => clientKey; set => clientKey = value; }
 
-        string clientGroupKey;
-        string IConfiguration.ClientGroupKey { get => clientGroupKey; set => clientGroupKey = value; }
+        int connectionRetryTimeout = ClientConst.ConnectionRetryTimeout;
+        int IConfiguration.ConnectionRetryTimeout { get => connectionRetryTimeout; set => connectionRetryTimeout = value; }
+
 
         bool isOfflineMode = ClientConst.IsOfflineMode;
-        bool IConfiguration.IsOfflineMode { get => isOfflineMode; set => isOfflineMode = value; }
-
-        bool textMessageReceiveAutoCompleted = ClientConst.TextMessageReceiveAutoCompleted;
-        bool IConfiguration.TextMessageReceiveAutoCompleted { get => textMessageReceiveAutoCompleted; set => textMessageReceiveAutoCompleted = value; }
+        public bool IsOfflineMode { get => isOfflineMode; set => isOfflineMode = value; }
 
 
 
-        StatusCodeFactoryEnum statusCodeFactory = ClientConst.StatusCodeFactory;
-        StatusCodeFactoryEnum IConfiguration.StatusCodeFactory { get => statusCodeFactory; set => statusCodeFactory = value; }
-
-        StatusCodeMessageLanguageEnum statusCodeMessageLanguage = ClientConst.StatusCodeMessageLanguage;
-        StatusCodeMessageLanguageEnum IConfiguration.StatusCodeMessageLanguage { get => statusCodeMessageLanguage; set => statusCodeMessageLanguage = value; }
-
-        ConcurrentDictionary<string, StatusCodeModel> statusCodeDatas = ClientConst.DefaultStatusCodeDatas;
-        public ConcurrentDictionary<string, StatusCodeModel> StatusCodeDatas { get => statusCodeDatas; set => statusCodeDatas = value; }
+        string userName = ClientConst.UserName;
+        public string UserName { get => userName; set => userName = value; }
+        string password = ClientConst.Password;
+        public string Password { get => password; set => password = value; }
 
 
-
-        ConnectProtocolEnum connectProtocol = ClientConst.ConnectProtocol;
-        ConnectProtocolEnum IConfiguration.ConnectProtocol { get => connectProtocol; set => connectProtocol = value; }
-
-
+        EndpoindFactoryEnum endpoindFactor = ClientConst.EndpoindFactory;
+        public EndpoindFactoryEnum EndpoindFactory => endpoindFactor;
+        AccountFactoryEnum accountFactory = ClientConst.AccountFactory;
+        public AccountFactoryEnum AccountFactory => accountFactory;
         string hostName = ClientConst.HostName;
         string IConfiguration.HostName { get => hostName; set => hostName = value; }
 
@@ -55,22 +49,7 @@ namespace JoberMQ.Client.Net.Implementation.Configuration.Default
         bool isSsl = ClientConst.IsSsl;
         bool IConfiguration.IsSsl { get => isSsl; set => isSsl = value; }
 
-        bool automaticReconnect = ClientConst.AutomaticReconnect;
-        bool IConfiguration.AutomaticReconnect { get => automaticReconnect; set => automaticReconnect = value; }
 
-        int connectionRetryTimeout = ClientConst.ConnectionRetryTimeout;
-        int IConfiguration.ConnectionRetryTimeout { get => connectionRetryTimeout; set => connectionRetryTimeout = value; }
 
-        string userName = ClientConst.UserName;
-        string IConfiguration.UserName { get => userName; set => userName = value; }
-
-        string password = ClientConst.Password;
-        string IConfiguration.Password { get => password; set => password = value; }
-
-        ClientTypeEnum clientType = ClientConst.ClientType;
-        ClientTypeEnum IConfiguration.ClientType { get => clientType; set => clientType = value; }
-
-        RoundRobinFactoryEnum roundRobinFactory = ClientConst.RoundRobinFactory;
-        RoundRobinFactoryEnum IConfiguration.RoundRobinFactory { get => roundRobinFactory; set => roundRobinFactory = value; }
     }
 }

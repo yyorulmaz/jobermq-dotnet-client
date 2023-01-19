@@ -1,30 +1,42 @@
-﻿using JoberMQ.Client.Net.Implementation.Client.Default;
-using JoberMQ.Client.Net.Abstraction.Client;
+﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Abstraction.Connect;
-using JoberMQ.Client.Net.Implementation.Configuration.Default;
-using JoberMQ.Common.Enums.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JoberMQ.Client.Net.Enums.Client;
+using JoberMQ.Client.Net.Implementation.Client.Default;
 
-namespace JoberMQ.Client.Net.__Factories.Client
+namespace JoberMQ.Client.Net.Factories.Client
 {
-    internal class ClientFactory
+    public class ClientFactory
     {
-        public static IClient Create(IConfiguration configuration, IConnection connection)
+        public static IClient Create(
+            string clientKey,
+            string clientGroupKey,
+            IConfiguration configuration)
         {
             IClient client;
 
             switch (configuration.ClientFactory)
             {
                 case ClientFactoryEnum.Default:
-                    client = new DfClient(configuration, connection);
+                    switch (configuration.ConnectProtocol)
+                    {
+                        case Enums.Protocol.ConnectProtocolEnum.Socket:
+                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            break;
+                        default:
+                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            break;
+                    }
                     break;
                 default:
-                    client = new DfClient(configuration, connection);
+                    switch (configuration.ConnectProtocol)
+                    {
+                        case Enums.Protocol.ConnectProtocolEnum.Socket:
+                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            break;
+                        default:
+                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            break;
+                    }
                     break;
             }
 
