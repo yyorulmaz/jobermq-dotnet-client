@@ -21,15 +21,19 @@ namespace JoberMQ.Client.Net.Extensions.Message
                 GeneralData = message.GeneralData,
                 PriorityType = message.PriorityType
             };
-            multipleMessage.ResultMessage = new Models.Message.MessageModel
+
+            if (resultMessage != null)
             {
-                MessageType = resultMessage.MessageType,
-                Message = resultMessage.Message,
-                Routing = resultMessage.Routing,
-                Info = resultMessage.Info,
-                GeneralData = resultMessage.GeneralData,
-                PriorityType = resultMessage.PriorityType
-            };
+                multipleMessage.ResultMessage = new Models.Message.MessageModel
+                {
+                    MessageType = resultMessage.MessageType,
+                    Message = resultMessage.Message,
+                    Routing = resultMessage.Routing,
+                    Info = resultMessage.Info,
+                    GeneralData = resultMessage.GeneralData,
+                    PriorityType = resultMessage.PriorityType
+                };
+            }
 
             builder.MultipleMessages.Add(multipleMessage);
             return new MessageBuilderMessageModel { Builder = builder };

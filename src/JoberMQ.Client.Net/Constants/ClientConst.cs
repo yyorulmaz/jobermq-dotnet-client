@@ -31,5 +31,10 @@ namespace JoberMQ.Client.Net.Constants
         internal const string ActionHub = "JoberHub";
         internal const string ActionLogin = "account/login";
 
+
+
+        internal const string DefaultDistributorDirectKey = "dis.default.direct";
+        internal const string DefaultQueueSpecialKey = "queue.default.special";
+
     }
 }

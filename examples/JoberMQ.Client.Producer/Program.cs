@@ -1,6 +1,7 @@
 ﻿using JoberMQ.Client.Net;
 using JoberMQ.Client.Net.Extensions;
 using JoberMQ.Client.Net.Extensions.Job;
+using JoberMQ.Client.Net.Extensions.Message;
 using JoberMQ.Client.Net.Models.Routing;
 
 var configuration = JoberMQClient.GetConfiguration();
@@ -10,16 +11,24 @@ var ssss = client.ConnectAsync().Result;
 
 
 
-for (int i = 0; i < 1000000; i++)
+//for (int i = 0; i < 1000000; i++)
+//{
+//    var message = client
+//        .JobBuilder()
+//        .Message(client.CreateMessage("1111", new RoutingSpecialModel { ClientKey = "client2" }))
+//        .Build();
+
+//    var ddddddddd = client.Publish(message).Result;
+//}
+
+for (int i = 0; i < 100000; i++)
 {
     var message = client
-        .JobBuilder()
-        .Message(client.CreateMessage("1111", new RoutingSpecialModel { ClientKey = "client2" }))
-        .Build();
-
+    .MessageBuilder()
+    .Message(client.CreateMessage("1111", new RoutingSpecialModel { ClientKey = "client2" }))
+    .Build();
     var ddddddddd = client.Publish(message).Result;
 }
-
 
 
 Console.ReadLine();

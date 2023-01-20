@@ -24,12 +24,12 @@ namespace JoberMQ.Client.Net.Extensions
             var serialize = "";
             if (builder.Operation.OperationType ==  OperationTypeEnum.Job)
             {
-                serialize = JsonConvert.SerializeObject(Job(builder, client));
+                serialize = JsonConvert.SerializeObject(Job(builder));
                 result = await client.HubConnection.InvokeAsync<bool>("Job", serialize);
             }
             else if (builder.Operation.OperationType == OperationTypeEnum.Message)
             {
-                serialize = JsonConvert.SerializeObject(Message(builder, client));
+                serialize = JsonConvert.SerializeObject(Message(builder));
                 result = await client.HubConnection.InvokeAsync<bool>("Message", serialize);
             }
             else if (builder.Operation.OperationType == OperationTypeEnum.Rpc)
@@ -40,7 +40,7 @@ namespace JoberMQ.Client.Net.Extensions
             return result;
         }
 
-        private static JobDbo Job(BuilderModel builder, IClient client)
+        private static JobDbo Job(BuilderModel builder)
         {
             var jobDbo = new JobDbo();
             jobDbo.JobDetails = new List<JobDetailDbo>();
@@ -71,7 +71,24 @@ namespace JoberMQ.Client.Net.Extensions
 
             return jobDbo;
         }
-        private static JobDbo Message(BuilderModel builder, IClient client)
-            => Job(builder, client);
+        private static MessageDbo Message(BuilderModel builder)
+        {
+            var messageDbo = new MessageDbo();
+
+            messageDbo.Id = Guid.NewGuid();
+            messageDbo.Operation = builder.Operation;
+            messageDbo.Producer = builder.Producer;
+            messageDbo.Message = builder.MultipleMessages.FirstOrDefault().Message;
+            messageDbo.IsResult = builder.IsResult;
+            messageDbo.ResultMessage = builder.MultipleMessages.FirstOrDefault().ResultMessage;
+            messageDbo.TriggerGroupsId = builder.Timing.TriggerGroupsId;
+
+
+            //toto kontrol
+            //messageDbo.Consuming = ;
+
+
+            return messageDbo;
+        }
     }
 }
