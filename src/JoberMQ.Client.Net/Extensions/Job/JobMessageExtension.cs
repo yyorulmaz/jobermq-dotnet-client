@@ -1,21 +1,22 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
 using JoberMQ.Client.Net.Models.Builder;
+using JoberMQ.Client.Net.Models.Job;
 using JoberMQ.Client.Net.Models.Multiple;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobMessageExtension
     {
-        public static JobBuilderMessageModel Message(this JobBuilderModel jobBuilder, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilder.Builder, message, resultMessage);
-        public static JobBuilderMessageModel Message(this JobBuilderPublisherModel jobBuilderPublisher, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderPublisher.Builder, message, resultMessage);
-        public static JobBuilderMessageModel Message(this JobBuilderTimingModel jobBuilderTiming, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderTiming.Builder, message, resultMessage);
-        public static JobBuilderMessageModel Message(this JobBuilderMessageModel jobBuilderMessage, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderMessage.Builder, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderExtensionModel jobBuilderExtension, IMessage message, IMessage resultMessage = null)
+            => Add(jobBuilderExtension.Builder, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null)
+            => Add(jobBuilderPublisherExtension.Builder, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null)
+            => Add(jobBuilderTimingExtension.Builder, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage message, IMessage resultMessage = null)
+            => Add(jobBuilderMessageExtension.Builder, message, resultMessage);
 
-        private static JobBuilderMessageModel Add(BuilderModel builder, IMessage message, IMessage resultMessage = null)
+        private static JobBuilderMessageExtensionModel Add(JobBuilderModel builder, IMessage message, IMessage resultMessage = null)
         {
             var multipleMessage = new MultipleMessageModel();
             multipleMessage.Message = new Models.Message.MessageModel
@@ -42,7 +43,7 @@ namespace JoberMQ.Client.Net.Extensions.Job
             }
 
             builder.MultipleMessages.Add(multipleMessage);
-            return new JobBuilderMessageModel { Builder = builder };
+            return new JobBuilderMessageExtensionModel { Builder = builder };
         }
     }
 

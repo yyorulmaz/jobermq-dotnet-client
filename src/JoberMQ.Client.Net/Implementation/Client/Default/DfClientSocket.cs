@@ -4,8 +4,9 @@ using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Enums.Client;
 using JoberMQ.Client.Net.Factories.Account;
 using JoberMQ.Client.Net.Factories.Endpoint;
+using JoberMQ.Client.Net.Models.Client;
+using JoberMQ.Client.Net.Models.DeclareConsume;
 using JoberMQ.Client.Net.Models.Login;
-using JoberMQ.Client.Net.Models.Producer;
 using JoberMQ.Library.Database.Enums;
 using JoberMQ.Library.Database.Factories;
 using JoberMQ.Library.Database.Repository.Abstraction.Mem;
@@ -14,6 +15,8 @@ using JoberMQ.Library.Method.Factories;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -29,23 +32,25 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             string clientGroupKey,
             IConfiguration configuration)
         {
-            producer = new ProducerModel();
-            producer.ClientKey = clientKey;
-            producer.ClientGroupKey = clientGroupKey;
+            clientInfo = new ClientInfoModel();
+            clientInfo.ClientKey = clientKey;
+            clientInfo.ClientGroupKey = clientGroupKey;
 
             accounts = MemFactory.Create<Guid, IAccount>(MemFactoryEnum.Default, MemDataFactoryEnum.None);
             var endpointDetail = EndpoindFactory.Create(configuration);
             var account = AccountFactory.Create(configuration, true, true, endpointDetail);
             accounts.Add(Guid.NewGuid(), account);
-            method = MethodFactory.Create(Library.StatusCode.Enums.StatusCodeFactoryEnum.Default);
+            method = MethodFactory.Create(Library.Method.Enums.MethodFactoryEnum.Default);
 
             this.isOfflineClient = configuration.IsOfflineMode;
             this.connectionRetryTimeout = configuration.ConnectionRetryTimeout;
+
+            declareConsuming = new ConcurrentDictionary<Guid, DeclareConsumeModel>();
         }
 
-        #region Producer
-        ProducerModel producer;
-        public ProducerModel Producer => producer;
+        #region Client Info
+        ClientInfoModel clientInfo;
+        public ClientInfoModel ClientInfo => clientInfo;
         #endregion
 
         bool isClientActive;
@@ -85,7 +90,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         public async Task<bool> ConnectAsync()
         {
             var account = accounts.Get(x => x.IsMaster == true && x.IsActive == true);
-            var getToken = await GetTokenAsync(account.EndpointLogin, account.UserName, account.Password, producer.ClientKey);
+            var getToken = await GetTokenAsync(account.EndpointLogin, account.UserName, account.Password, clientInfo.ClientKey);
 
             if (getToken != null && getToken.IsSuccess)
                 token = getToken.Token;
@@ -134,8 +139,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     options.AccessTokenProvider = () => Task.FromResult(token);
 
                     options.Headers.Add("ClientType", ClientTypeEnum.Normal.ToString());
-                    options.Headers.Add("ClientKey", producer.ClientKey);
-                    options.Headers.Add("ClientGroupKey", producer.ClientGroupKey);
+                    options.Headers.Add("ClientKey", clientInfo.ClientKey);
+                    options.Headers.Add("ClientGroupKey", clientInfo.ClientGroupKey);
                     options.Headers.Add("IsOfflineClient", isOfflineClient.ToString());
                 })
                //.WithAutomaticReconnect()
@@ -150,8 +155,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     options.AccessTokenProvider = () => Task.FromResult(token);
 
                     options.Headers.Add("ClientType", ClientTypeEnum.Normal.ToString());
-                    options.Headers.Add("ClientKey", producer.ClientKey);
-                    options.Headers.Add("ClientGroupKey", producer.ClientGroupKey);
+                    options.Headers.Add("ClientKey", clientInfo.ClientKey);
+                    options.Headers.Add("ClientGroupKey", clientInfo.ClientGroupKey);
                     options.Headers.Add("IsOfflineClient", isOfflineClient.ToString());
                 })
                .Build();
@@ -208,6 +213,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         private bool isReConnectStarted = false;
         private bool automaticReconnect;
         public bool AutomaticReconnect => automaticReconnect;
+
+
         private async Task ReConnectAsync()
         {
             ReceiveServerActiveAction(false);
@@ -217,7 +224,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             {
                 if (token == null)
                 {
-                    var getToken = await GetTokenAsync(account.EndpointLogin, account.UserName, account.Password, producer.ClientKey);
+                    var getToken = await GetTokenAsync(account.EndpointLogin, account.UserName, account.Password, clientInfo.ClientKey);
                     if (getToken != null && getToken.IsSuccess)
                         token = getToken.Token;
                 }
@@ -324,9 +331,14 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         }
         #endregion
 
-        
 
-        
+
+
+        ConcurrentDictionary<Guid, DeclareConsumeModel> declareConsuming;
+        public ConcurrentDictionary<Guid, DeclareConsumeModel> DeclareConsuming { get => declareConsuming; set => declareConsuming = value; }
+
+
+
 
 
         private bool isOfflineClient;

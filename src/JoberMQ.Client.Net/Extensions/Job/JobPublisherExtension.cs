@@ -1,20 +1,21 @@
 ﻿using JoberMQ.Client.Net.Enums.Publisher;
 using JoberMQ.Client.Net.Models.Builder;
+using JoberMQ.Client.Net.Models.Job;
 using JoberMQ.Client.Net.Models.Publisher;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobPublisherExtension
     {
-        public static JobBuilderPublisherModel Publisher(this JobBuilderModel jobBuilder, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
-            => Add(jobBuilder.Builder, publisherType);
+        public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderExtensionModel jobBuilderExtension, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
+            => Add(jobBuilderExtension.Builder, publisherType);
 
-        private static JobBuilderPublisherModel Add(BuilderModel builder, PublisherTypeEnum publisherType)
+        private static JobBuilderPublisherExtensionModel Add(JobBuilderModel builder, PublisherTypeEnum publisherType)
         {
-            var jJobBuilderPublisher = new JobBuilderPublisherModel();
-            jJobBuilderPublisher.Builder = builder;
-            jJobBuilderPublisher.Builder.Publisher = new PublisherModel { PublisherType = publisherType };
-            return jJobBuilderPublisher;
+            var jJobBuilderPublisherExtension = new JobBuilderPublisherExtensionModel();
+            jJobBuilderPublisherExtension.Builder = builder;
+            jJobBuilderPublisherExtension.Builder.Publisher = new PublisherModel { PublisherType = publisherType };
+            return jJobBuilderPublisherExtension;
         }
     }
 }

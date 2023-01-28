@@ -1,6 +1,7 @@
 ﻿using JoberMQ.Client.Net.Dbos;
 using JoberMQ.Client.Net.Enums.Timing;
 using JoberMQ.Client.Net.Models.Builder;
+using JoberMQ.Client.Net.Models.Job;
 using JoberMQ.Client.Net.Models.Timing;
 using System;
 
@@ -9,34 +10,34 @@ namespace JoberMQ.Client.Net.Extensions.Job
     public static class JobTimingExtension
     {
         // Now
-        public static JobBuilderTimingModel TimingNow(this JobBuilderPublisherModel jobBuilderPublisher)
-            => TimingNowAdd(jobBuilderPublisher.Builder);
-        public static JobBuilderTimingModel TimingNow(this JobBuilderModel jobBuilderModel)
-            => TimingNowAdd(jobBuilderModel.Builder);
-        private static JobBuilderTimingModel TimingNowAdd(BuilderModel builder)
+        public static JobBuilderTimingExtensionModel TimingNow(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension)
+            => TimingNowAdd(jobBuilderPublisherExtension.Builder);
+        public static JobBuilderTimingExtensionModel TimingNow(this JobBuilderExtensionModel jobBuilderExtension)
+            => TimingNowAdd(jobBuilderExtension.Builder);
+        private static JobBuilderTimingExtensionModel TimingNowAdd(JobBuilderModel builder)
         {
-            var jobBuilderTiming = new JobBuilderTimingModel();
-            jobBuilderTiming.Builder = builder;
-            jobBuilderTiming.Builder.Timing = new TimingModel { TimingType = TimingTypeEnum.Now };
-            return jobBuilderTiming;
+            var jobBuilderTimingExtension = new JobBuilderTimingExtensionModel();
+            jobBuilderTimingExtension.Builder = builder;
+            jobBuilderTimingExtension.Builder.Timing = new TimingModel { TimingType = TimingTypeEnum.Now };
+            return jobBuilderTimingExtension;
         }
 
 
 
         // Schedule
-        public static JobBuilderTimingModel TimingScheduleDelayed(this JobBuilderPublisherModel jobBuilderPublisher, int delayedSecond)
-            => TimingScheduleAdd(jobBuilderPublisher.Builder, ScheduleTypeEnum.Delayed, delayedSecond, null, 1);
-        public static JobBuilderTimingModel TimingScheduleRecurrent(this JobBuilderPublisherModel jobBuilderPublisher, string cronTime, int? executeCountMax = null)
-            => TimingScheduleAdd(jobBuilderPublisher.Builder, ScheduleTypeEnum.Recurrent, null, cronTime, executeCountMax);
-        public static JobBuilderTimingModel TimingScheduleDelayed(this JobBuilderModel jobBuilderModel, int delayedSecond)
-            => TimingScheduleAdd(jobBuilderModel.Builder, ScheduleTypeEnum.Delayed, delayedSecond, null, 1);
-        public static JobBuilderTimingModel TimingScheduleRecurrent(this JobBuilderModel jobBuilderModel, string cronTime, int? executeCountMax = null)
-            => TimingScheduleAdd(jobBuilderModel.Builder, ScheduleTypeEnum.Recurrent, null, cronTime, executeCountMax);
-        private static JobBuilderTimingModel TimingScheduleAdd(BuilderModel builder, ScheduleTypeEnum scheduleType, int? delayedSecond, string cronTime, int? executeCountMax = null)
+        public static JobBuilderTimingExtensionModel TimingScheduleDelayed(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, int delayedSecond)
+            => TimingScheduleAdd(jobBuilderPublisherExtension.Builder, ScheduleTypeEnum.Delayed, delayedSecond, null, 1);
+        public static JobBuilderTimingExtensionModel TimingScheduleRecurrent(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, string cronTime, int? executeCountMax = null)
+            => TimingScheduleAdd(jobBuilderPublisherExtension.Builder, ScheduleTypeEnum.Recurrent, null, cronTime, executeCountMax);
+        public static JobBuilderTimingExtensionModel TimingScheduleDelayed(this JobBuilderExtensionModel jobBuilderExtension, int delayedSecond)
+            => TimingScheduleAdd(jobBuilderExtension.Builder, ScheduleTypeEnum.Delayed, delayedSecond, null, 1);
+        public static JobBuilderTimingExtensionModel TimingScheduleRecurrent(this JobBuilderExtensionModel jobBuilderExtension, string cronTime, int? executeCountMax = null)
+            => TimingScheduleAdd(jobBuilderExtension.Builder, ScheduleTypeEnum.Recurrent, null, cronTime, executeCountMax);
+        private static JobBuilderTimingExtensionModel TimingScheduleAdd(JobBuilderModel builder, ScheduleTypeEnum scheduleType, int? delayedSecond, string cronTime, int? executeCountMax = null)
         {
-            var jobBuilderTiming = new JobBuilderTimingModel();
-            jobBuilderTiming.Builder = builder;
-            jobBuilderTiming.Builder.Timing = new TimingModel
+            var jobBuilderTimingExtension = new JobBuilderTimingExtensionModel();
+            jobBuilderTimingExtension.Builder = builder;
+            jobBuilderTimingExtension.Builder.Timing = new TimingModel
             {
                 TimingType = TimingTypeEnum.Schedule,
                 ScheduleType = scheduleType,
@@ -45,28 +46,28 @@ namespace JoberMQ.Client.Net.Extensions.Job
                 ExecuteCountMax = executeCountMax
             };
 
-            return jobBuilderTiming;
+            return jobBuilderTimingExtension;
         }
 
 
 
         // Trigger
-        public static JobBuilderTimingModel TimingTriggerWhenDone(this JobBuilderPublisherModel jobBuilderPublisher, Guid jobId, bool errorWorkflowStop)
-            => TimingTriggerAdd(jobBuilderPublisher.Builder, jobId, errorWorkflowStop);
-        public static JobBuilderTimingModel TimingTriggerWhenDone(this JobBuilderModel jobBuilderModel, Guid jobId, bool errorWorkflowStop)
-            => TimingTriggerAdd(jobBuilderModel.Builder, jobId, errorWorkflowStop);
-        private static JobBuilderTimingModel TimingTriggerAdd(BuilderModel builder, Guid jobId, bool errorWorkflowStop)
+        public static JobBuilderTimingExtensionModel TimingTriggerWhenDone(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, Guid jobId, bool errorWorkflowStop)
+            => TimingTriggerAdd(jobBuilderPublisherExtension.Builder, jobId, errorWorkflowStop);
+        public static JobBuilderTimingExtensionModel TimingTriggerWhenDone(this JobBuilderExtensionModel jobBuilderExtension, Guid jobId, bool errorWorkflowStop)
+            => TimingTriggerAdd(jobBuilderExtension.Builder, jobId, errorWorkflowStop);
+        private static JobBuilderTimingExtensionModel TimingTriggerAdd(JobBuilderModel builder, Guid jobId, bool errorWorkflowStop)
         {
-            var jobBuilderTiming = new JobBuilderTimingModel();
-            jobBuilderTiming.Builder = builder;
-            jobBuilderTiming.Builder.Timing = new TimingModel
+            var jobBuilderTimingExtension = new JobBuilderTimingExtensionModel();
+            jobBuilderTimingExtension.Builder = builder;
+            jobBuilderTimingExtension.Builder.Timing = new TimingModel
             {
                 TimingType = TimingTypeEnum.Trigger,
                 ErrorWorkflowStop = errorWorkflowStop,
                 TriggerJobId = jobId
             };
 
-            return jobBuilderTiming;
+            return jobBuilderTimingExtension;
         }
     }
 }

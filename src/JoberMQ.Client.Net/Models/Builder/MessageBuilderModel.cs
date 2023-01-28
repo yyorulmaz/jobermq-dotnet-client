@@ -1,7 +1,7 @@
 ﻿namespace JoberMQ.Client.Net.Models.Builder
 {
-    public class MessageBuilderModel
+    public class MessageBuilderModel : JobBuilderModel
     {
-        public BuilderModel Builder { get; set; } = new BuilderModel();
+
     }
 }

@@ -1,15 +1,16 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
 using JoberMQ.Client.Net.Models.Builder;
+using JoberMQ.Client.Net.Models.MessageBuilder;
 using JoberMQ.Client.Net.Models.Multiple;
 
 namespace JoberMQ.Client.Net.Extensions.Message
 {
     public static class MessageMessageExtension
     {
-        public static MessageBuilderMessageModel Message(this MessageBuilderModel messageBuilder, IMessage message, IMessage resultMessage = null)
+        public static MessageBuilderMessageExtensionModel Message(this MessageBuilderExtensionModel messageBuilder, IMessage message, IMessage resultMessage = null)
             => Add(messageBuilder.Builder, message, resultMessage);
 
-        private static MessageBuilderMessageModel Add(BuilderModel builder, IMessage message, IMessage resultMessage = null)
+        private static MessageBuilderMessageExtensionModel Add(MessageBuilderModel builder, IMessage message, IMessage resultMessage = null)
         {
             var multipleMessage = new MultipleMessageModel();
             multipleMessage.Message = new Models.Message.MessageModel
@@ -36,7 +37,7 @@ namespace JoberMQ.Client.Net.Extensions.Message
             }
 
             builder.MultipleMessages.Add(multipleMessage);
-            return new MessageBuilderMessageModel { Builder = builder };
+            return new MessageBuilderMessageExtensionModel { Builder = builder };
         }
     }
 

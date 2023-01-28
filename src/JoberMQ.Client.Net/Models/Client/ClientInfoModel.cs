@@ -1,8 +1,9 @@
-﻿namespace JoberMQ.Client.Net.Models.Producer
+﻿namespace JoberMQ.Client.Net.Models.Client
 {
-    public class ProducerModel
+    public class ClientInfoModel
     {
         public string ClientKey { get; set; }
         public string ClientGroupKey { get; set; }
+
     }
 }

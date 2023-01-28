@@ -1,6 +1,6 @@
-﻿namespace JoberMQ.Client.Net.Models.DeclareConsumeBuilder
+﻿namespace JoberMQ.Client.Net.Models.DeclareConsume
 {
-    public class DeclareConsumeGroupBuilderModel
+    public class DeclareConsumeBuilderSpecialExtensionModel
     {
         public DeclareConsumeBuilderModel DeclareConsumeBuilder { get; set; } = new DeclareConsumeBuilderModel();
     }

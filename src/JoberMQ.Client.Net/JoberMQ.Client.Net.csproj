@@ -5,11 +5,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JoberMQ.Library" Version="0.2.0" />
+		<PackageReference Include="JoberMQ.Library" Version="0.2.3" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.13" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="CronExpressionDescriptor" Version="2.16.0" />
 		<PackageReference Include="TimerFramework" Version="0.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Extensions\DeclareDistributor\" />
+	  <Folder Include="Extensions\DeclareQueue\" />
+	  <Folder Include="Models\Producer\" />
 	</ItemGroup>
 
 </Project>
