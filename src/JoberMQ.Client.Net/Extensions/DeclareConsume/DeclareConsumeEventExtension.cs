@@ -1,26 +1,23 @@
-﻿using JoberMQ.Client.Net.Abstraction.Client;
-using JoberMQ.Client.Net.Enums.Declare;
+﻿using JoberMQ.Client.Net.Enums.Declare;
 using JoberMQ.Client.Net.Models.DeclareConsume;
-using System.ComponentModel;
-using System.Linq;
 
 namespace JoberMQ.Client.Net.Extensions.DeclareConsume
 {
     public static class DeclareConsumeEventExtension
     {
-        public static DeclareConsumeBuilderEventExtensionModel EventSubscript(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension, string eventKey)
-            => Add(DeclareConsumeOperationTypeEnum.EventSubscript, eventKey);
+        public static DeclareConsumeEventModel EventSubscript(this DeclareConsumeBuilderModel declareConsumeBuilder, string eventKey)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.EventSubscript, eventKey);
 
-        public static DeclareConsumeBuilderEventExtensionModel EventUnSubscript(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension, string eventKey)
-            => Add(DeclareConsumeOperationTypeEnum.EventUnSubscript, eventKey);
+        public static DeclareConsumeEventModel EventUnSubscript(this DeclareConsumeBuilderModel declareConsumeBuilder, string eventKey)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.EventUnSubscript, eventKey);
 
-        private static DeclareConsumeBuilderEventExtensionModel Add(DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
+        private static DeclareConsumeEventModel Add(DeclareConsumeTransportModel declareConsumeTransport, DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
         {
-            var declareConsumeBuilderEventExtension = new DeclareConsumeBuilderEventExtensionModel();
-            declareConsumeBuilderEventExtension.DeclareConsumeBuilder.DeclareConsumeOperationType = declareConsumeOperationType;
-            declareConsumeBuilderEventExtension.DeclareConsumeBuilder.DeclareKey = declareKey;
-            return declareConsumeBuilderEventExtension;
+            var result = new DeclareConsumeEventModel();
+            result.DeclareConsumeTransport = declareConsumeTransport;
+            result.DeclareConsumeTransport.DeclareConsumeOperationType = declareConsumeOperationType;
+            result.DeclareConsumeTransport.DeclareKey = declareKey;
+            return result;
         }
-
     }
 }

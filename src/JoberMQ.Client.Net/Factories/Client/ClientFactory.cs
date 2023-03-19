@@ -42,5 +42,21 @@ namespace JoberMQ.Client.Net.Factories.Client
 
             return client;
         }
+        public static IClientInfo CreateClientInfo(IConfiguration configuration)
+        {
+            IClientInfo clientInfo;
+
+            switch (configuration.ClientInfoFactory)
+            {
+                case ClientInfoFactoryEnum.Default:
+                    clientInfo = new DfClientInfo(configuration.IsOfflineMode);
+                    break;
+                default:
+                    clientInfo = new DfClientInfo(configuration.IsOfflineMode);
+                    break;
+            }
+
+            return clientInfo;
+        }
     }
 }

@@ -1,26 +1,23 @@
-﻿using JoberMQ.Client.Net.Abstraction.Client;
-using JoberMQ.Client.Net.Enums.Declare;
+﻿using JoberMQ.Client.Net.Enums.Declare;
 using JoberMQ.Client.Net.Models.DeclareConsume;
-using System.ComponentModel;
-using System.Linq;
 
 namespace JoberMQ.Client.Net.Extensions.DeclareConsume
 {
     public static class DeclareConsumeGroupExtension
     {
-        public static DeclareConsumeBuilderGroupExtensionModel GroupAdd(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension)
-            => Add(DeclareConsumeOperationTypeEnum.GroupAdd, null);
+        public static DeclareConsumeGroupModel GroupAdd(this DeclareConsumeBuilderModel declareConsumeBuilder)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.GroupAdd, null);
 
-        public static DeclareConsumeBuilderGroupExtensionModel GroupRemove(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension)
-            => Add(DeclareConsumeOperationTypeEnum.GroupRemove, null);
+        public static DeclareConsumeGroupModel GroupRemove(this DeclareConsumeBuilderModel declareConsumeBuilder)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.GroupRemove, null);
 
-        private static DeclareConsumeBuilderGroupExtensionModel Add(DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
+        private static DeclareConsumeGroupModel Add(DeclareConsumeTransportModel declareConsumeTransport, DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
         {
-            var declareConsumeBuilderGroupExtension = new DeclareConsumeBuilderGroupExtensionModel();
-            declareConsumeBuilderGroupExtension.DeclareConsumeBuilder.DeclareConsumeOperationType = declareConsumeOperationType;
-            declareConsumeBuilderGroupExtension.DeclareConsumeBuilder.DeclareKey = declareKey;
-            return declareConsumeBuilderGroupExtension;
+            var result = new DeclareConsumeGroupModel();
+            result.DeclareConsumeTransport = declareConsumeTransport;
+            result.DeclareConsumeTransport.DeclareConsumeOperationType = declareConsumeOperationType;
+            result.DeclareConsumeTransport.DeclareKey = declareKey;
+            return result;
         }
-
     }
 }

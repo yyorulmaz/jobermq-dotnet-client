@@ -24,5 +24,22 @@ namespace JoberMQ.Client.Net.Factories.Account
 
             return account;
         }
+
+        public static IAccountInfo CreateAccountInfo(IConfiguration configuration, IEndpointDetail endpointDetail)
+        {
+            IAccountInfo accountInfo;
+
+            switch (configuration.AccountInfoFactory)
+            {
+                case AccountInfoFactoryEnum.Default:
+                    accountInfo = new DfAccountInfo(configuration, endpointDetail);
+                    break;
+                default:
+                    accountInfo = new DfAccountInfo(configuration, endpointDetail);
+                    break;
+            }
+
+            return accountInfo;
+        }
     }
 }

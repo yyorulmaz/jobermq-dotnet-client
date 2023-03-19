@@ -20,7 +20,8 @@ namespace JoberMQ.Client.Net.Extensions.Job
             var jobBuilderExtension = new JobBuilderExtensionModel();
             jobBuilderExtension.Builder.Operation = new OperationModel { OperationType = OperationTypeEnum.Job } ;
             jobBuilderExtension.Builder.Info = info;
-            jobBuilderExtension.Builder.ClientInfo = client.ClientInfo;
+            jobBuilderExtension.Builder.ClientInfo.ClientKey = client.ClientInfo.ClientKey;
+            jobBuilderExtension.Builder.ClientInfo.ClientGroupKey = client.ClientInfo.ClientGroupKey;
             jobBuilderExtension.Builder.Publisher = new PublisherModel { PublisherType = PublisherTypeEnum.Standart };
             jobBuilderExtension.Builder.Timing = new TimingModel { TimingType = TimingTypeEnum.Now };
             jobBuilderExtension.Builder.IsResult = false;

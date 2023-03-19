@@ -13,8 +13,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Extensions\DeclareDistributor\" />
-	  <Folder Include="Extensions\DeclareQueue\" />
 	  <Folder Include="Models\Producer\" />
 	</ItemGroup>
 

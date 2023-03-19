@@ -1,14 +1,29 @@
 ﻿using JoberMQ.Client.Net;
 using JoberMQ.Client.Net.Extensions;
 using JoberMQ.Client.Net.Extensions.DeclareConsume;
+using JoberMQ.Client.Net.Extensions.DeclareDistributor;
 using JoberMQ.Client.Net.Extensions.Job;
 using JoberMQ.Client.Net.Extensions.Message;
 using JoberMQ.Client.Net.Models.Routing;
 
 var configuration = JoberMQClient.GetConfiguration();
 var client = JoberMQClient.CreateClient("client1", "clientGroup1", configuration);
-client.ConnectState += Client_ConnectState;
-var ssss = client.ConnectAsync().Result;
+client.Connect.ConnectState += Client_ConnectState;
+var ssss = client.Connect.ConnectAsync().Result;
+
+#region Declare Distributor
+var declareDistributor = client
+    .DeclareDistributor()
+    .Create("deneme Distributor 1")
+    .Build();
+var declareDistributorResult = client.Publish(declareDistributor).Result;
+#endregion
+
+
+
+
+
+
 
 
 
@@ -32,11 +47,11 @@ var ssss = client.ConnectAsync().Result;
 //}
 
 
-var declareConsume = client
-    .DeclareConsumeBuilder()
-    .SpecialAdd()
-    .Build();
-var ddddddddd = client.Publish(declareConsume).Result;
+//var declareConsume = client
+//    .DeclareConsumeBuilder()
+//    .SpecialAdd()
+//    .Build();
+//var ddddddddd = client.Publish(declareConsume).Result;
 
 
 

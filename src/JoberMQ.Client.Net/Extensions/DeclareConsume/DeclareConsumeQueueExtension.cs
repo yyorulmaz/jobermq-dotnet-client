@@ -1,28 +1,26 @@
-﻿using JoberMQ.Client.Net.Abstraction.Client;
-using JoberMQ.Client.Net.Enums.Declare;
+﻿using JoberMQ.Client.Net.Enums.Declare;
 using JoberMQ.Client.Net.Models.DeclareConsume;
-using System.ComponentModel;
-using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JoberMQ.Client.Net.Extensions.DeclareConsume
 {
     public static class DeclareConsumeQueueExtension
     {
-        public static DeclareConsumeBuilderQueueExtensionModel QueueAdd(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension, string queueKey)
-            => Add(DeclareConsumeOperationTypeEnum.QueueAdd, queueKey);
+        public static DeclareConsumeQueueModel QueueAdd(this DeclareConsumeBuilderModel declareConsumeBuilder, string queueKey)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.QueueAdd, queueKey);
 
-        public static DeclareConsumeBuilderQueueExtensionModel QueueRemove(this DeclareConsumeBuilderExtensionModel declareConsumeBuilderExtension, string queueKey)
-            => Add(DeclareConsumeOperationTypeEnum.QueueRemove, queueKey);
+        public static DeclareConsumeQueueModel QueueRemove(this DeclareConsumeBuilderModel declareConsumeBuilder, string queueKey)
+            => Add(declareConsumeBuilder.DeclareConsumeTransport, DeclareConsumeOperationTypeEnum.QueueRemove, queueKey);
 
-        private static DeclareConsumeBuilderQueueExtensionModel Add(DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
+        private static DeclareConsumeQueueModel Add(DeclareConsumeTransportModel declareConsumeTransport, DeclareConsumeOperationTypeEnum declareConsumeOperationType, string declareKey)
         {
-            var declareConsumeBuilderQueueExtension = new DeclareConsumeBuilderQueueExtensionModel();
-            declareConsumeBuilderQueueExtension.DeclareConsumeBuilder.DeclareConsumeOperationType = declareConsumeOperationType;
-            declareConsumeBuilderQueueExtension.DeclareConsumeBuilder.DeclareKey = declareKey;
-            return declareConsumeBuilderQueueExtension;
+            var result = new DeclareConsumeQueueModel();
+            result.DeclareConsumeTransport = declareConsumeTransport;
+            result.DeclareConsumeTransport.DeclareConsumeOperationType = declareConsumeOperationType;
+            result.DeclareConsumeTransport.DeclareKey = declareKey;
+            return result;
         }
-
-
-
     }
 }

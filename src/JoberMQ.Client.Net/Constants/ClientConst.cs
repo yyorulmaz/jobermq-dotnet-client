@@ -1,16 +1,15 @@
 ﻿using JoberMQ.Client.Net.Enums.Account;
 using JoberMQ.Client.Net.Enums.Client;
+using JoberMQ.Client.Net.Enums.Connect;
 using JoberMQ.Client.Net.Enums.Endpoint;
 using JoberMQ.Client.Net.Enums.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace JoberMQ.Client.Net.Constants
 {
     internal class ClientConst
     {
         internal const ClientFactoryEnum ClientFactory = ClientFactoryEnum.Default;
+        internal const ClientInfoFactoryEnum ClientInfoFactory = ClientInfoFactoryEnum.Default;
         internal const ConnectProtocolEnum ConnectProtocol = ConnectProtocolEnum.Socket;
         internal const bool IsOfflineMode = true;
         internal const int ConnectionRetryTimeoutMin = 2000;
@@ -23,6 +22,10 @@ namespace JoberMQ.Client.Net.Constants
         
         internal const EndpoindFactoryEnum EndpoindFactory = EndpoindFactoryEnum.Default;
         internal const AccountFactoryEnum AccountFactory = AccountFactoryEnum.Default;
+        internal const AccountInfoFactoryEnum AccountInfoFactory = AccountInfoFactoryEnum.Default;
+        
+        internal const ConnectFactoryEnum ConnectFactory = ConnectFactoryEnum.Default;
+        
         internal const string HostName = "localhost";
         internal const int Port = 7654;
         internal const int PortSsl = 7655;

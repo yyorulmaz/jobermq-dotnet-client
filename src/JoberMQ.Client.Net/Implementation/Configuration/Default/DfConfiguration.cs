@@ -2,6 +2,7 @@
 using JoberMQ.Client.Net.Constants;
 using JoberMQ.Client.Net.Enums.Account;
 using JoberMQ.Client.Net.Enums.Client;
+using JoberMQ.Client.Net.Enums.Connect;
 using JoberMQ.Client.Net.Enums.Endpoint;
 using JoberMQ.Client.Net.Enums.Protocol;
 using System;
@@ -14,6 +15,8 @@ namespace JoberMQ.Client.Net.Implementation.Configuration.Default
     {
         ClientFactoryEnum clientFactory = ClientConst.ClientFactory;
         public ClientFactoryEnum ClientFactory => clientFactory;
+        ClientInfoFactoryEnum clientInfoFactory = ClientConst.ClientInfoFactory;
+        public ClientInfoFactoryEnum ClientInfoFactory => clientInfoFactory;
         ConnectProtocolEnum connectProtocol = ClientConst.ConnectProtocol;
         public ConnectProtocolEnum ConnectProtocol => connectProtocol;
 
@@ -37,6 +40,12 @@ namespace JoberMQ.Client.Net.Implementation.Configuration.Default
         public EndpoindFactoryEnum EndpoindFactory => endpoindFactor;
         AccountFactoryEnum accountFactory = ClientConst.AccountFactory;
         public AccountFactoryEnum AccountFactory => accountFactory;
+        AccountInfoFactoryEnum accountInfoFactory = ClientConst.AccountInfoFactory;
+        public AccountInfoFactoryEnum AccountInfoFactory => accountInfoFactory;
+
+        ConnectFactoryEnum connectFactory = ClientConst.ConnectFactory;
+        public ConnectFactoryEnum ConnectFactory => connectFactory;
+
         string hostName = ClientConst.HostName;
         string IConfiguration.HostName { get => hostName; set => hostName = value; }
 

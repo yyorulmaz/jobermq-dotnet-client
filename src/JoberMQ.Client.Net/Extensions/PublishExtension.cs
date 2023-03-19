@@ -4,6 +4,8 @@ using JoberMQ.Client.Net.Enums.Declare;
 using JoberMQ.Client.Net.Enums.Operation;
 using JoberMQ.Client.Net.Models.Builder;
 using JoberMQ.Client.Net.Models.DeclareConsume;
+using JoberMQ.Client.Net.Models.DeclareDistributor;
+using JoberMQ.Client.Net.Models.DeclareQueue;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -26,18 +28,19 @@ namespace JoberMQ.Client.Net.Extensions
         {
             bool result = false;
 
-            builder.ClientInfo = client.ClientInfo;
+            builder.ClientInfo.ClientKey = client.ClientInfo.ClientKey;
+            builder.ClientInfo.ClientGroupKey = client.ClientInfo.ClientGroupKey;
             
             var serialize = "";
             if (builder.Operation.OperationType ==  OperationTypeEnum.Job)
             {
                 serialize = JsonConvert.SerializeObject(Job(builder));
-                result = await client.HubConnection.InvokeAsync<bool>("Job", serialize);
+                result = await client.Connect.HubConnection.InvokeAsync<bool>("Job", serialize);
             }
             else if (builder.Operation.OperationType == OperationTypeEnum.Message)
             {
                 serialize = JsonConvert.SerializeObject(Message(builder));
-                result = await client.HubConnection.InvokeAsync<bool>("Message", serialize);
+                result = await client.Connect.HubConnection.InvokeAsync<bool>("Message", serialize);
             }
             else if (builder.Operation.OperationType == OperationTypeEnum.Rpc)
             {
@@ -97,12 +100,12 @@ namespace JoberMQ.Client.Net.Extensions
 
 
 
-        public static async Task<bool> Publish(this IClient client, DeclareConsumeBuilderModel declareConsumeBuilder)
+        public static async Task<bool> Publish(this IClient client, DeclareConsumeTransportModel DeclareConsumeTransport)
         {
             var declareConsume = new DeclareConsumeModel();
             bool isOperation = false;
 
-            switch (declareConsumeBuilder.DeclareConsumeOperationType)
+            switch (DeclareConsumeTransport.DeclareConsumeOperationType)
             {
                 case DeclareConsumeOperationTypeEnum.SpecialAdd:
                     var specialAdd = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Special);
@@ -141,39 +144,39 @@ namespace JoberMQ.Client.Net.Extensions
                     }
                     break;
                 case DeclareConsumeOperationTypeEnum.QueueAdd:
-                    var queueAdd = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                    var queueAdd = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                     if (queueAdd == null || queueAdd.Count() == 0)
                     {
                         declareConsume.DeclareConsumeType = DeclareConsumeTypeEnum.Queue;
-                        declareConsume.DeclareKey = declareConsumeBuilder.DeclareKey;
+                        declareConsume.DeclareKey = DeclareConsumeTransport.DeclareKey;
                         client.DeclareConsuming.TryAdd(Guid.NewGuid(), declareConsume);
                         isOperation = true;
                     }
                     break;
                 case DeclareConsumeOperationTypeEnum.QueueRemove:
-                    var queueRemove = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                    var queueRemove = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                     if (queueRemove != null || queueRemove.Count() == 0)
                     {
-                        var queueValue = client.DeclareConsuming.FirstOrDefault(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                        var queueValue = client.DeclareConsuming.FirstOrDefault(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Queue && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                         client.DeclareConsuming.TryRemove(queueValue.Key, out var xxx);
                         isOperation = true;
                     }
                     break;
                 case DeclareConsumeOperationTypeEnum.EventSubscript:
-                    var eventSubscript = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                    var eventSubscript = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                     if (eventSubscript == null || eventSubscript.Count() == 0)
                     {
                         declareConsume.DeclareConsumeType = DeclareConsumeTypeEnum.Event;
-                        declareConsume.DeclareKey = declareConsumeBuilder.DeclareKey;
+                        declareConsume.DeclareKey = DeclareConsumeTransport.DeclareKey;
                         client.DeclareConsuming.TryAdd(Guid.NewGuid(), declareConsume);
                         isOperation = true;
                     }
                     break;
                 case DeclareConsumeOperationTypeEnum.EventUnSubscript:
-                    var eventUnSubscript = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                    var eventUnSubscript = client.DeclareConsuming.Where(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                     if (eventUnSubscript != null || eventUnSubscript.Count() == 0)
                     {
-                        var eventValue = client.DeclareConsuming.FirstOrDefault(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == declareConsumeBuilder.DeclareKey);
+                        var eventValue = client.DeclareConsuming.FirstOrDefault(x => x.Value.DeclareConsumeType == DeclareConsumeTypeEnum.Event && x.Value.DeclareKey == DeclareConsumeTransport.DeclareKey);
                         client.DeclareConsuming.TryRemove(eventValue.Key, out var xxx);
                         isOperation = true;
                     }
@@ -183,12 +186,22 @@ namespace JoberMQ.Client.Net.Extensions
             if (isOperation == true)
             {
                 var serialize = JsonConvert.SerializeObject(client.DeclareConsuming);
-                return await client.HubConnection.InvokeAsync<bool>("DeclareConsume", serialize);
+                return await client.Connect.HubConnection.InvokeAsync<bool>("DeclareConsume", serialize);
             }
             else
             {
                 return true;
             }
+        }
+        public static async Task<bool> Publish(this IClient client, DeclareDistributorModel declareDistributor)
+        {
+            var serialize = JsonConvert.SerializeObject(declareDistributor);
+            return await client.Connect.HubConnection.InvokeAsync<bool>("DeclareDistributor", serialize);
+        }
+        public static async Task<bool> Publish(this IClient client, DeclareQueueModel declareQueue)
+        {
+            var serialize = JsonConvert.SerializeObject(declareQueue);
+            return await client.Connect.HubConnection.InvokeAsync<bool>("DeclareQueue", serialize);
         }
     }
 }

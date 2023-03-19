@@ -21,7 +21,8 @@ namespace JoberMQ.Client.Net.Extensions.Message
             var messageBuilder = new MessageBuilderExtensionModel();
             messageBuilder.Builder.Operation = new OperationModel { OperationType = OperationTypeEnum.Message };
             messageBuilder.Builder.Info = info;
-            messageBuilder.Builder.ClientInfo = client.ClientInfo;
+            messageBuilder.Builder.ClientInfo.ClientKey = client.ClientInfo.ClientKey;
+            messageBuilder.Builder.ClientInfo.ClientGroupKey = client.ClientInfo.ClientGroupKey;
             messageBuilder.Builder.Publisher = new PublisherModel { PublisherType = PublisherTypeEnum.Standart };
             messageBuilder.Builder.Timing = new TimingModel { TimingType = TimingTypeEnum.Now };
             messageBuilder.Builder.IsResult = false;

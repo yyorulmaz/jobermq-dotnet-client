@@ -1,6 +1,6 @@
 ﻿namespace JoberMQ.Client.Net.Models.DeclareConsume
 {
-    public class DeclareConsumeBuilderModel
+    public class DeclareConsumeEventModel
     {
         public DeclareConsumeTransportModel DeclareConsumeTransport { get; internal set; }
     }
