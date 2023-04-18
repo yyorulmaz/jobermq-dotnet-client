@@ -1,64 +1,45 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Configuration;
+using JoberMQ.Client.Net.Abstraction.Endpoint;
 using JoberMQ.Client.Net.Constants;
-using JoberMQ.Client.Net.Enums.Account;
-using JoberMQ.Client.Net.Enums.Client;
-using JoberMQ.Client.Net.Enums.Connect;
-using JoberMQ.Client.Net.Enums.Endpoint;
-using JoberMQ.Client.Net.Enums.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using JoberMQ.Client.Net.Factories.Endpoint;
+using JoberMQ.Library.Enums.Client;
+using JoberMQ.Library.Enums.Connect;
+using JoberMQ.Library.Enums.Endpoint;
 
 namespace JoberMQ.Client.Net.Implementation.Configuration.Default
 {
-    internal class DfConfiguration : IConfiguration
+    public class DfConfiguration : IConfiguration
     {
         ClientFactoryEnum clientFactory = ClientConst.ClientFactory;
-        public ClientFactoryEnum ClientFactory => clientFactory;
-        ClientInfoFactoryEnum clientInfoFactory = ClientConst.ClientInfoFactory;
-        public ClientInfoFactoryEnum ClientInfoFactory => clientInfoFactory;
+        public ClientFactoryEnum ClientFactory { get => clientFactory; set => clientFactory = value; }
         ConnectProtocolEnum connectProtocol = ClientConst.ConnectProtocol;
-        public ConnectProtocolEnum ConnectProtocol => connectProtocol;
+        public ConnectProtocolEnum ConnectProtocol { get => connectProtocol; set => connectProtocol = value; }
+        ClientTypeEnum IConfiguration.ClientType => ClientConst.ClientType;
+        bool IConfiguration.IsOfflineClient => ClientConst.IsOfflineClient;
 
 
+        int IConfiguration.ConnectionRetryTimeoutMin => ClientConst.ConnectionRetryTimeoutMin;
         int connectionRetryTimeout = ClientConst.ConnectionRetryTimeout;
-        int IConfiguration.ConnectionRetryTimeout { get => connectionRetryTimeout; set => connectionRetryTimeout = value; }
+        public int ConnectionRetryTimeout { get => connectionRetryTimeout; set => connectionRetryTimeout = value; }
+        bool IConfiguration.AutoReconnect => ClientConst.AutoReconnect;
 
 
-        bool isOfflineMode = ClientConst.IsOfflineMode;
-        public bool IsOfflineMode { get => isOfflineMode; set => isOfflineMode = value; }
+        IEndpoint endpointLogin = ClientConst.EndpointLogin;
+        IEndpoint IConfiguration.EndpointLogin { get => endpointLogin; set => endpointLogin = value; }
+        IEndpoint endpointHub = ClientConst.EndpointHub;
+        IEndpoint IConfiguration.EndpointHub { get => endpointHub; set => endpointHub = value; }
 
 
+        bool textMessageReceiveAutoCompleted = ClientConst.TextMessageReceiveAutoCompleted;
+        public bool TextMessageReceiveAutoCompleted { get => textMessageReceiveAutoCompleted; set => textMessageReceiveAutoCompleted = value; }
 
-        string userName = ClientConst.UserName;
-        public string UserName { get => userName; set => userName = value; }
-        string password = ClientConst.Password;
-        public string Password { get => password; set => password = value; }
-
-
-        EndpoindFactoryEnum endpoindFactor = ClientConst.EndpoindFactory;
-        public EndpoindFactoryEnum EndpoindFactory => endpoindFactor;
-        AccountFactoryEnum accountFactory = ClientConst.AccountFactory;
-        public AccountFactoryEnum AccountFactory => accountFactory;
-        AccountInfoFactoryEnum accountInfoFactory = ClientConst.AccountInfoFactory;
-        public AccountInfoFactoryEnum AccountInfoFactory => accountInfoFactory;
-
-        ConnectFactoryEnum connectFactory = ClientConst.ConnectFactory;
-        public ConnectFactoryEnum ConnectFactory => connectFactory;
-
-        string hostName = ClientConst.HostName;
-        string IConfiguration.HostName { get => hostName; set => hostName = value; }
-
-        int port = ClientConst.Port;
-        int IConfiguration.Port { get => port; set => port = value; }
-
-        int portSsl = ClientConst.PortSsl;
-        int IConfiguration.PortSsl { get => portSsl; set => portSsl = value; }
-
-        bool isSsl = ClientConst.IsSsl;
-        bool IConfiguration.IsSsl { get => isSsl; set => isSsl = value; }
-
-
-
+        public void SetEndpointLogin(bool IsSsl, string HostName, int Port, int PortSsl, string Action)
+        {
+            endpointLogin = EndpointFactory.Create(EndpointFactoryEnum.Default, IsSsl, HostName, Port, PortSsl, Action);
+        }
+        public void SetEndpointHub(bool IsSsl, string HostName, int Port, int PortSsl, string Action)
+        {
+            endpointHub = EndpointFactory.Create(EndpointFactoryEnum.Default, IsSsl, HostName, Port, PortSsl, Action);
+        }
     }
 }

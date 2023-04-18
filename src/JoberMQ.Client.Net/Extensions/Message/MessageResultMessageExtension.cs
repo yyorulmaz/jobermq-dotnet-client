@@ -1,17 +1,16 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.Job;
-using JoberMQ.Client.Net.Models.Message;
-using JoberMQ.Client.Net.Models.MessageBuilder;
+using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Message;
 
 namespace JoberMQ.Client.Net.Extensions.Message
 {
     public static class MessageResultMessageExtension
     {
         public static MessageBuilderResultMessageExtensionModel ResultMessage(this MessageBuilderMessageExtensionModel messageBuilderMessageExtension, IMessage resultMessage)
-           => Add(messageBuilderMessageExtension.Builder, resultMessage);
+           => Add(messageBuilderMessageExtension.Message, resultMessage);
 
-        private static MessageBuilderResultMessageExtensionModel Add(MessageBuilderModel builder, IMessage resultMessage = null)
+        private static MessageBuilderResultMessageExtensionModel Add(MessageDbo builder, IMessage resultMessage = null)
         {
             builder.IsResult = true;
 
@@ -26,7 +25,7 @@ namespace JoberMQ.Client.Net.Extensions.Message
             };
             builder.ResultMessage = message;
 
-            return new MessageBuilderResultMessageExtensionModel { Builder = builder };
+            return new MessageBuilderResultMessageExtensionModel { Message = builder };
         }
     }
 }

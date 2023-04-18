@@ -1,20 +1,24 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
+using JoberMQ.Library.Enums.Client;
 
 namespace JoberMQ.Client.Net.Implementation.Client.Default
 {
     public class DfClientInfo : IClientInfo
     {
-        public DfClientInfo(bool isOfflineClient)
+        public DfClientInfo(ClientTypeEnum clientType, string clientKey, string clientGroupKey, bool isOfflineClient)
         {
-            this.isOfflineClient = isOfflineClient;
+            this.ClientType = clientType;
+            this.ClientKey = clientKey;
+            this.ClientGroupKey = clientGroupKey;
+            this.IsOfflineClient = isOfflineClient;
         }
-        string clientKey;
-        public string ClientKey { get => clientKey; set => clientKey = value; }
-        string clientGroupKey;
-        public string ClientGroupKey { get => clientGroupKey; set => clientGroupKey = value; }
+
+        public ClientTypeEnum ClientType { get; }
+        public string ClientKey { get; }
+        public string ClientGroupKey { get; }
+        public bool IsOfflineClient { get; }
+
         public bool isClientActive = false;
         public bool IsClientActive => isClientActive;
-        public bool isOfflineClient;
-        public bool IsOfflineClient => isOfflineClient;
     }
 }

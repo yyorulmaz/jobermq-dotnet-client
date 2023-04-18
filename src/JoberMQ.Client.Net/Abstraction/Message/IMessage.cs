@@ -1,7 +1,10 @@
-﻿using JoberMQ.Client.Net.Enums.Message;
-using JoberMQ.Client.Net.Enums.Priority;
-using JoberMQ.Client.Net.Models.Info;
-using JoberMQ.Client.Net.Models.Routing;
+﻿using JoberMQ.Library.Enums.Message;
+using JoberMQ.Library.Enums.Priority;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Routing;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JoberMQ.Client.Net.Abstraction.Message
 {
@@ -13,5 +16,6 @@ namespace JoberMQ.Client.Net.Abstraction.Message
         InfoModel Info { get; }
         string GeneralData { get; }
         PriorityTypeEnum PriorityType { get; }
+        ConsumingModel MessageConsuming { get; set; }
     }
 }

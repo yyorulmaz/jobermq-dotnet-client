@@ -1,49 +1,52 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.Job;
-using JoberMQ.Client.Net.Models.Multiple;
+using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Job;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobMessageExtension
     {
-        public static JobBuilderMessageExtensionModel Message(this JobBuilderExtensionModel jobBuilderExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderExtension.Builder, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderModel jobBuilderExtension, IMessage message, IMessage resultMessage = null)
+            => Add(jobBuilderExtension.Job, message, resultMessage);
         public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderPublisherExtension.Builder, message, resultMessage);
+            => Add(jobBuilderPublisherExtension.Job, message, resultMessage);
         public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderTimingExtension.Builder, message, resultMessage);
+            => Add(jobBuilderTimingExtension.Job, message, resultMessage);
         public static JobBuilderMessageExtensionModel Message(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderMessageExtension.Builder, message, resultMessage);
+            => Add(jobBuilderMessageExtension.Job, message, resultMessage);
 
-        private static JobBuilderMessageExtensionModel Add(JobBuilderModel builder, IMessage message, IMessage resultMessage = null)
+        private static JobBuilderMessageExtensionModel Add(JobDbo builder, IMessage message, IMessage resultMessage = null)
         {
-            var multipleMessage = new MultipleMessageModel();
-            multipleMessage.Message = new Models.Message.MessageModel
+            var jobDetail = new JobDetailDbo();
+            jobDetail.JobId = builder.Id;
+            jobDetail.Message = new MessageModel
             {
                 MessageType = message.MessageType,
                 Message = message.Message,
                 Routing = message.Routing,
                 Info = message.Info,
                 GeneralData = message.GeneralData,
-                PriorityType = message.PriorityType
+                PriorityType = message.PriorityType,
+                MessageConsuming = message.MessageConsuming
             };
 
             if (resultMessage != null)
             {
-                multipleMessage.ResultMessage = new Models.Message.MessageModel
+                jobDetail.ResultMessage = new MessageModel
                 {
                     MessageType = resultMessage.MessageType,
                     Message = resultMessage.Message,
                     Routing = resultMessage.Routing,
                     Info = resultMessage.Info,
                     GeneralData = resultMessage.GeneralData,
-                    PriorityType = resultMessage.PriorityType
+                    PriorityType = resultMessage.PriorityType,
+                    MessageConsuming = resultMessage.MessageConsuming
                 };
             }
 
-            builder.MultipleMessages.Add(multipleMessage);
-            return new JobBuilderMessageExtensionModel { Builder = builder };
+            builder.JobDetails.Add(jobDetail);
+            return new JobBuilderMessageExtensionModel { Job = builder };
         }
     }
 
@@ -167,6 +170,4 @@ namespace JoberMQ.Client.Net.Extensions.Job
     //    }
     //}
     #endregion
-
-
 }

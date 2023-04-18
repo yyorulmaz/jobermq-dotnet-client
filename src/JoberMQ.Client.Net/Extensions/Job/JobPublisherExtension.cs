@@ -1,20 +1,23 @@
-﻿using JoberMQ.Client.Net.Enums.Publisher;
-using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.Job;
-using JoberMQ.Client.Net.Models.Publisher;
+﻿using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Enums.Publisher;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Job;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobPublisherExtension
     {
-        public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderExtensionModel jobBuilderExtension, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
-            => Add(jobBuilderExtension.Builder, publisherType);
+        public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderModel jobBuilder, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
+            => Add(jobBuilder.Job, publisherType);
 
-        private static JobBuilderPublisherExtensionModel Add(JobBuilderModel builder, PublisherTypeEnum publisherType)
+        private static JobBuilderPublisherExtensionModel Add(JobDbo builder, PublisherTypeEnum publisherType)
         {
             var jJobBuilderPublisherExtension = new JobBuilderPublisherExtensionModel();
-            jJobBuilderPublisherExtension.Builder = builder;
-            jJobBuilderPublisherExtension.Builder.Publisher = new PublisherModel { PublisherType = publisherType };
+            jJobBuilderPublisherExtension.Job = builder;
+            jJobBuilderPublisherExtension.Job.Publisher.PublisherType = publisherType;
             return jJobBuilderPublisherExtension;
         }
     }

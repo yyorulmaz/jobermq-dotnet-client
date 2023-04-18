@@ -1,7 +1,8 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Enums.Client;
 using JoberMQ.Client.Net.Implementation.Client.Default;
+using JoberMQ.Library.Enums.Client;
+using JoberMQ.Library.Enums.Connect;
 
 namespace JoberMQ.Client.Net.Factories.Client
 {
@@ -19,7 +20,7 @@ namespace JoberMQ.Client.Net.Factories.Client
                 case ClientFactoryEnum.Default:
                     switch (configuration.ConnectProtocol)
                     {
-                        case Enums.Protocol.ConnectProtocolEnum.Socket:
+                        case ConnectProtocolEnum.Socket:
                             client = new DfClientSocket(clientKey, clientGroupKey, configuration);
                             break;
                         default:
@@ -30,7 +31,7 @@ namespace JoberMQ.Client.Net.Factories.Client
                 default:
                     switch (configuration.ConnectProtocol)
                     {
-                        case Enums.Protocol.ConnectProtocolEnum.Socket:
+                        case ConnectProtocolEnum.Socket:
                             client = new DfClientSocket(clientKey, clientGroupKey, configuration);
                             break;
                         default:
@@ -41,22 +42,6 @@ namespace JoberMQ.Client.Net.Factories.Client
             }
 
             return client;
-        }
-        public static IClientInfo CreateClientInfo(IConfiguration configuration)
-        {
-            IClientInfo clientInfo;
-
-            switch (configuration.ClientInfoFactory)
-            {
-                case ClientInfoFactoryEnum.Default:
-                    clientInfo = new DfClientInfo(configuration.IsOfflineMode);
-                    break;
-                default:
-                    clientInfo = new DfClientInfo(configuration.IsOfflineMode);
-                    break;
-            }
-
-            return clientInfo;
         }
     }
 }

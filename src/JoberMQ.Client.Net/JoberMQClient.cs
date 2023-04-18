@@ -1,14 +1,15 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Enums.Configuration;
 using JoberMQ.Client.Net.Factories.Client;
+using JoberMQ.Client.Net.Factories.Configuration;
+using JoberMQ.Library.Enums.Configuration;
 
 namespace JoberMQ.Client.Net
 {
     public class JoberMQClient
     {
         public static IConfiguration GetConfiguration()
-            => Factories.Configuration.ConfigurationFactory.Create(ConfigurationFactoryEnum.Default);
+            => ConfigurationFactory.Create(ConfigurationFactoryEnum.Default);
 
         public static IClient CreateClient(string clientKey, string clientGroupKey)
             => DefaultCreateClient(clientKey, clientGroupKey, null);

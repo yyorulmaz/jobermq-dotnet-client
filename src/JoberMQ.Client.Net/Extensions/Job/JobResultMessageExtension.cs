@@ -1,18 +1,19 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.Job;
-using JoberMQ.Client.Net.Models.Message;
+using JoberMQ.Client.Net.Constants;
+using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Job;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobResultMessageExtension
     {
-        public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage resultMessage)
-           => Add(jobBuilderMessageExtension.Builder, resultMessage);
+        public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
+           => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
 
-        private static JobBuilderResultMessageExtensionModel Add(JobBuilderModel builder, IMessage resultMessage = null)
+        private static JobBuilderResultMessageExtensionModel Add(JobDbo builder, IMessage resultMessage, bool isConsumingRetryPause, int consumingRetryMaxCount)
         {
-            builder.IsResult = true;
+            builder.IsJobResultMessage = true;
 
             var message = new MessageModel()
             {
@@ -21,11 +22,18 @@ namespace JoberMQ.Client.Net.Extensions.Job
                 Routing = resultMessage.Routing,
                 Info = resultMessage.Info,
                 GeneralData = resultMessage.GeneralData,
-                PriorityType = resultMessage.PriorityType
+                PriorityType = resultMessage.PriorityType,
+                MessageConsuming = resultMessage.MessageConsuming
             };
-            builder.ResultMessage = message;
+            builder.JobResultMessage = message;
 
-            return new JobBuilderResultMessageExtensionModel { Builder = builder };
+            builder.JobResultMessageConsuming = new ConsumingModel
+            {
+                IsConsumingRetryPause = isConsumingRetryPause,
+                ConsumingRetryMaxCount = consumingRetryMaxCount
+            };
+
+            return new JobBuilderResultMessageExtensionModel { Job = builder };
         }
     }
 }

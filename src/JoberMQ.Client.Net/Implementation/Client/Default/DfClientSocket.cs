@@ -1,96 +1,277 @@
-﻿using JoberMQ.Client.Net.Abstraction.Account;
-using JoberMQ.Client.Net.Abstraction.Client;
+﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Abstraction.Connect;
+using JoberMQ.Client.Net.Constants;
 using JoberMQ.Client.Net.Factories.Account;
 using JoberMQ.Client.Net.Factories.Client;
 using JoberMQ.Client.Net.Factories.Connect;
-using JoberMQ.Client.Net.Factories.Endpoint;
-using JoberMQ.Client.Net.Models.DeclareConsume;
-using JoberMQ.Client.Net.Models.DeclareDistributor;
-using JoberMQ.Client.Net.Models.DeclareQueue;
+using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Enums.Message;
+using JoberMQ.Library.Enums.Operation;
+using JoberMQ.Library.Enums.Publisher;
+using JoberMQ.Library.Enums.Status;
+using JoberMQ.Library.Enums.Timing;
 using JoberMQ.Library.Method.Abstraction;
+using JoberMQ.Library.Method.Enums;
 using JoberMQ.Library.Method.Factories;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Client;
+using JoberMQ.Library.Models.Consume;
+using JoberMQ.Library.Models.Distributor;
+using JoberMQ.Library.Models.Job;
+using JoberMQ.Library.Models.Message;
+using JoberMQ.Library.Models.Queue;
+using JoberMQ.Library.Models.Response;
+using JoberMQ.Library.Models.Rpc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace JoberMQ.Client.Net.Implementation.Client.Default
 {
     public class DfClientSocket : IClient
     {
-        public DfClientSocket(
-            string clientKey,
-            string clientGroupKey,
-            IConfiguration configuration)
+        public DfClientSocket(string clientKey, string clientGroupKey, IConfiguration configuration)
         {
-            clientInfo = ClientFactory.CreateClientInfo(configuration);
-            clientInfo.ClientKey = clientKey;
-            clientInfo.ClientGroupKey = clientGroupKey;
+            this.configuration = configuration;
+            consuming=new ConcurrentDictionary<Guid, ConsumeModel>();
 
-            var endpointDetail = EndpoindFactory.Create(configuration);
-            accountInfo = AccountFactory.CreateAccountInfo(configuration, endpointDetail);
+            var account = AccountFactory.Create(ClientConst.AccountFactory, true, true, ClientConst.UserName, ClientConst.Password, configuration.EndpointLogin, configuration.EndpointHub);
+            clientInfo = ClientInfoFactory.Create(ClientConst.ClientInfoFactory, ClientConst.ClientType, clientKey, clientGroupKey, ClientConst.IsOfflineClient);
+            connect = ConnectFactory.Create(ClientConst.ConnectFactory, ClientConst.ConnectionRetryTimeout, ClientConst.AutoReconnect, account, clientInfo);
+            method = MethodFactory.Create(MethodFactoryEnum.Default);
 
-            connect = ConnectFactory.Create(configuration, clientInfo, accountInfo, ref ReceiveData, ref ReceiveDataError, ref ReceiveServerActive, configuration.ConnectionRetryTimeout);
-
-            method = MethodFactory.Create(Library.Method.Enums.MethodFactoryEnum.Default);
-            declareConsuming = new ConcurrentDictionary<Guid, DeclareConsumeModel>();
+            connect.ReceiveData += Connect_ReceiveData;
+            connect.ReceiveRpc +=Connect_ReceiveRpc;
         }
 
-        IClientInfo clientInfo;
-        public IClientInfo ClientInfo => clientInfo;
+     
 
-        IAccountInfo accountInfo;
-        public IAccountInfo AccountInfo => accountInfo;
+        IConfiguration configuration;
+
+        IClientInfo clientInfo;
+        IClientInfo IClient.ClientInfo => clientInfo;
 
         IConnect connect;
-        public IConnect Connect => connect;
+        IConnect IClient.Connect => connect;
+
+        public DistributorBuilderModel DistributorBuilder()
+          => new DistributorBuilderModel { DistributorTransport = new DistributorTransportModel() };
+        public ConsumeBuilderModel ConsumeBuilder()
+            => new ConsumeBuilderModel { ConsumeTransport = new ConsumeTransportModel() };
+        public QueueBuilderModel QueueBuilder()
+            => new QueueBuilderModel { QueueTransport = new QueueTransportModel() };
+
+
+
+        public JobBuilderModel JobBuilder(string name = null, string description = null)
+           => JobBuilderDefault(name, description);
+        private JobBuilderModel JobBuilderDefault(string name, string description)
+            => new JobBuilderModel
+            {
+                Job = new JobDbo
+                {
+                    Id = Guid.NewGuid(),
+                    Operation = new OperationModel
+                    {
+                        Version = 0,
+                        OperationType = OperationTypeEnum.Job
+                    },
+                    Producer = new ProducerModel
+                    {
+                        ClientKey = clientInfo.ClientKey,
+                        ClientGroupKey = clientInfo.ClientGroupKey
+                    },
+                    Info = new InfoModel
+                    {
+                        Name = name,
+                        Description = description
+                    },
+                    Publisher = new PublisherModel
+                    {
+                        PublisherType = PublisherTypeEnum.Standart
+                    },
+                    Timing = new TimingModel
+                    {
+                        TimingType = TimingTypeEnum.Now
+                    },
+                    JobDetails = new List<JobDetailDbo>(),
+                    IsJobResultMessage = false,
+                    JobResultMessage = null,
+                    JobResultMessageConsuming = null,
+                    Status = new StatusModel
+                    {
+                        IsCompleted = false,
+                        IsError = false,
+                        StatusTypeMessage = StatusTypeMessageEnum.None,
+                        TempAgainDate = null
+                    }
+                }
+            };
+
+        public MessageBuilderModel MessageBuilder()
+            => MessageBuilderDefaulT();
+        private MessageBuilderModel MessageBuilderDefaulT()
+            => new MessageBuilderModel
+            {
+                Message = new MessageDbo
+                {
+                    Id = Guid.NewGuid(),
+                    Operation = new OperationModel
+                    {
+                        Version = 0,
+                        OperationType = OperationTypeEnum.Message
+                    },
+                    Producer = new ProducerModel
+                    {
+                        ClientKey = clientInfo.ClientKey,
+                        ClientGroupKey = clientInfo.ClientGroupKey
+                    },
+                    Message = null,
+                    IsResult = false,
+                    ResultMessage = null,
+                    TriggerGroupsId = null,
+                    CreatedJobId = null,
+                    CreatedJobDetailId = null,
+                    CreatedJobTransactionId = null,
+                    CreatedJobTransactionDetailId = null,
+                    EventGroupsId = null,
+                    Status = new StatusModel
+                    {
+                        IsCompleted = false,
+                        IsError = false,
+                        StatusTypeMessage = StatusTypeMessageEnum.None,
+                        TempAgainDate = null
+                    },
+                }
+            };
+        public RpcBuilderModel RpcBuilder()
+           => RpcBuilderDefault();
+        private RpcBuilderModel RpcBuilderDefault()
+            => new RpcBuilderModel
+            {
+               RpcMessage = new RpcRequestModel
+               {
+                   Id = Guid.NewGuid(),
+                   ProducerId = clientInfo.ClientKey,
+               }
+            };
+
+
+        public event Action<string> ReceiveMessageText;
+        //private async void Connect_ReceiveData(string obj)
+        private void Connect_ReceiveData(string obj)
+        {
+            if (String.IsNullOrEmpty(obj))
+                return;
+
+            var messageDbo = JsonConvert.DeserializeObject<MessageDbo>(obj);
+
+            // Message Started
+            var messageStarted = new MessageStartedModel();
+            messageStarted.MessageId = messageDbo.Id;
+            messageStarted.IsError = false;
+            _ = connect.InvokeAsync<ResponseModel>("MessageStarted", JsonConvert.SerializeObject(messageStarted));
+
+            var messageCompleted = new MessageCompletedModel();
+            messageCompleted.MessageId = messageDbo.Id;
+
+
+            if (messageDbo.Message.MessageType == MessageTypeEnum.Text)
+            {
+                ReceiveMessageText?.Invoke(messageDbo.Message.Message);
+                if (configuration.TextMessageReceiveAutoCompleted)
+                {
+                    messageCompleted.IsError = false;
+                    messageCompleted.Message = "";
+                    _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
+                }
+            }
+            else if (messageDbo.Message.MessageType == MessageTypeEnum.Funtion)
+            {
+                var returnData = method.MethodRun(messageDbo.Message.Message).Result;
+
+                if (returnData.StatusCode == "0")
+                {
+                    messageCompleted.IsError = false;
+                    messageCompleted.Message = "";
+                }
+                else
+                {
+                    messageCompleted.IsError = true;
+                    messageCompleted.Message = returnData.Message;
+                }
+                messageCompleted.Type = returnData.TypeFullName;
+                messageCompleted.ReturnData = returnData.Data;
+                //messageCompleted.RoutingType = consumerMessage.RoutingType;
+
+                _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
+
+            }
+
+
+        }
+
+        static int counter = 0;
+        private void Connect_ReceiveRpc(string obj)
+        {
+            if (String.IsNullOrEmpty(obj))
+                return;
+
+            var message = JsonConvert.DeserializeObject<RpcResponseModel>(obj);
+
+
+
+            //işlemler
+            //
+            message.Result = "hayde - " + counter.ToString();
+            counter++;
+
+
+            _ = connect.InvokeAsync<ResponseModel>("RpcResponse", JsonConvert.SerializeObject(message));
+        }
+
+        ConcurrentDictionary<Guid, ConsumeModel> consuming;
+        public ConcurrentDictionary<Guid, ConsumeModel> Consuming { get => consuming; set => consuming = value; }
 
         IMethod method;
         public IMethod Method => method;
 
-        public DeclareConsumeBuilderModel DeclareConsumeBuilder()
-            => new DeclareConsumeBuilderModel { DeclareConsumeTransport = new DeclareConsumeTransportModel() };
 
-        public DeclareDistributorBuilderModel DeclareDistributor()
-            => new DeclareDistributorBuilderModel { DeclareDistributorTransport = new DeclareDistributorTransportModel() };
-
-        public DeclareQueueBuilderModel DeclareQueue()
-            => new DeclareQueueBuilderModel { DeclareQueueTransport = new DeclareQueueTransportModel() };
-
-
-
-
-
-        public event Action<string> ReceiveData;
-        public event Action<string> ReceiveDataError;
-        public event Action<bool> ReceiveServerActive;
-
-        
+        #region Dispose
         private bool disposedValue;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    //isConnect = false;
+                    // TODO: dispose managed state (managed objects)
+                    connect.Dispose();
                 }
 
-                // free unmanaged resources (unmanaged objects) and override finalizer
-                // set large fields to null
-                disposedValue = true;
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue=true;
             }
         }
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~DfClientSocket()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            System.GC.SuppressFinalize(this);
         }
-
-
-
-        ConcurrentDictionary<Guid, DeclareConsumeModel> declareConsuming;
-        public ConcurrentDictionary<Guid, DeclareConsumeModel> DeclareConsuming { get => declareConsuming; set => declareConsuming = value; }
+        #endregion
     }
 }

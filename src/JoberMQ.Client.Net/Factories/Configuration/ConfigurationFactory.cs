@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Enums.Configuration;
 using JoberMQ.Client.Net.Implementation.Configuration.Default;
+using JoberMQ.Library.Enums.Configuration;
 
 namespace JoberMQ.Client.Net.Factories.Configuration
 {
@@ -19,7 +19,7 @@ namespace JoberMQ.Client.Net.Factories.Configuration
                     configuration = new DfConfiguration();
                     break;
             }
-            
+
             return configuration;
         }
     }

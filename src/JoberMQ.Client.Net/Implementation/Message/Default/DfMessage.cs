@@ -1,17 +1,14 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Client.Net.Enums.Message;
-using JoberMQ.Client.Net.Enums.Priority;
-using JoberMQ.Client.Net.Models.Info;
-using JoberMQ.Client.Net.Models.Routing;
-using JoberMQ.Library.Method.Abstraction;
-using System;
-using System.Linq.Expressions;
+using JoberMQ.Library.Enums.Message;
+using JoberMQ.Library.Enums.Priority;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Routing;
 
 namespace JoberMQ.Client.Net.Implementation.Message.Default
 {
     public class DfMessage : IMessage
     {
-        public DfMessage(MessageTypeEnum messageType, string message, RoutingModel routing, InfoModel info, string generalData, PriorityTypeEnum priorityType)
+        public DfMessage(MessageTypeEnum messageType, string message, RoutingModel routing, InfoModel info, string generalData, PriorityTypeEnum priorityType, bool isConsumingRetryPause, int consumingRetryMaxCount)
         {
             this.messageType = messageType;
             this.message =  message;
@@ -19,6 +16,11 @@ namespace JoberMQ.Client.Net.Implementation.Message.Default
             this.info = info;
             this.generalData = generalData;
             this.priorityType = priorityType;
+            this.MessageConsuming = new ConsumingModel
+            {
+                IsConsumingRetryPause = isConsumingRetryPause,
+                ConsumingRetryMaxCount = consumingRetryMaxCount
+            };
         }
         //public DfMessage(string message, RoutingModel routing, InfoModel info, string generalData, PriorityTypeEnum priorityType)
         //    => Creator(MessageTypeEnum.Text, message, routing, info, generalData, priorityType);
@@ -54,5 +56,8 @@ namespace JoberMQ.Client.Net.Implementation.Message.Default
 
         PriorityTypeEnum priorityType;
         public PriorityTypeEnum PriorityType => priorityType;
+
+        ConsumingModel messageConsuming;
+        public ConsumingModel MessageConsuming { get => messageConsuming; set => messageConsuming = value; }
     }
 }

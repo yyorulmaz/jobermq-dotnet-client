@@ -4,14 +4,22 @@ using System.Threading.Tasks;
 
 namespace JoberMQ.Client.Net.Abstraction.Connect
 {
-    public interface IConnect
+    public interface IConnect : IDisposable
     {
-        int ConnectionRetryTimeout { get; }
-        bool AutomaticReconnect { get; }
-        event Action<bool> ConnectState;
+        int RetryTimeout { get; }
+        bool AutoReconnect { get; }
+
+        Task<R> InvokeAsync<R>(string methodName, object arg);
+
         Task<bool> ConnectAsync();
         bool IsConnect { get; }
-        HubConnection HubConnection { get; }
+        event Action<bool> ConnectState;
+
         bool IsServerActive { get; }
+
+        event Action<string> ReceiveData;
+        event Action<string> ReceiveDataError;
+        event Action<bool> ReceiveServerActive;
+        event Action<string> ReceiveRpc;
     }
 }

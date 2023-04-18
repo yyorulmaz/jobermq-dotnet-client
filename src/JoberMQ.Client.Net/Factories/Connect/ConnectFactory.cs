@@ -1,35 +1,29 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Account;
 using JoberMQ.Client.Net.Abstraction.Client;
-using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Abstraction.Connect;
-using JoberMQ.Client.Net.Enums.Connect;
 using JoberMQ.Client.Net.Implementation.Connect.Default;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using JoberMQ.Library.Enums.Connect;
 
 namespace JoberMQ.Client.Net.Factories.Connect
 {
-    public class ConnectFactory
+    internal class ConnectFactory
     {
         public static IConnect Create(
-            IConfiguration configuration,
-            IClientInfo clientInfo,
-            IAccountInfo accountInfo,
-            ref Action<string> receiveData,
-            ref Action<string> receiveDataError,
-            ref Action<bool> receiveServerActive,
-            int connectionRetryTimeout)
+            ConnectFactoryEnum connectFactory,
+            int retryTimeout,
+            bool autoReconnect,
+            IAccount account,
+            IClientInfo clientInfo)
         {
             IConnect connect;
 
-            switch (configuration.ConnectFactory)
+            switch (connectFactory)
             {
                 case ConnectFactoryEnum.Default:
-                    connect = new DfConnect(clientInfo, accountInfo, ref receiveData, ref receiveDataError, ref receiveServerActive, connectionRetryTimeout);
+                    connect = new DfConnect(retryTimeout, autoReconnect, account, clientInfo);
                     break;
                 default:
-                    connect = new DfConnect(clientInfo, accountInfo, ref receiveData, ref receiveDataError, ref receiveServerActive, connectionRetryTimeout);
+                    connect = new DfConnect(retryTimeout, autoReconnect, account, clientInfo);
                     break;
             }
 

@@ -1,43 +1,53 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.MessageBuilder;
-using JoberMQ.Client.Net.Models.Multiple;
+using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Models;
+using JoberMQ.Library.Models.Message;
 
 namespace JoberMQ.Client.Net.Extensions.Message
 {
     public static class MessageMessageExtension
     {
-        public static MessageBuilderMessageExtensionModel Message(this MessageBuilderExtensionModel messageBuilder, IMessage message, IMessage resultMessage = null)
-            => Add(messageBuilder.Builder, message, resultMessage);
+        public static MessageBuilderMessageExtensionModel Message(this MessageBuilderModel messageBuilder, IMessage message, IMessage resultMessage = null)
+            => Add(messageBuilder.Message, message, resultMessage);
 
-        private static MessageBuilderMessageExtensionModel Add(MessageBuilderModel builder, IMessage message, IMessage resultMessage = null)
+        private static MessageBuilderMessageExtensionModel Add(MessageDbo builder, IMessage message, IMessage resultMessage = null)
         {
-            var multipleMessage = new MultipleMessageModel();
-            multipleMessage.Message = new Models.Message.MessageModel
+            var msg = new MessageModel
             {
                 MessageType = message.MessageType,
                 Message = message.Message,
                 Routing = message.Routing,
                 Info = message.Info,
                 GeneralData = message.GeneralData,
-                PriorityType = message.PriorityType
+                PriorityType = message.PriorityType,
+                MessageConsuming = message.MessageConsuming
             };
+            builder.Message = msg;
+
 
             if (resultMessage != null)
             {
-                multipleMessage.ResultMessage = new Models.Message.MessageModel
+                var resultMsg = new MessageModel
                 {
                     MessageType = resultMessage.MessageType,
                     Message = resultMessage.Message,
                     Routing = resultMessage.Routing,
                     Info = resultMessage.Info,
                     GeneralData = resultMessage.GeneralData,
-                    PriorityType = resultMessage.PriorityType
+                    PriorityType = resultMessage.PriorityType,
+                    MessageConsuming = resultMessage.MessageConsuming
                 };
+
+                builder.IsResult = true;
+                builder.ResultMessage = resultMsg;
+
+            }
+            else
+            {
+                builder.IsResult = false;
             }
 
-            builder.MultipleMessages.Add(multipleMessage);
-            return new MessageBuilderMessageExtensionModel { Builder = builder };
+            return new MessageBuilderMessageExtensionModel { Message = builder };
         }
     }
 

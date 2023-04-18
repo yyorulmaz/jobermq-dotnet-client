@@ -1,11 +1,11 @@
-﻿using JoberMQ.Client.Net.Models.Builder;
-using JoberMQ.Client.Net.Models.Job;
+﻿using JoberMQ.Library.Dbos;
+using JoberMQ.Library.Models.Job;
 
 namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobBuildExtension
     {
-        public static JobBuilderModel Build(this JobBuilderMessageExtensionModel jobBuilderMessageExtension) => jobBuilderMessageExtension.Builder;
-        public static JobBuilderModel Build(this JobBuilderResultMessageExtensionModel jobBuilderResultMessageExtension) => jobBuilderResultMessageExtension.Builder;
+        public static JobDbo Build(this JobBuilderMessageExtensionModel jobBuilderMessageExtension) => jobBuilderMessageExtension.Job;
+        public static JobDbo Build(this JobBuilderResultMessageExtensionModel jobBuilderResultMessageExtension) => jobBuilderResultMessageExtension.Job;
     }
 }

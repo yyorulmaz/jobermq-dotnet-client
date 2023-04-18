@@ -1,16 +1,16 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Endpoint;
+using System;
 
 namespace JoberMQ.Client.Net.Abstraction.Account
 {
-    public interface IAccount
+    internal interface IAccount : IDisposable
     {
-        bool IsMaster { get; set; }
-        bool IsActive { get; set; }
-
-        string EndpointLogin { get; }
-        string EndpointHub { get; }
+        bool IsMaster { get; }
+        bool IsActive { get; }
         string UserName { get; }
         string Password { get; }
-        IEndpointDetail EndpointDetail { get; }
+        string Token { get; set; }
+        IEndpoint EndpointLogin { get; }
+        IEndpoint EndpointHub { get; }
     }
 }
