@@ -10,7 +10,7 @@ using JoberMQ.Client.Net.Extensions.Routing;
 using JoberMQ.Client.Net.Extensions.Rpc;
 
 var config = JoberMQClient.GetConfiguration();
-var client = JoberMQClient.CreateClient("client 3", "client group 1", config);
+var client = JoberMQClient.CreateClient("client 4", "client group 1", config);
 client.Connect.ConnectState += Client_ConnectState;
 var connect = client.Connect.ConnectAsync().Result;
 
@@ -50,16 +50,64 @@ int aaa = 0;
 #endregion
 
 #region Message Rpc
-Task.Run(async () =>
-{
-    for (int i = 0; i < 100000; i++)
-    {
-        var message = client.CreateMessage("client 2", "");
-        var builder = client.RpcBuilder().Message(message).Build();
-        var result = await client.PublishAsync(builder);
-        Console.WriteLine(result.Result);
-    }
-});
+//Task.Run(async () =>
+//{
+//    for (int i = 0; i < 100000; i++)
+//    {
+//        var message = client.CreateMessage("client 2", "");
+//        var builder = client.RpcBuilder().Message(message).Build();
+//        var result = await client.PublishAsync(builder);
+//        Console.WriteLine(result.Result);
+//    }
+//});
+#endregion
+
+#region Message
+//Task.Run(async () =>
+//{
+//    var startDate = DateTime.Now;
+//    Console.WriteLine("startDate : " + startDate);
+
+//    for (int i = 1; i < 1000001; i++)
+//    {
+//        //var message = client
+//        //.MessageBuilder()
+//        //.Message(client.CreateMessage("hey", client.CreateSpecial("client 1")))
+//        //.Build();
+
+//        ////var result = await client.Publish(message);
+//        //var result = client.Publish(message);
+
+
+//        if (client.Connect.IsConnect)
+//        {
+//            //var message = client.CreateMessage(i.ToString(), client.CreateRoutingSpecial("client 2"));
+//            var message = client.CreateMessage(i.ToString(), client.CreateRoutingSpecial("client 2"));
+//            var job = client
+//            .JobBuilder()
+//            .Message(message)
+//            .Build();
+//            var result = await client.PublishAsync(job);
+
+//            //var result = client.PublishAsync(job);
+
+
+
+//        }
+//        else
+//        {
+//            Console.WriteLine("error");
+//        }
+
+
+
+
+//    }
+//    var endDate = DateTime.Now;
+//    Console.WriteLine("endDate : " + endDate);
+//    Console.WriteLine("fark : " + (startDate-endDate));
+
+//});
 #endregion
 
 #region Message
@@ -68,44 +116,34 @@ Task.Run(async () =>
     var startDate = DateTime.Now;
     Console.WriteLine("startDate : " + startDate);
 
-    for (int i = 1; i < 1000001; i++)
+    for (int i = 1; i < 11; i++)
     {
-        //var message = client
-        //.MessageBuilder()
-        //.Message(client.CreateMessage("hey", client.CreateSpecial("client 1")))
-        //.Build();
-
-        ////var result = await client.Publish(message);
-        //var result = client.Publish(message);
-
-
         if (client.Connect.IsConnect)
         {
-            var message = client.CreateMessage(i.ToString(), client.CreateRoutingSpecial("client 2"));
-            var job = client
-            .JobBuilder()
-            .Message(message)
+            var message = client.CreateMessage(i.ToString(), client.CreateRoutingEvent("denemeEvent1"));
+            
+            
+            
+            //var job = client
+            //.JobBuilder()
+            //.Message(message, isDbTextSave:false)
+            //.Build();
+            //var result = await client.PublishAsync(job);
+
+
+            var msg = client
+            .MessageBuilder()
+            .Message(message, isDbTextSave: false)
             .Build();
-            var result = await client.PublishAsync(job);
-
-            //var result = client.PublishAsync(job);
-
-
+            //var result = await client.PublishAsync(msg);
+            var result = await client.PublishAsync(msg);
 
         }
         else
         {
             Console.WriteLine("error");
         }
-
-
-
-
     }
-    var endDate = DateTime.Now;
-    Console.WriteLine("endDate : " + endDate);
-    Console.WriteLine("fark : " + (startDate-endDate));
-
 });
 #endregion
 

@@ -1,4 +1,5 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
+using JoberMQ.Client.Net.Constants;
 using JoberMQ.Library.Dbos;
 using JoberMQ.Library.Models;
 using JoberMQ.Library.Models.Job;
@@ -7,17 +8,19 @@ namespace JoberMQ.Client.Net.Extensions.Job
 {
     public static class JobMessageExtension
     {
-        public static JobBuilderMessageExtensionModel Message(this JobBuilderModel jobBuilderExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderExtension.Job, message, resultMessage);
-        public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderPublisherExtension.Job, message, resultMessage);
-        public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderTimingExtension.Job, message, resultMessage);
-        public static JobBuilderMessageExtensionModel Message(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage message, IMessage resultMessage = null)
-            => Add(jobBuilderMessageExtension.Job, message, resultMessage);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderModel jobBuilderExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+            => Add(jobBuilderExtension.Job, message, resultMessage, isDbTextSave);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+            => Add(jobBuilderPublisherExtension.Job, message, resultMessage, isDbTextSave);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+            => Add(jobBuilderTimingExtension.Job, message, resultMessage, isDbTextSave);
+        public static JobBuilderMessageExtensionModel Message(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+            => Add(jobBuilderMessageExtension.Job, message, resultMessage, isDbTextSave);
 
-        private static JobBuilderMessageExtensionModel Add(JobDbo builder, IMessage message, IMessage resultMessage = null)
+        private static JobBuilderMessageExtensionModel Add(JobDbo builder, IMessage message, IMessage resultMessage, bool isDbTextSave)
         {
+            builder.IsDbTextSave = isDbTextSave;
+
             var jobDetail = new JobDetailDbo();
             jobDetail.JobId = builder.Id;
             jobDetail.Message = new MessageModel
@@ -28,8 +31,9 @@ namespace JoberMQ.Client.Net.Extensions.Job
                 Info = message.Info,
                 GeneralData = message.GeneralData,
                 PriorityType = message.PriorityType,
-                MessageConsuming = message.MessageConsuming
+                MessageConsuming = message.MessageConsuming,
             };
+            jobDetail.IsDbTextSave = isDbTextSave;
 
             if (resultMessage != null)
             {
@@ -41,7 +45,7 @@ namespace JoberMQ.Client.Net.Extensions.Job
                     Info = resultMessage.Info,
                     GeneralData = resultMessage.GeneralData,
                     PriorityType = resultMessage.PriorityType,
-                    MessageConsuming = resultMessage.MessageConsuming
+                    MessageConsuming = resultMessage.MessageConsuming,
                 };
             }
 

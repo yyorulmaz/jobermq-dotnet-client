@@ -29,11 +29,12 @@ namespace JoberMQ.Client.Net.Constants
         internal const bool AutoReconnect = true;
 
 
-        internal const string DistributorDefaultDirectSpecialKey = "distributor.default.direct.special";
-        internal const string DistributorDefaultDirectGroupKey = "distributor.default.direct.group";
-        internal const string DistributorDefaultDirectQueueKey = "distributor.default.direct.queue";
-        internal const string DistributorDefaultEventKey = "distributor.default.event";
-        internal const string QueueDefaultSpecialKey = "queue.default.special";
+        internal const string DistributorDefaultDirectKey = "default.distributor.direct";
+        internal const string DistributorDefaultEventKey = "default.distributor.event";
+        internal const string DistributorDefaultFilterKey = "default.distributor.filter";
+        //internal const string DistributorDefaultDirectGroupKey = "distributor.default.direct.group";
+        //internal const string DistributorDefaultDirectQueueKey = "distributor.default.direct.queue";
+        internal const string QueueDefaultSpecialFifoKey = "default.queue.special.fifo";
       
 
 
@@ -54,6 +55,13 @@ namespace JoberMQ.Client.Net.Constants
 
 
         internal const bool TextMessageReceiveAutoCompleted = true;
+
+
+
+        internal const bool IsDbTextSave = true;
+
+
+
         
     }
 }

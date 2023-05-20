@@ -1,4 +1,5 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
+using JoberMQ.Client.Net.Constants;
 using JoberMQ.Library.Dbos;
 using JoberMQ.Library.Models;
 using JoberMQ.Library.Models.Message;
@@ -7,11 +8,13 @@ namespace JoberMQ.Client.Net.Extensions.Message
 {
     public static class MessageMessageExtension
     {
-        public static MessageBuilderMessageExtensionModel Message(this MessageBuilderModel messageBuilder, IMessage message, IMessage resultMessage = null)
-            => Add(messageBuilder.Message, message, resultMessage);
+        public static MessageBuilderMessageExtensionModel Message(this MessageBuilderModel messageBuilder, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+            => Add(messageBuilder.Message, message, resultMessage, isDbTextSave);
 
-        private static MessageBuilderMessageExtensionModel Add(MessageDbo builder, IMessage message, IMessage resultMessage = null)
+        private static MessageBuilderMessageExtensionModel Add(MessageDbo builder, IMessage message, IMessage resultMessage, bool isDbTextSave)
         {
+            builder.IsDbTextSave = isDbTextSave;
+
             var msg = new MessageModel
             {
                 MessageType = message.MessageType,
@@ -20,7 +23,7 @@ namespace JoberMQ.Client.Net.Extensions.Message
                 Info = message.Info,
                 GeneralData = message.GeneralData,
                 PriorityType = message.PriorityType,
-                MessageConsuming = message.MessageConsuming
+                MessageConsuming = message.MessageConsuming,
             };
             builder.Message = msg;
 
@@ -35,7 +38,7 @@ namespace JoberMQ.Client.Net.Extensions.Message
                     Info = resultMessage.Info,
                     GeneralData = resultMessage.GeneralData,
                     PriorityType = resultMessage.PriorityType,
-                    MessageConsuming = resultMessage.MessageConsuming
+                    MessageConsuming = resultMessage.MessageConsuming,
                 };
 
                 builder.IsResult = true;

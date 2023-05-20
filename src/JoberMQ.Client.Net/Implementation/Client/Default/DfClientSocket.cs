@@ -38,7 +38,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         public DfClientSocket(string clientKey, string clientGroupKey, IConfiguration configuration)
         {
             this.configuration = configuration;
-            consuming=new ConcurrentDictionary<Guid, ConsumeModel>();
+            consuming = new ConcurrentDictionary<Guid, ConsumeModel>();
 
             var account = AccountFactory.Create(ClientConst.AccountFactory, true, true, ClientConst.UserName, ClientConst.Password, configuration.EndpointLogin, configuration.EndpointHub);
             clientInfo = ClientInfoFactory.Create(ClientConst.ClientInfoFactory, ClientConst.ClientType, clientKey, clientGroupKey, ClientConst.IsOfflineClient);
@@ -47,9 +47,37 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
             connect.ReceiveData += Connect_ReceiveData;
             connect.ReceiveRpc +=Connect_ReceiveRpc;
+            connect.ConnectState +=Connect_ConnectState;
         }
 
-     
+
+
+        #region reconnect Consuming
+        //bu yapıyı şundan dolayı kurdum. client bağlantı kopmuş ve tekrar bağlanmışsa 
+        //consuming bilgilerini tekrar sunucuya göndermek için
+        bool isConsumingRefresh = false;
+        private void Connect_ConnectState(bool obj)
+        {
+            //if (obj == false)
+            //{
+            //    isConsumingRefresh = true;
+            //}
+            //else
+            //{
+            //    if (isConsumingRefresh == true && connect.IsConnect)
+            //    {
+            //        var consumeRequest = new ConsumeRequestModel();
+            //        consumeRequest.Consuming = Consuming;
+
+            //        var serialize = JsonConvert.SerializeObject(consumeRequest);
+            //        var result = connect.InvokeAsync<ResponseModel>("Consume", serialize).Result;
+            //        if (result.IsSucces == true)
+            //            isConsumingRefresh = false;
+            //    }
+            //}
+
+        }
+        #endregion
 
         IConfiguration configuration;
 
@@ -154,11 +182,11 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         private RpcBuilderModel RpcBuilderDefault()
             => new RpcBuilderModel
             {
-               RpcMessage = new RpcRequestModel
-               {
-                   Id = Guid.NewGuid(),
-                   ProducerId = clientInfo.ClientKey,
-               }
+                RpcMessage = new RpcRequestModel
+                {
+                    Id = Guid.NewGuid(),
+                    ProducerId = clientInfo.ClientKey,
+                }
             };
 
 
@@ -175,7 +203,10 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             var messageStarted = new MessageStartedModel();
             messageStarted.MessageId = messageDbo.Id;
             messageStarted.IsError = false;
-            _ = connect.InvokeAsync<ResponseModel>("MessageStarted", JsonConvert.SerializeObject(messageStarted));
+
+            // todo kontrol et. veritabanına kaydetmediğim için started gönderirsem patlıyor. buna çözüm düşünebilirsin yada hiçbirşey yapma
+            if (messageDbo.IsDbTextSave)
+                _ = connect.InvokeAsync<ResponseModel>("MessageStarted", JsonConvert.SerializeObject(messageStarted));
 
             var messageCompleted = new MessageCompletedModel();
             messageCompleted.MessageId = messageDbo.Id;
@@ -188,7 +219,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                 {
                     messageCompleted.IsError = false;
                     messageCompleted.Message = "";
-                    _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
+                    if (messageDbo.IsDbTextSave)
+                        _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
                 }
             }
             else if (messageDbo.Message.MessageType == MessageTypeEnum.Funtion)
@@ -209,7 +241,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                 messageCompleted.ReturnData = returnData.Data;
                 //messageCompleted.RoutingType = consumerMessage.RoutingType;
 
-                _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
+                if (messageDbo.IsDbTextSave)
+                    _ = connect.InvokeAsync<ResponseModel>("MessageCompleted", JsonConvert.SerializeObject(messageCompleted));
 
             }
 

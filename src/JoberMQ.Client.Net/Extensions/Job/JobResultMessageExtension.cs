@@ -23,7 +23,7 @@ namespace JoberMQ.Client.Net.Extensions.Job
                 Info = resultMessage.Info,
                 GeneralData = resultMessage.GeneralData,
                 PriorityType = resultMessage.PriorityType,
-                MessageConsuming = resultMessage.MessageConsuming
+                MessageConsuming = resultMessage.MessageConsuming,
             };
             builder.JobResultMessage = message;
 

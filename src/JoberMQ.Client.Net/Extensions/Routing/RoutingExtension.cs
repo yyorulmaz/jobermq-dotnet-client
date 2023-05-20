@@ -19,8 +19,8 @@ namespace JoberMQ.Client.Net.Extensions.Routing
         internal static RoutingModel CreateRouting(this IClient client, RoutingSpecialModel routingSpecial)
             => new RoutingModel
             {
-                DistributorKey = ClientConst.DistributorDefaultDirectSpecialKey,
-                QueueKey = ClientConst.QueueDefaultSpecialKey,
+                DistributorKey = ClientConst.DistributorDefaultDirectKey,
+                QueueKey = ClientConst.QueueDefaultSpecialFifoKey,
                 ClientKey = routingSpecial.ClientKey,
                 RoutingType = RoutingTypeEnum.Special
             };
@@ -36,7 +36,7 @@ namespace JoberMQ.Client.Net.Extensions.Routing
         internal static RoutingModel CreateRouting(this IClient client, RoutingGroupModel routingGroup)
             => new RoutingModel
             {
-                DistributorKey = ClientConst.DistributorDefaultDirectGroupKey,
+                DistributorKey = ClientConst.DistributorDefaultDirectKey,
                 QueueKey = routingGroup.ClientGroupKey,
                 ClientGroupKey = routingGroup.ClientGroupKey,
                 RoutingType = RoutingTypeEnum.Group
@@ -53,7 +53,7 @@ namespace JoberMQ.Client.Net.Extensions.Routing
         internal static RoutingModel CreateRouting(this IClient client, RoutingQueueModel routingQueue)
             => new RoutingModel
             {
-                DistributorKey = ClientConst.DistributorDefaultDirectQueueKey,
+                DistributorKey = ClientConst.DistributorDefaultDirectKey,
                 QueueKey = routingQueue.QueueKey,
                 RoutingType = RoutingTypeEnum.Queue
             };
@@ -71,6 +71,7 @@ namespace JoberMQ.Client.Net.Extensions.Routing
             {
                 DistributorKey = ClientConst.DistributorDefaultEventKey,
                 EventName = routingEvent.EventName,
+                QueueKey = routingEvent.EventName,
                 RoutingType = RoutingTypeEnum.Event
             };
 
@@ -100,7 +101,7 @@ namespace JoberMQ.Client.Net.Extensions.Routing
         internal static RoutingModel CreateRouting(this IClient client, RoutingFilterModel routingFilter)
         {
             var routing = new RoutingModel();
-            routing.DistributorKey = ClientConst.DistributorDefaultDirectSpecialKey;
+            routing.DistributorKey = ClientConst.DistributorDefaultFilterKey;
             routing.FilterRegex = routingFilter.FilterRegex;
             routing.StartsWith = routingFilter.StartsWith;
             routing.Contains = routingFilter.Contains;
