@@ -26,21 +26,8 @@ namespace JoberMQ.Client.Net.Extensions.Routing
             };
 
 
-        public static RoutingGroupModel CreateRoutingGroup(this IClient client, string clientGroupKey)
-            => CreateRoutingGroup(clientGroupKey);
-        static RoutingGroupModel CreateRoutingGroup(string clientGroupKey)
-            => new RoutingGroupModel
-            {
-                ClientGroupKey = clientGroupKey
-            };
-        internal static RoutingModel CreateRouting(this IClient client, RoutingGroupModel routingGroup)
-            => new RoutingModel
-            {
-                DistributorKey = ClientConst.DistributorDefaultDirectKey,
-                QueueKey = routingGroup.ClientGroupKey,
-                ClientGroupKey = routingGroup.ClientGroupKey,
-                RoutingType = RoutingTypeEnum.Group
-            };
+
+
 
 
         public static RoutingQueueModel CreateRoutingQueue(this IClient client, string queueKey)

@@ -9,20 +9,20 @@ namespace JoberMQ.Client.Net.Extensions.Queue
         public static QueueTransportModel Create(
             this QueueBuilderModel queueBuilder,
             string queueKey,
-            MatchTypeEnum matchType = MatchTypeEnum.Free,
-            SendTypeEnum sendType = SendTypeEnum.FIFO,
+            QueueMatchTypeEnum matchType = QueueMatchTypeEnum.Free,
+            QueueOrderOfSendingTypeEnum queueOrderOfSendingType = QueueOrderOfSendingTypeEnum.FIFO,
             PermissionTypeEnum permissionType = PermissionTypeEnum.All,
             bool isDurable = true)
-            => Operation(queueBuilder.QueueTransport, QueueOperationTypeEnum.Create, null, queueKey, matchType, sendType, permissionType, isDurable);
+            => Operation(queueBuilder.QueueTransport, QueueOperationTypeEnum.Create, null, queueKey, matchType, queueOrderOfSendingType, permissionType, isDurable);
 
         public static QueueTransportModel Edit(
             this QueueBuilderModel queueBuilder,
             string queueKey,
-            MatchTypeEnum matchType = MatchTypeEnum.Free,
-            SendTypeEnum sendType = SendTypeEnum.FIFO,
+            QueueMatchTypeEnum matchType = QueueMatchTypeEnum.Free,
+            QueueOrderOfSendingTypeEnum queueOrderOfSendingType = QueueOrderOfSendingTypeEnum.FIFO,
             PermissionTypeEnum permissionType = PermissionTypeEnum.All,
             bool isDurable = true)
-            => Operation(queueBuilder.QueueTransport, QueueOperationTypeEnum.Update, null, queueKey, matchType, sendType, permissionType, isDurable);
+            => Operation(queueBuilder.QueueTransport, QueueOperationTypeEnum.Update, null, queueKey, matchType, queueOrderOfSendingType, permissionType, isDurable);
 
         public static QueueTransportModel Remove(
             this QueueBuilderModel queueBuilder,
@@ -40,8 +40,8 @@ namespace JoberMQ.Client.Net.Extensions.Queue
             QueueOperationTypeEnum queueOperationType,
             string distributorKey,
             string queueKey,
-            MatchTypeEnum matchType = MatchTypeEnum.Free,
-            SendTypeEnum sendType = SendTypeEnum.FIFO,
+            QueueMatchTypeEnum matchType = QueueMatchTypeEnum.Free,
+            QueueOrderOfSendingTypeEnum queueOrderOfSendingType = QueueOrderOfSendingTypeEnum.FIFO,
             PermissionTypeEnum permissionType = PermissionTypeEnum.All,
             bool isDurable = true)
         {
@@ -49,7 +49,7 @@ namespace JoberMQ.Client.Net.Extensions.Queue
             queueTransport.DistributorKey = distributorKey;
             queueTransport.QueueKey = queueKey;
             queueTransport.MatchType = matchType;
-            queueTransport.SendType = sendType;
+            queueTransport.QueueOrderOfSendingType = queueOrderOfSendingType;
             queueTransport.PermissionType = permissionType;
             queueTransport.IsDurable = isDurable;
             return queueTransport;

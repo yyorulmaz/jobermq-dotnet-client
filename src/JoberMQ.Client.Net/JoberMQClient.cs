@@ -11,12 +11,12 @@ namespace JoberMQ.Client.Net
         public static IConfiguration GetConfiguration()
             => ConfigurationFactory.Create(ConfigurationFactoryEnum.Default);
 
-        public static IClient CreateClient(string clientKey, string clientGroupKey)
-            => DefaultCreateClient(clientKey, clientGroupKey, null);
-        public static IClient CreateClient(string clientKey, string clientGroupKey, IConfiguration configuration)
-            => DefaultCreateClient(clientKey, clientGroupKey, configuration);
+        public static IClient CreateClient(string clientKey)
+            => DefaultCreateClient(clientKey, null);
+        public static IClient CreateClient(string clientKey, IConfiguration configuration)
+            => DefaultCreateClient(clientKey, configuration);
 
-        private static IClient DefaultCreateClient(string clientKey, string clientGroupKey, IConfiguration configuration)
+        private static IClient DefaultCreateClient(string clientKey, IConfiguration configuration)
         {
             IConfiguration config;
 
@@ -25,7 +25,7 @@ namespace JoberMQ.Client.Net
             else
                 config = configuration;
 
-            return ClientFactory.Create(clientKey, clientGroupKey, configuration);
+            return ClientFactory.Create(clientKey, configuration);
         }
     }
 }

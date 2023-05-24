@@ -11,7 +11,7 @@ namespace JoberMQ.Client.Net.Extensions.Queue
             result.DistributorKey = queueTransport.DistributorKey;
             result.QueueKey = queueTransport.QueueKey;
             result.MatchType = queueTransport.MatchType;
-            result.SendType = queueTransport.SendType;
+            result.QueueOrderOfSendingType = queueTransport.QueueOrderOfSendingType;
             result.PermissionType = queueTransport.PermissionType;
             result.IsDurable = queueTransport.IsDurable;
 

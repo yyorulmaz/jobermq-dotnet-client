@@ -16,7 +16,7 @@ using System.Text.RegularExpressions;
 
 
 var config = JoberMQClient.GetConfiguration();
-var client = JoberMQClient.CreateClient("client 2", "client group 2", config);
+var client = JoberMQClient.CreateClient("client 2", config);
 client.Connect.ConnectState += Client_ConnectState;
 var connect = client.Connect.ConnectAsync().Result;
 

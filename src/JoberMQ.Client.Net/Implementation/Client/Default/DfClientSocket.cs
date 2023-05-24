@@ -35,13 +35,13 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 {
     public class DfClientSocket : IClient
     {
-        public DfClientSocket(string clientKey, string clientGroupKey, IConfiguration configuration)
+        public DfClientSocket(string clientKey, IConfiguration configuration)
         {
             this.configuration = configuration;
-            consuming = new ConcurrentDictionary<Guid, ConsumeModel>();
+            //consuming = new ConcurrentDictionary<Guid, ConsumeModel>();
 
             var account = AccountFactory.Create(ClientConst.AccountFactory, true, true, ClientConst.UserName, ClientConst.Password, configuration.EndpointLogin, configuration.EndpointHub);
-            clientInfo = ClientInfoFactory.Create(ClientConst.ClientInfoFactory, ClientConst.ClientType, clientKey, clientGroupKey, ClientConst.IsOfflineClient);
+            clientInfo = ClientInfoFactory.Create(ClientConst.ClientInfoFactory, ClientConst.ClientType, clientKey, ClientConst.IsOfflineClient);
             connect = ConnectFactory.Create(ClientConst.ConnectFactory, ClientConst.ConnectionRetryTimeout, ClientConst.AutoReconnect, account, clientInfo);
             method = MethodFactory.Create(MethodFactoryEnum.Default);
 
@@ -87,6 +87,9 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         IConnect connect;
         IConnect IClient.Connect => connect;
 
+        IMethod method;
+        public IMethod Method => method;
+
         public DistributorBuilderModel DistributorBuilder()
           => new DistributorBuilderModel { DistributorTransport = new DistributorTransportModel() };
         public ConsumeBuilderModel ConsumeBuilder()
@@ -111,8 +114,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     },
                     Producer = new ProducerModel
                     {
-                        ClientKey = clientInfo.ClientKey,
-                        ClientGroupKey = clientInfo.ClientGroupKey
+                        ClientKey = clientInfo.ClientKey
                     },
                     Info = new InfoModel
                     {
@@ -142,8 +144,8 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             };
 
         public MessageBuilderModel MessageBuilder()
-            => MessageBuilderDefaulT();
-        private MessageBuilderModel MessageBuilderDefaulT()
+            => MessageBuilderDefault();
+        private MessageBuilderModel MessageBuilderDefault()
             => new MessageBuilderModel
             {
                 Message = new MessageDbo
@@ -157,7 +159,6 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
                     Producer = new ProducerModel
                     {
                         ClientKey = clientInfo.ClientKey,
-                        ClientGroupKey = clientInfo.ClientGroupKey
                     },
                     Message = null,
                     IsResult = false,
@@ -268,11 +269,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             _ = connect.InvokeAsync<ResponseModel>("RpcResponse", JsonConvert.SerializeObject(message));
         }
 
-        ConcurrentDictionary<Guid, ConsumeModel> consuming;
-        public ConcurrentDictionary<Guid, ConsumeModel> Consuming { get => consuming; set => consuming = value; }
-
-        IMethod method;
-        public IMethod Method => method;
+        
 
 
         #region Dispose

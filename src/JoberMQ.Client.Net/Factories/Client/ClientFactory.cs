@@ -10,7 +10,6 @@ namespace JoberMQ.Client.Net.Factories.Client
     {
         public static IClient Create(
             string clientKey,
-            string clientGroupKey,
             IConfiguration configuration)
         {
             IClient client;
@@ -21,10 +20,10 @@ namespace JoberMQ.Client.Net.Factories.Client
                     switch (configuration.ConnectProtocol)
                     {
                         case ConnectProtocolEnum.Socket:
-                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            client = new DfClientSocket(clientKey, configuration);
                             break;
                         default:
-                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            client = new DfClientSocket(clientKey, configuration);
                             break;
                     }
                     break;
@@ -32,10 +31,10 @@ namespace JoberMQ.Client.Net.Factories.Client
                     switch (configuration.ConnectProtocol)
                     {
                         case ConnectProtocolEnum.Socket:
-                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            client = new DfClientSocket(clientKey, configuration);
                             break;
                         default:
-                            client = new DfClientSocket(clientKey, clientGroupKey, configuration);
+                            client = new DfClientSocket(clientKey, configuration);
                             break;
                     }
                     break;

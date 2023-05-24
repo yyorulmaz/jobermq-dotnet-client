@@ -174,7 +174,6 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
             {
                 ClientType = clientInfo.ClientType,
                 ClientKey = clientInfo.ClientKey,
-                ClientGroupKey = clientInfo.ClientGroupKey,
                 IsOfflineClient = clientInfo.IsOfflineClient,
                 IsClientActive = clientInfo.IsClientActive
             };
@@ -183,7 +182,6 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
             //options.Headers.Add("ClientType", clientInfo.ClientType.ToString());
             //options.Headers.Add("ClientKey", clientInfo.ClientKey);
-            //options.Headers.Add("ClientGroupKey", clientInfo.ClientGroupKey);
             //options.Headers.Add("IsOfflineClient", clientInfo.IsOfflineClient.ToString());
 
             return options;

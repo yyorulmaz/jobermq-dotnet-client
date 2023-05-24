@@ -34,7 +34,6 @@ namespace JoberMQ.Client.Net.Abstraction.Client
 
 
 
-        ConcurrentDictionary<Guid, ConsumeModel> Consuming { get; set; }
 
         IMethod Method { get; }
     }

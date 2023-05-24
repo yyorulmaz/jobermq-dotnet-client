@@ -6,7 +6,6 @@ namespace JoberMQ.Client.Net.Abstraction.Client
     {
         ClientTypeEnum ClientType { get; }
         string ClientKey { get; }
-        string ClientGroupKey { get; }
         bool IsOfflineClient { get; }
         bool IsClientActive { get; }
     }

@@ -10,7 +10,7 @@ using JoberMQ.Client.Net.Extensions.Routing;
 using JoberMQ.Client.Net.Extensions.Rpc;
 
 var config = JoberMQClient.GetConfiguration();
-var client = JoberMQClient.CreateClient("client 4", "client group 1", config);
+var client = JoberMQClient.CreateClient("client 4", config);
 client.Connect.ConnectState += Client_ConnectState;
 var connect = client.Connect.ConnectAsync().Result;
 
