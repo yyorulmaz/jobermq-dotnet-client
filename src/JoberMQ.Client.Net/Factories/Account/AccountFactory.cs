@@ -1,7 +1,7 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Account;
 using JoberMQ.Client.Net.Abstraction.Endpoint;
 using JoberMQ.Client.Net.Implementation.Account.Default;
-using JoberMQ.Library.Enums.Account;
+using JoberMQ.Common.Enums.Account;
 
 namespace JoberMQ.Client.Net.Factories.Account
 {
@@ -14,10 +14,10 @@ namespace JoberMQ.Client.Net.Factories.Account
             switch (accountFactory)
             {
                 case AccountFactoryEnum.Default:
-                    account = new DfAccount(IsMaster, IsActive, UserName, Password, EndpointLogin, EndpointHub);
+                    account = new DefaultAccount(IsMaster, IsActive, UserName, Password, EndpointLogin, EndpointHub);
                     break;
                 default:
-                    account = new DfAccount(IsMaster, IsActive, UserName, Password, EndpointLogin, EndpointHub);
+                    account = new DefaultAccount(IsMaster, IsActive, UserName, Password, EndpointLogin, EndpointHub);
                     break;
             }
 

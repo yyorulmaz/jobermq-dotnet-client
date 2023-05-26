@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Endpoint;
-using JoberMQ.Library.Enums.Client;
-using JoberMQ.Library.Enums.Connect;
+using JoberMQ.Common.Enums.Client;
+using JoberMQ.Common.Enums.Connect;
 
 namespace JoberMQ.Client.Net.Abstraction.Configuration
 {
@@ -16,6 +16,5 @@ namespace JoberMQ.Client.Net.Abstraction.Configuration
         IEndpoint EndpointLogin { get; set; }
         IEndpoint EndpointHub { get; set; }
         bool TextMessageReceiveAutoCompleted { get; set; }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
 using JoberMQ.Client.Net.Implementation.Message.Default;
-using JoberMQ.Library.Enums.Message;
+using JoberMQ.Common.Enums.Message;
 
 namespace JoberMQ.Client.Net.Factories.Message
 {

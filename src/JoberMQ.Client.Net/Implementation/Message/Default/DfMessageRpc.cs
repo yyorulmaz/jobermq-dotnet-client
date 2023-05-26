@@ -1,5 +1,5 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Library.Enums.Message;
+using JoberMQ.Common.Enums.Message;
 
 namespace JoberMQ.Client.Net.Implementation.Message.Default
 {

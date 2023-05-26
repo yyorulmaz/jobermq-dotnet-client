@@ -1,4 +1,4 @@
-﻿using JoberMQ.Library.Enums.Client;
+﻿using JoberMQ.Common.Enums.Client;
 
 namespace JoberMQ.Client.Net.Abstraction.Client
 {

@@ -1,8 +1,9 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Message;
-using JoberMQ.Library.Enums.Message;
-using JoberMQ.Library.Enums.Priority;
-using JoberMQ.Library.Models;
-using JoberMQ.Library.Models.Routing;
+using JoberMQ.Common.Enums.Message;
+using JoberMQ.Common.Enums.Priority;
+using JoberMQ.Common.Models.Consuming;
+using JoberMQ.Common.Models.Info;
+using JoberMQ.Common.Models.Routing;
 
 namespace JoberMQ.Client.Net.Implementation.Message.Default
 {

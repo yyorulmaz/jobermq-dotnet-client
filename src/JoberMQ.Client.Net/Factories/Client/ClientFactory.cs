@@ -1,16 +1,14 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Implementation.Client.Default;
-using JoberMQ.Library.Enums.Client;
-using JoberMQ.Library.Enums.Connect;
+using JoberMQ.Common.Enums.Client;
+using JoberMQ.Common.Enums.Connect;
 
 namespace JoberMQ.Client.Net.Factories.Client
 {
     public class ClientFactory
     {
-        public static IClient Create(
-            string clientKey,
-            IConfiguration configuration)
+        public static IClient Create(string clientKey, IConfiguration configuration)
         {
             IClient client;
 
@@ -20,10 +18,10 @@ namespace JoberMQ.Client.Net.Factories.Client
                     switch (configuration.ConnectProtocol)
                     {
                         case ConnectProtocolEnum.Socket:
-                            client = new DfClientSocket(clientKey, configuration);
+                            client = new DefaultClientSocket(clientKey, configuration);
                             break;
                         default:
-                            client = new DfClientSocket(clientKey, configuration);
+                            client = new DefaultClientSocket(clientKey, configuration);
                             break;
                     }
                     break;
@@ -31,10 +29,10 @@ namespace JoberMQ.Client.Net.Factories.Client
                     switch (configuration.ConnectProtocol)
                     {
                         case ConnectProtocolEnum.Socket:
-                            client = new DfClientSocket(clientKey, configuration);
+                            client = new DefaultClientSocket(clientKey, configuration);
                             break;
                         default:
-                            client = new DfClientSocket(clientKey, configuration);
+                            client = new DefaultClientSocket(clientKey, configuration);
                             break;
                     }
                     break;

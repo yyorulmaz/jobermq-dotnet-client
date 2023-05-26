@@ -1,4 +1,4 @@
-﻿using JoberMQ.Library.Enums.Message;
+﻿using JoberMQ.Common.Enums.Message;
 
 namespace JoberMQ.Client.Net.Abstraction.Message
 {

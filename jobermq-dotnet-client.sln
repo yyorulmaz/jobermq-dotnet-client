@@ -15,13 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6773A4DC-4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "existing library", "existing library", "{EF82E716-352C-48EB-8B07-A74629B634A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoberMQ.Library", "..\jobermq-library\src\JoberMQ.Library\JoberMQ.Library.csproj", "{4218D817-DFB0-40D9-9860-C7227E00D8B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoberMQ.Client.Example.Consumer", "examples\JoberMQ.Client.Example.Consumer\JoberMQ.Client.Example.Consumer.csproj", "{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.Client.Example.Consumer", "examples\JoberMQ.Client.Example.Consumer\JoberMQ.Client.Example.Consumer.csproj", "{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.Client.Example.Producer", "examples\JoberMQ.Client.Example.Producer\JoberMQ.Client.Example.Producer.csproj", "{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoberMQ.Client.Example.Producer", "examples\JoberMQ.Client.Example.Producer\JoberMQ.Client.Example.Producer.csproj", "{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation - library", "presentation - library", "{040695F4-3CF8-488E-9A1B-5688504FE7AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoberMQ.Common", "..\jobermq-common\src\JoberMQ.Common\JoberMQ.Common.csproj", "{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,6 @@ Global
 		{75450E30-8614-457B-A604-1D9153E02659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75450E30-8614-457B-A604-1D9153E02659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75450E30-8614-457B-A604-1D9153E02659}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4218D817-DFB0-40D9-9860-C7227E00D8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4218D817-DFB0-40D9-9860-C7227E00D8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4218D817-DFB0-40D9-9860-C7227E00D8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4218D817-DFB0-40D9-9860-C7227E00D8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,16 +41,20 @@ Global
 		{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{75450E30-8614-457B-A604-1D9153E02659} = {040695F4-3CF8-488E-9A1B-5688504FE7AB}
-		{4218D817-DFB0-40D9-9860-C7227E00D8B8} = {EF82E716-352C-48EB-8B07-A74629B634A7}
 		{95DB20F8-13BD-4572-B3D4-EB049DB1ED0C} = {FB55AB12-FA4C-4EAE-BE8D-FE00CA84CDEB}
 		{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0} = {FB55AB12-FA4C-4EAE-BE8D-FE00CA84CDEB}
 		{040695F4-3CF8-488E-9A1B-5688504FE7AB} = {A4AAA401-E7CB-436C-9F17-C47731B5AD0C}
+		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F} = {EF82E716-352C-48EB-8B07-A74629B634A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49CD25B3-E433-4F77-827E-4AD2DA834E0A}

@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Endpoint;
 using JoberMQ.Client.Net.Implementation.Endpoint.Default;
-using JoberMQ.Library.Enums.Endpoint;
+using JoberMQ.Common.Enums.Endpoint;
 
 namespace JoberMQ.Client.Net.Factories.Endpoint
 {
@@ -13,10 +13,10 @@ namespace JoberMQ.Client.Net.Factories.Endpoint
             switch (endpointFactory)
             {
                 case EndpointFactoryEnum.Default:
-                    endpoint = new DfEndpoint(IsSsl, HostName, Port, PortSsl, Action);
+                    endpoint = new DefaultEndpoint(IsSsl, HostName, Port, PortSsl, Action);
                     break;
                 default:
-                    endpoint = new DfEndpoint(IsSsl, HostName, Port, PortSsl, Action);
+                    endpoint = new DefaultEndpoint(IsSsl, HostName, Port, PortSsl, Action);
                     break;
             }
 

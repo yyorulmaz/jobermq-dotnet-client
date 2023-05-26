@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Client;
 using JoberMQ.Client.Net.Implementation.Client.Default;
-using JoberMQ.Library.Enums.Client;
+using JoberMQ.Common.Enums.Client;
 
 namespace JoberMQ.Client.Net.Factories.Client
 {
@@ -13,10 +13,10 @@ namespace JoberMQ.Client.Net.Factories.Client
             switch (clientInfoFactory)
             {
                 case ClientInfoFactoryEnum.Default:
-                    clientInfo = new DfClientInfo(clientType, clientKey, isOfflineClient);
+                    clientInfo = new DefaultClientInfo(clientType, clientKey, isOfflineClient);
                     break;
                 default:
-                    clientInfo = new DfClientInfo(clientType, clientKey, isOfflineClient);
+                    clientInfo = new DefaultClientInfo(clientType, clientKey, isOfflineClient);
                     break;
             }
 

@@ -1,6 +1,6 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Configuration;
-using JoberMQ.Client.Net.Implementation.Configuration.Default;
-using JoberMQ.Library.Enums.Configuration;
+using JoberMQ.Client.Net.Implementation.Configuration;
+using JoberMQ.Common.Enums.Configuration;
 
 namespace JoberMQ.Client.Net.Factories.Configuration
 {
@@ -13,10 +13,10 @@ namespace JoberMQ.Client.Net.Factories.Configuration
             switch (factory)
             {
                 case ConfigurationFactoryEnum.Default:
-                    configuration = new DfConfiguration();
+                    configuration = new DefaultConfiguration();
                     break;
                 default:
-                    configuration = new DfConfiguration();
+                    configuration = new DefaultConfiguration();
                     break;
             }
 

@@ -2,7 +2,7 @@
 using JoberMQ.Client.Net.Abstraction.Configuration;
 using JoberMQ.Client.Net.Factories.Client;
 using JoberMQ.Client.Net.Factories.Configuration;
-using JoberMQ.Library.Enums.Configuration;
+using JoberMQ.Common.Enums.Configuration;
 
 namespace JoberMQ.Client.Net
 {
@@ -25,7 +25,7 @@ namespace JoberMQ.Client.Net
             else
                 config = configuration;
 
-            return ClientFactory.Create(clientKey, configuration);
+            return ClientFactory.Create(clientKey, config);
         }
     }
 }
