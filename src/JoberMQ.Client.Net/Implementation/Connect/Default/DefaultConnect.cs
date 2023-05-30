@@ -64,13 +64,18 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
         public async Task<bool> ConnectAsync()
         {
-            var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
+            try
+            {
+                var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
             masterAccount = account.Value;
             var responseLogin = await LoginAsync(masterAccount.EndpointLogin.GetEndpoint(), masterAccount.UserName, masterAccount.Password, clientInfo.ClientKey);
+
+            Console.WriteLine("IsSuccess : " + responseLogin.IsSuccess);
 
             if (responseLogin != null && responseLogin.IsSuccess)
             {
                 masterAccount.Token = responseLogin.Token;
+            Console.WriteLine("Token : " + responseLogin.Token);
                 Accounts.TryUpdate(account.Key, masterAccount, null);
             }
             else
@@ -80,14 +85,15 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
             hubConn = CreateHubConnection();
 
-            try
-            {
+            
                 await hubConn.StartAsync();
 
                 Console.WriteLine("connected");
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
+
                 if (AutoReconnect)
                 {
                     isReConnectStarted = true;
@@ -178,6 +184,8 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
             //httpConnectionOptions.DefaultTransferFormat = Microsoft.AspNetCore.Connections.TransferFormat.Binary;
 
             options.AccessTokenProvider = () => Task.FromResult(masterAccount.Token);
+
+            Console.WriteLine("AccessTokenProvider : " + options.AccessTokenProvider);
 
 
             var clientInfoData = new ClientInfoDataModel

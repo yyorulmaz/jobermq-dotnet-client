@@ -1,4 +1,6 @@
 ﻿using JoberMQ.Client.Net;
+using JoberMQ.Common.Enums.Permission;
+using JoberMQ.Common.Enums.Queue;
 
 var config = JoberMQClient.GetConfiguration();
 //var client = JoberMQClient.CreateClient("client 4", config);
@@ -20,10 +22,10 @@ static void Client_ConnectState(bool obj)
 //var distributorCreate = await client.DistributorCreateAsync("yenidistributor1", DistributorTypeEnum.Direct, DistributorSearchSourceTypeEnum.None, PermissionTypeEnum.All, true);
 //#endregion
 
-//#region Queue
-//var queueGet = await client.QueueGetAsync("def.que.clientkey.free");
-//var queueCreate = await client.QueueCreateAsync("yeniqueue1", new string[] {"tag1", "tag2"}, QueueMatchTypeEnum.Tag, QueueOrderOfSendingTypeEnum.Free, PermissionTypeEnum.All, true, true);
-//#endregion
+#region Queue
+var queueGet = await client.QueueGetAsync("def.que.clientkey.free");
+var queueCreate = await client.QueueCreateAsync("yeniqueue1", new string[] { "tag1", "tag2" }, QueueMatchTypeEnum.Tag, QueueOrderOfSendingTypeEnum.Free, PermissionTypeEnum.All, true, true);
+#endregion
 
 //#region Consume
 //var consumeSub = await client.ConsumeSubAsync("def.que.clientkey.free", true);
@@ -35,10 +37,12 @@ static void Client_ConnectState(bool obj)
 #endregion
 
 #region Message
+var startDate = DateTime.Now;
 Task.Run(async () =>
 {
     for (int i = 0; i < 100001; i++)
     {
+        Console.WriteLine(i);
         //Thread.Sleep(1000);
         //var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingQueue("def.que.clientkey.free"));
         var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 2"));
@@ -46,7 +50,9 @@ Task.Run(async () =>
 
         if (i == 100000)
         {
-            Console.WriteLine("mesaj eklemesi bitti");
+            var endDate = DateTime.Now;
+
+            Console.WriteLine("mesaj eklemesi bitti : " + endDate + startDate);
         }
     }
 });
