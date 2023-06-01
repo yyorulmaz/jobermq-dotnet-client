@@ -23,8 +23,8 @@ static void Client_ConnectState(bool obj)
 //#endregion
 
 #region Queue
-var queueGet = await client.QueueGetAsync("def.que.clientkey.free");
-var queueCreate = await client.QueueCreateAsync("yeniqueue1", new string[] { "tag1", "tag2" }, QueueMatchTypeEnum.Tag, QueueOrderOfSendingTypeEnum.Free, PermissionTypeEnum.All, true, true);
+//var queueGet = await client.QueueGetAsync("def.que.clientkey.free");
+//var queueCreate = await client.QueueCreateAsync("yeniqueue1", new string[] { "tag1", "tag2" }, QueueMatchTypeEnum.Tag, QueueOrderOfSendingTypeEnum.Free, PermissionTypeEnum.All, true, true);
 #endregion
 
 //#region Consume
@@ -40,7 +40,7 @@ var queueCreate = await client.QueueCreateAsync("yeniqueue1", new string[] { "ta
 var startDate = DateTime.Now;
 Task.Run(async () =>
 {
-    for (int i = 0; i < 100001; i++)
+    for (int i = 0; i < 100000001; i++)
     {
         Console.WriteLine(i);
         //Thread.Sleep(1000);
@@ -48,11 +48,11 @@ Task.Run(async () =>
         var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 2"));
         var result = await client.Message(message).SendAsync();
 
-        if (i == 100000)
+        if (i == 100000000)
         {
             var endDate = DateTime.Now;
 
-            Console.WriteLine("mesaj eklemesi bitti : " + endDate + startDate);
+            Console.WriteLine("mesaj eklemesi bitti : " + (endDate - startDate));
         }
     }
 });

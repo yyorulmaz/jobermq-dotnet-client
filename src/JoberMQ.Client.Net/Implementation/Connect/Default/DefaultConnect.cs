@@ -121,7 +121,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
                 return JsonConvert.DeserializeObject<ResponseLoginModel>(content);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new ResponseLoginModel
                 {
