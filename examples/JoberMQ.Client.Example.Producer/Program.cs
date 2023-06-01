@@ -1,10 +1,7 @@
 ﻿using JoberMQ.Client.Net;
-using JoberMQ.Common.Enums.Permission;
-using JoberMQ.Common.Enums.Queue;
+using JoberMQ.Common.Enums.Endpoint;
 
-var config = JoberMQClient.GetConfiguration();
-//var client = JoberMQClient.CreateClient("client 4", config);
-var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), config);
+var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 7654);
 client.Connect.ConnectState += Client_ConnectState;
 var connect = client.Connect.ConnectAsync().Result;
 
@@ -45,7 +42,7 @@ Task.Run(async () =>
         Console.WriteLine(i);
         //Thread.Sleep(1000);
         //var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingQueue("def.que.clientkey.free"));
-        var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 2"));
+        var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 10"));
         var result = await client.Message(message).SendAsync();
 
         if (i == 100000000)

@@ -56,36 +56,36 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
         public async Task<R> InvokeAsync<R>(string methodName, object arg)
             => await hubConn.InvokeAsync<R>(methodName, arg);
         public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2)
-            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2 );
-            //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2});
+            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2);
+        //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2});
         public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2, object arg3)
-            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2, arg3 );
-            //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2, arg3} );
+            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2, arg3);
+        //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2, arg3} );
 
         public async Task<bool> ConnectAsync()
         {
             try
             {
                 var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
-            masterAccount = account.Value;
-            var responseLogin = await LoginAsync(masterAccount.EndpointLogin.GetEndpoint(), masterAccount.UserName, masterAccount.Password, clientInfo.ClientKey);
+                masterAccount = account.Value;
+                var responseLogin = await LoginAsync(masterAccount.EndpointLogin.GetEndpoint(), masterAccount.UserName, masterAccount.Password, clientInfo.ClientKey);
 
-            Console.WriteLine("IsSuccess : " + responseLogin.IsSuccess);
+                Console.WriteLine("IsSuccess : " + responseLogin.IsSuccess);
 
-            if (responseLogin != null && responseLogin.IsSuccess)
-            {
-                masterAccount.Token = responseLogin.Token;
-            Console.WriteLine("Token : " + responseLogin.Token);
-                Accounts.TryUpdate(account.Key, masterAccount, null);
-            }
-            else
-                //throw new Exception(getToken.Message);
-                return false;
+                if (responseLogin != null && responseLogin.IsSuccess)
+                {
+                    masterAccount.Token = responseLogin.Token;
+                    Console.WriteLine("Token : " + responseLogin.Token);
+                    Accounts.TryUpdate(account.Key, masterAccount, null);
+                }
+                else
+                    //throw new Exception(getToken.Message);
+                    return false;
 
 
-            hubConn = CreateHubConnection();
+                hubConn = CreateHubConnection();
 
-            
+
                 await hubConn.StartAsync();
 
                 Console.WriteLine("connected");
@@ -167,7 +167,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
 
 
-            
+
 
             //hub.On<string>("ReceiveData", (m) => ReceiveData?.Invoke(m));
             hub.On<MessageDbo>("ReceiveData", (m) => ReceiveData?.Invoke(m));
