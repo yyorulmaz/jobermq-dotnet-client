@@ -2,8 +2,6 @@
 using JoberMQ.Common.Models.Base;
 using System.Threading.Tasks;
 
-namespace JoberMQ.Client.Net.Extension.Consume
-{
     public static class ConsumeExtension
     {
         public static async Task<ResponseBaseModel> ConsumeSubAsync(this IClient client, string queueKey, bool isDurable)
@@ -12,4 +10,3 @@ namespace JoberMQ.Client.Net.Extension.Consume
         public static async Task<ResponseBaseModel> ConsumeUnSubAsync(this IClient client, string queueKey)
             => await client.Connect.InvokeAsync<ResponseBaseModel>("ConsumeUnSub", client.ClientInfo.ClientKey, queueKey);
     }
-}
