@@ -44,6 +44,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             method = MethodFactory.Create(MethodFactoryEnum.Default);
 
             connect.ReceiveData += Connect_ReceiveData;
+            connect.ReceiveDataText += Connect_ReceiveDataText;
             connect.ReceiveRpc += Connect_ReceiveRpc;
             connect.ConnectState += Connect_ConnectState;
         }
@@ -160,6 +161,13 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             //    return;
 
             ReceiveMessageText?.Invoke(obj.Message.Message);
+        }
+        private void Connect_ReceiveDataText(string obj)
+        {
+            //if (String.IsNullOrEmpty(obj))
+            //    return;
+
+            ReceiveMessageText?.Invoke(obj);
         }
         private void Connect_ReceiveRpc(string obj)
         {

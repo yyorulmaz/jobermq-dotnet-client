@@ -41,6 +41,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
         //public event Action<string> ReceiveData; 
         public event Action<MessageDbo> ReceiveData;
+        public event Action<string> ReceiveDataText;
         public event Action<string> ReceiveDataError;
         public event Action<bool> ReceiveServerActive;
         public event Action<string> ReceiveRpc;
@@ -61,6 +62,13 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
         public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2, object arg3)
             => await hubConn.InvokeAsync<R>(methodName, arg1, arg2, arg3);
         //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2, arg3} );
+
+        public async Task SendAsync(string methodName, object arg)
+            => await hubConn.SendAsync(methodName, arg);
+        public async Task SendAsync(string methodName, object arg1, object arg2)
+            => await hubConn.SendAsync(methodName, arg1, arg2);
+        public async Task SendAsync(string methodName, object arg1, object arg2, object arg3)
+            => await hubConn.SendAsync(methodName, arg1, arg2, arg3);
 
         public async Task<bool> ConnectAsync()
         {
@@ -166,6 +174,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
             //hub.On<string>("ReceiveData", (m) => ReceiveData?.Invoke(m));
             hub.On<MessageDbo>("ReceiveData", (m) => ReceiveData?.Invoke(m));
+            hub.On<string>("ReceiveDataText", (m) => ReceiveDataText?.Invoke(m));
             hub.On<string>("ReceiveDataError", (m) => ReceiveDataError?.Invoke(m));
             hub.On<string>("ClusterLoadBalancingEndpointReceive", (m) => ClusterLoadBalancingEndpointReceive(m));
             hub.On<bool>("ReceiveServerActive", (m) => ReceiveServerActiveAction(m));
