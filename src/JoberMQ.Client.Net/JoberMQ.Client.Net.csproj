@@ -1,54 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<!--<TargetFrameworks>netstandard2.0;net5.0;net6.0;net7.0</TargetFrameworks>-->
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Quartz" Version="3.3.3" />
-		<PackageReference Include="CronExpressionDescriptor" Version="2.16.0" />
-
-		<PackageReference Include="GenRep" Version="0.3.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqLite" Version="6.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.15" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(Configuration)' == 'Release'">
-
-		<Compile Include="..\JoberMQ.Common\**\*.cs" Exclude="..\JoberMQ.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Common\obj\**;..\JoberMQ.Common\bin\**">
-			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<Visible>false</Visible>
-		</Compile>
-
-		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
-			<Link>Commonold\%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<Visible>false</Visible>
-		</Compile>
-
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\jobermq-common\src\JoberMQ.Common\JoberMQ.Common.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(Configuration)' == 'Debug'">
 
-		<Compile Include="..\JoberMQ.Common\**\*.cs" Exclude="..\JoberMQ.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Common\obj\**;..\JoberMQ.Common\bin\**">
-			<Link>Common\%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<Visible>false</Visible>
-		</Compile>
-
-		<Compile Include="..\JoberMQ.Client.Common\**\*.cs" Exclude="..\JoberMQ.Client.Common\Properties\AssemblyInfo.cs;..\JoberMQ.Client.Common\obj\**;..\JoberMQ.Client.Common\bin\**">
-			<Link>Commonold\%(RecursiveDir)%(Filename)%(Extension)</Link>
-			<Visible>false</Visible>
-		</Compile>
-
-	</ItemGroup>
-	
 </Project>
