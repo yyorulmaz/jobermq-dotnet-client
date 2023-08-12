@@ -16,8 +16,5 @@ public static class FreeMessageExtension
 
 
 
-    public static async Task ConsumeSubAFreeMessageGroup(this IClient client, string groupKey)
-        => await client.Connect.SendAsync("ConsumeSubAFreeMessageGroup", groupKey);
-    public static async Task ConsumeUnSubAFreeMessageGroup(this IClient client, string groupKey)
-        => await client.Connect.SendAsync("ConsumeUnSubAFreeMessageGroup", groupKey);
+    
 }
