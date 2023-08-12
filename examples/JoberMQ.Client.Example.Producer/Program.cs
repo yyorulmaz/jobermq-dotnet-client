@@ -1,7 +1,8 @@
 ﻿using JoberMQ.Client.Net;
 using JoberMQ.Common.Enums.Endpoint;
 
-var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 7654);
+//var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 7654);
+var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 5000);
 client.Connect.ConnectState += Client_ConnectState;
 var connect = client.Connect.ConnectAsync().Result;
 
@@ -16,7 +17,7 @@ static void Client_ConnectState(bool obj)
 
 //#region Distributor
 //var distributorGet = await client.DistributorGetAsync("def.dis.search.queuekey");
-//var distributorCreate = await client.DistributorCreateAsync("yenidistributor1", DistributorTypeEnum.Direct, DistributorSearchSourceTypeEnum.None, PermissionTypeEnum.All, true);
+//var distributorAdd = await client.DistributorAddAsync("yenidistributor1", DistributorTypeEnum.Direct, DistributorSearchSourceTypeEnum.None, PermissionTypeEnum.All, true);
 //#endregion
 
 #region Queue
@@ -34,25 +35,25 @@ static void Client_ConnectState(bool obj)
 #endregion
 
 #region Message
-var startDate = DateTime.Now;
-Task.Run(async () =>
-{
-    for (int i = 0; i < 100000001; i++)
-    {
-        Console.WriteLine(i);
-        //Thread.Sleep(1000);
-        //var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingQueue("def.que.clientkey.free"));
-        var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 10"));
-        var result = await client.Message(message).SendAsync();
+//var startDate = DateTime.Now;
+//Task.Run(async () =>
+//{
+//    for (int i = 0; i < 100000001; i++)
+//    {
+//        Console.WriteLine(i);
+//        //Thread.Sleep(1000);
+//        //var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingQueue("def.que.clientkey.free"));
+//        var message = client.Creator().Message("test message - " + i.ToString(), client.Creator().RoutingClient("client 10"));
+//        var result = await client.Message(message).SendAsync();
 
-        if (i == 100000000)
-        {
-            var endDate = DateTime.Now;
+//        if (i == 100000000)
+//        {
+//            var endDate = DateTime.Now;
 
-            Console.WriteLine("mesaj eklemesi bitti : " + (endDate - startDate));
-        }
-    }
-});
+//            Console.WriteLine("mesaj eklemesi bitti : " + (endDate - startDate));
+//        }
+//    }
+//});
 #endregion
 
 #region Message RPC
@@ -69,7 +70,17 @@ Task.Run(async () =>
 //});
 #endregion
 
+#region Job
 
+
+
+var message = client.Creator().Message("test message", client.Creator().RoutingClient("client2"));
+//var result = await client.JobBuilder().TimingScheduleDelayed;
+
+
+
+
+#endregion
 
 
 

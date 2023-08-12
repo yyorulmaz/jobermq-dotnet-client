@@ -1,6 +1,7 @@
 ﻿using JoberMQ.Client.Net.Abstraction.Connect;
 using JoberMQ.Common.Enums.Routing;
 using JoberMQ.Common.Method.Abstraction;
+using JoberMQ.Common.Models.Distributor;
 using JoberMQ.Common.Models.Job;
 using JoberMQ.Common.Models.Message;
 using JoberMQ.Common.Models.Rpc;
@@ -12,6 +13,7 @@ namespace JoberMQ.Client.Net.Abstraction.Client
     {
         IClientInfo ClientInfo { get; }
         IConnect Connect { get; }
+
 
         JobBuilderModel JobBuilder(string name = null, string description = null);
         MessageBuilderModel MessageBuilder();

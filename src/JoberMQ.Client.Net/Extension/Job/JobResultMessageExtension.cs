@@ -5,36 +5,33 @@ using JoberMQ.Common.Models.Consuming;
 using JoberMQ.Common.Models.Job;
 using JoberMQ.Common.Models.Message;
 
-namespace JoberMQ.Client.Net.Extension.Job
+public static class JobResultMessageExtension
 {
-    public static class JobResultMessageExtension
+    public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
+       => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
+
+    private static JobBuilderResultMessageExtensionModel Add(JobDbo builder, IMessage resultMessage, bool isConsumingRetryPause, int consumingRetryMaxCount)
     {
-        public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
-           => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
+        builder.IsJobResultMessage = true;
 
-        private static JobBuilderResultMessageExtensionModel Add(JobDbo builder, IMessage resultMessage, bool isConsumingRetryPause, int consumingRetryMaxCount)
+        var message = new MessageModel()
         {
-            builder.IsJobResultMessage = true;
+            MessageType = resultMessage.MessageType,
+            Message = resultMessage.Message,
+            Routing = resultMessage.Routing,
+            Info = resultMessage.Info,
+            GeneralData = resultMessage.GeneralData,
+            PriorityType = resultMessage.PriorityType,
+            MessageConsuming = resultMessage.MessageConsuming,
+        };
+        builder.JobResultMessage = message;
 
-            var message = new MessageModel()
-            {
-                MessageType = resultMessage.MessageType,
-                Message = resultMessage.Message,
-                Routing = resultMessage.Routing,
-                Info = resultMessage.Info,
-                GeneralData = resultMessage.GeneralData,
-                PriorityType = resultMessage.PriorityType,
-                MessageConsuming = resultMessage.MessageConsuming,
-            };
-            builder.JobResultMessage = message;
+        builder.JobResultMessageConsuming = new ConsumingModel
+        {
+            IsConsumingRetryPause = isConsumingRetryPause,
+            ConsumingRetryMaxCount = consumingRetryMaxCount
+        };
 
-            builder.JobResultMessageConsuming = new ConsumingModel
-            {
-                IsConsumingRetryPause = isConsumingRetryPause,
-                ConsumingRetryMaxCount = consumingRetryMaxCount
-            };
-
-            return new JobBuilderResultMessageExtensionModel { Job = builder };
-        }
+        return new JobBuilderResultMessageExtensionModel { Job = builder };
     }
 }
