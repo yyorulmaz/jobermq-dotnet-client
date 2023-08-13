@@ -1,10 +1,11 @@
 ﻿using JoberMQ.Client.Net;
 using JoberMQ.Common.Enums.Endpoint;
+using JoberMQ.Common.Enums.Publisher;
 
 //var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 7654);
-var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 5000);
+var client = JoberMQClient.CreateClient("client1", UrlProtocolEnum.http, 5000);
 client.Connect.ConnectState += Client_ConnectState;
-var connect = client.Connect.ConnectAsync().Result;
+var connect = client.ConnectAsync().Result;
 
 static void Client_ConnectState(bool obj)
 {
@@ -26,7 +27,7 @@ static void Client_ConnectState(bool obj)
 #endregion
 
 //#region Consume
-//var consumeSub = await client.ConsumeSubAsync("def.que.clientkey.free", true);
+////var consumeSub =   await client.ConsumeSubAsync("def.que.clientkey.free", true);
 ////var consumeUnSub = await client.ConsumeUnSubAsync("def.que.clientkey.free");
 //#endregion
 
@@ -75,7 +76,18 @@ static void Client_ConnectState(bool obj)
 
 
 var message = client.Creator().Message("test message", client.Creator().RoutingClient("client2"));
-//var result = await client.JobBuilder().TimingScheduleDelayed;
+//var job =  client.JobBuilder()
+//                 .Message(message)
+//                 .Publisher(PublisherTypeEnum.Standart)
+//                 .TimingNow()
+//                 .ResultMessage(message)
+//                 .Build();
+var job = client.JobBuilder()
+                 .Message(message)
+                 //.TimingScheduleDelayed(20)
+                 .TimingScheduleRecurrent("* * * ? * * *")
+                 .Build();
+var result = await client.PublishAsync(job);
 
 
 

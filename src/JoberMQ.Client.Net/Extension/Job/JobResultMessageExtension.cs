@@ -9,6 +9,10 @@ public static class JobResultMessageExtension
 {
     public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
        => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
+    public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderPublisherExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
+       => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
+    public static JobBuilderResultMessageExtensionModel ResultMessage(this JobBuilderTimingExtensionModel jobBuilderMessageExtension, IMessage resultMessage, bool isConsumingRetryPause = ClientConst.IsConsumingRetryPause, int consumingRetryMaxCount = ClientConst.ConsumingRetryMaxCount)
+       => Add(jobBuilderMessageExtension.Job, resultMessage, isConsumingRetryPause, consumingRetryMaxCount);
 
     private static JobBuilderResultMessageExtensionModel Add(JobDbo builder, IMessage resultMessage, bool isConsumingRetryPause, int consumingRetryMaxCount)
     {

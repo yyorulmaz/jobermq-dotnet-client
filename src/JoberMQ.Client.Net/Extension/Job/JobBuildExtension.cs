@@ -5,4 +5,7 @@ public static class JobBuildExtension
 {
     public static JobDbo Build(this JobBuilderMessageExtensionModel jobBuilderMessageExtension) => jobBuilderMessageExtension.Job;
     public static JobDbo Build(this JobBuilderResultMessageExtensionModel jobBuilderResultMessageExtension) => jobBuilderResultMessageExtension.Job;
+    public static JobDbo Build(this JobBuilderPublisherExtensionModel jobBuilderResultMessageExtension) => jobBuilderResultMessageExtension.Job;
+    public static JobDbo Build(this JobBuilderTimingExtensionModel jobBuilderResultMessageExtension) => jobBuilderResultMessageExtension.Job;
+    
 }

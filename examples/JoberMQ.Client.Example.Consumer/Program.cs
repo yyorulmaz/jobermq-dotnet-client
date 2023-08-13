@@ -3,7 +3,7 @@ using JoberMQ.Common.Enums.Endpoint;
 
 //var client = JoberMQClient.CreateClient("client 10", UrlProtocolEnum.http, 5183);
 //var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 5183);
-var client = JoberMQClient.CreateClient(Guid.NewGuid().ToString(), UrlProtocolEnum.http, 5000);
+var client = JoberMQClient.CreateClient("client2", UrlProtocolEnum.http, 5000);
 client.Connect.ConnectState += Client_ConnectState;
 client.ReceiveMessageText +=Client_ReceiveMessageText;
 
@@ -12,7 +12,8 @@ void Client_ReceiveMessageText(string obj)
     Console.WriteLine(obj);
 }
 
-var connect = client.Connect.ConnectAsync().Result;
+var connect = client.ConnectAsync().Result;
+//var consumeSub = await client.Consume().SubAsync("def.que.clientkey.free", true);
 
 static void Client_ConnectState(bool obj)
 {
@@ -22,7 +23,6 @@ static void Client_ConnectState(bool obj)
         Console.WriteLine("disconnected");
 }
 
-//var consumeSub = await client.ConsumeSubAsync("Binance-Futures-Usdt-FifteenMinutes-BTCUSDT", true);
 
 
 

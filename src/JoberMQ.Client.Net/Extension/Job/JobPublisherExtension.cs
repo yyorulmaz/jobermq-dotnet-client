@@ -4,7 +4,9 @@ using JoberMQ.Common.Models.Job;
 
 public static class JobPublisherExtension
 {
-    public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderModel jobBuilder, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
+    //public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderModel jobBuilder, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
+    //    => Add(jobBuilder.Job, publisherType);
+    public static JobBuilderPublisherExtensionModel Publisher(this JobBuilderMessageExtensionModel jobBuilder, PublisherTypeEnum publisherType = PublisherTypeEnum.Standart)
         => Add(jobBuilder.Job, publisherType);
 
     private static JobBuilderPublisherExtensionModel Add(JobDbo builder, PublisherTypeEnum publisherType)

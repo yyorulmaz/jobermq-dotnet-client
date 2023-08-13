@@ -8,10 +8,10 @@ public static class JobMessageExtension
 {
     public static JobBuilderMessageExtensionModel Message(this JobBuilderModel jobBuilderExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
         => Add(jobBuilderExtension.Job, message, resultMessage, isDbTextSave);
-    public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
-        => Add(jobBuilderPublisherExtension.Job, message, resultMessage, isDbTextSave);
-    public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
-        => Add(jobBuilderTimingExtension.Job, message, resultMessage, isDbTextSave);
+    //public static JobBuilderMessageExtensionModel Message(this JobBuilderPublisherExtensionModel jobBuilderPublisherExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+    //    => Add(jobBuilderPublisherExtension.Job, message, resultMessage, isDbTextSave);
+    //public static JobBuilderMessageExtensionModel Message(this JobBuilderTimingExtensionModel jobBuilderTimingExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
+    //    => Add(jobBuilderTimingExtension.Job, message, resultMessage, isDbTextSave);
     public static JobBuilderMessageExtensionModel Message(this JobBuilderMessageExtensionModel jobBuilderMessageExtension, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
         => Add(jobBuilderMessageExtension.Job, message, resultMessage, isDbTextSave);
 

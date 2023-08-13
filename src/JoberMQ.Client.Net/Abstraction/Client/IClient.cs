@@ -6,6 +6,7 @@ using JoberMQ.Common.Models.Job;
 using JoberMQ.Common.Models.Message;
 using JoberMQ.Common.Models.Rpc;
 using System;
+using System.Threading.Tasks;
 
 namespace JoberMQ.Client.Net.Abstraction.Client
 {
@@ -14,8 +15,8 @@ namespace JoberMQ.Client.Net.Abstraction.Client
         IClientInfo ClientInfo { get; }
         IConnect Connect { get; }
 
-
-        JobBuilderModel JobBuilder(string name = null, string description = null);
+        Task<bool> ConnectAsync();
+        
         MessageBuilderModel MessageBuilder();
         RpcBuilderModel RpcBuilder();
 

@@ -28,6 +28,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Threading.Tasks;
 
 namespace JoberMQ.Client.Net.Implementation.Client.Default
 {
@@ -58,50 +59,22 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
 
 
-        
-        public JobBuilderModel JobBuilder(string name = null, string description = null)
-           => JobBuilderDefault(name, description);
-        private JobBuilderModel JobBuilderDefault(string name, string description)
-            => new JobBuilderModel
+
+        public async Task<bool> ConnectAsync()
+        {
+            var conn = await connect.ConnectAsync();
+
+            if (conn)
             {
-                Job = new JobDbo
-                {
-                    Id = Guid.NewGuid(),
-                    Operation = new OperationModel
-                    {
-                        Version = 0,
-                        OperationType = OperationTypeEnum.Job
-                    },
-                    Producer = new ProducerModel
-                    {
-                        ClientKey = clientInfo.ClientKey
-                    },
-                    Info = new InfoModel
-                    {
-                        Name = name,
-                        Description = description
-                    },
-                    Publisher = new PublisherModel
-                    {
-                        PublisherType = PublisherTypeEnum.Standart
-                    },
-                    Timing = new TimingModel
-                    {
-                        TimingType = TimingTypeEnum.Now
-                    },
-                    JobDetails = new List<JobDetailDbo>(),
-                    IsJobResultMessage = false,
-                    JobResultMessage = null,
-                    JobResultMessageConsuming = null,
-                    Status = new StatusModel
-                    {
-                        IsCompleted = false,
-                        IsError = false,
-                        StatusTypeMessage = StatusTypeMessageEnum.None,
-                        TempAgainDate = null
-                    }
-                }
-            };
+                await this.Consume().SubAsync(ClientConst.DefaultQueueClientKey, true);
+            }
+
+            return conn;
+        }
+
+
+
+
         public MessageBuilderModel MessageBuilder()
             => MessageBuilderDefault();
         private MessageBuilderModel MessageBuilderDefault()
@@ -181,7 +154,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             //işlemler
             //
             message.Result = "hayde - ";
-       
+
 
 
 
@@ -222,7 +195,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
-        } 
+        }
         #endregion
     }
 }

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 public static class PublishExtension
 {
     public static async Task<ResponseModel> PublishAsync(this IClient client, JobDbo job)
-        => await client.Connect.InvokeAsync<ResponseModel>("Job", JsonConvert.SerializeObject(job));
+        //=> await client.Connect.InvokeAsync<ResponseModel>("Job", JsonConvert.SerializeObject(job));
+        => await client.Connect.InvokeAsync<ResponseModel>("Job", job);
     public static async Task<ResponseModel> PublishAsync(this IClient client, MessageDbo message)
-        => await client.Connect.InvokeAsync<ResponseModel>("Message", JsonConvert.SerializeObject(message));
+        //=> await client.Connect.InvokeAsync<ResponseModel>("Message", JsonConvert.SerializeObject(message));
+        => await client.Connect.InvokeAsync<ResponseModel>("Message", message);
     public static async Task<RpcResponseModel> PublishAsync(this IClient client, RpcRequestModel message)
         => await client.Connect.InvokeAsync<RpcResponseModel>("Rpc", JsonConvert.SerializeObject(message));
 }
