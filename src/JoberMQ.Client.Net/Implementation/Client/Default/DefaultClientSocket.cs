@@ -6,6 +6,7 @@ using JoberMQ.Client.Net.Factories.Account;
 using JoberMQ.Client.Net.Factories.Client;
 using JoberMQ.Client.Net.Factories.Connect;
 using JoberMQ.Common.Dbos;
+using JoberMQ.Common.Enums.Message;
 using JoberMQ.Common.Enums.Operation;
 using JoberMQ.Common.Enums.Publisher;
 using JoberMQ.Common.Enums.Routing;
@@ -14,6 +15,7 @@ using JoberMQ.Common.Enums.Timing;
 using JoberMQ.Common.Method.Abstraction;
 using JoberMQ.Common.Method.Enums;
 using JoberMQ.Common.Method.Factories;
+using JoberMQ.Common.Models;
 using JoberMQ.Common.Models.Info;
 using JoberMQ.Common.Models.Job;
 using JoberMQ.Common.Models.Message;
@@ -130,15 +132,66 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
         //private void Connect_ReceiveData(string obj)
         private void Connect_ReceiveData(MessageDbo obj)
         {
-            //if (String.IsNullOrEmpty(obj))
-            //    return;
+            if (obj == null)
+                return;
 
-            ReceiveMessageText?.Invoke(obj.Message.Message);
+
+            _ = Task.Run(() =>
+            {
+                #region STARTED
+                var jobStartedModel = new StartedModel();
+                jobStartedModel.MessageId = obj.Id;
+                _ = connect.SendAsync("Started", JsonConvert.SerializeObject(jobStartedModel));
+                #endregion
+
+                if (obj.Message.MessageType == MessageTypeEnum.Funtion)
+                {
+                    var returnData = method.MethodRun(obj.Message.Message).Result;
+
+                    var jobCompleted = new CompletedModel();
+                    jobCompleted.MessageId = obj.Id;
+
+                    if (returnData.StatusCode == "0")
+                    {
+                        jobCompleted.IsError = false;
+                        jobCompleted.Message = "";
+                    }
+                    else
+                    {
+                        jobCompleted.IsError = true;
+                        jobCompleted.Message = returnData.Message;
+                    }
+                    jobCompleted.Type = returnData.TypeFullName;
+                    jobCompleted.ReturnData = returnData.Data;
+                    jobCompleted.RoutingType = obj.Message.Routing.RoutingType;
+
+                    _ = connect.SendAsync("Completed", JsonConvert.SerializeObject(jobCompleted));
+                }
+                else if (obj.Message.MessageType == MessageTypeEnum.Text)
+                {
+                    ReceiveMessageText?.Invoke(obj.Message.Message);
+                    if (configuration.TextMessageReceiveAutoCompleted == true)
+                    {
+                        var jobCompleted = new CompletedModel();
+                        jobCompleted.MessageId = obj.Id;
+                        jobCompleted.IsError = false;
+                        jobCompleted.Message = "";
+
+                        _ = connect.SendAsync("Completed", JsonConvert.SerializeObject(jobCompleted));
+                    }
+                }
+            });
+
+
+
+
+
+
+
         }
         private void Connect_ReceiveDataText(string obj)
         {
-            //if (String.IsNullOrEmpty(obj))
-            //    return;
+            // burası freemessage için kuyllanılıyor
 
             ReceiveMessageText?.Invoke(obj);
         }
@@ -147,18 +200,24 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
             if (String.IsNullOrEmpty(obj))
                 return;
 
-            var message = JsonConvert.DeserializeObject<RpcResponseModel>(obj);
+            var message = JsonConvert.DeserializeObject<RpcRequestModel>(obj);
+            if (message.MessageType == MessageTypeEnum.Text)
+            {
 
+            }
+            else if (message.MessageType == MessageTypeEnum.Funtion)
+            {
 
+            }
 
             //işlemler
             //
-            message.Result = "hayde - ";
 
 
+            var response = new RpcResponseModel();
+            response.ResultData = "hayde - ";
 
-
-            _ = connect.InvokeAsync<ResponseModel>("RpcResponse", JsonConvert.SerializeObject(message));
+            _ = connect.InvokeAsync<ResponseModel>("RpcResponse", JsonConvert.SerializeObject(response));
         }
         private void Connect_ConnectState(bool obj)
         {

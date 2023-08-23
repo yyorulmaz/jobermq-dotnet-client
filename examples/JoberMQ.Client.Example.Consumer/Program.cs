@@ -14,6 +14,7 @@ void Client_ReceiveMessageText(string obj)
 
 var connect = client.ConnectAsync().Result;
 //var consumeSub = await client.Consume().SubAsync("def.que.clientkey.free", true);
+await client.Consume().SubFreeMessageGroup("group1");
 
 static void Client_ConnectState(bool obj)
 {

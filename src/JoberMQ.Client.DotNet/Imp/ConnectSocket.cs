@@ -1,7 +1,4 @@
-﻿using JoberMQ.Client.Net.Abstraction.Account;
-using JoberMQ.Client.Net.Abstraction.Client;
-using JoberMQ.Client.Net.Abstraction.Connect;
-using JoberMQ.Common.Dbos;
+﻿using JoberMQ.Client.DotNet.Abs;
 using JoberMQ.Common.Models.Account;
 using JoberMQ.Common.Models.Client;
 using Microsoft.AspNetCore.Http.Connections.Client;
@@ -12,135 +9,74 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JoberMQ.Client.Net.Implementation.Connect.Default
+namespace JoberMQ.Client.DotNet.Imp
 {
-    internal class DefaultConnect : IConnect
+    internal class ConnectSocket : IConnect
     {
-        private bool isReConnectStarted = false;
-        private ConcurrentDictionary<Guid, IAccount> Accounts = new ConcurrentDictionary<Guid, IAccount>();
+        private readonly int retryTimeout;
+        private readonly bool autoReconnect;
+        private ConcurrentDictionary<Guid, IAccount> accounts = new ConcurrentDictionary<Guid, IAccount>();
         private IAccount masterAccount;
-        IClientInfo clientInfo;
-        bool isServerActive;
+        private IClientInfo clientInfo;
+        private HubConnection hubConnection;
+        private bool isServerActive;
+        private bool isReconnectStarted = false;
 
-        public DefaultConnect(
-            int retryTimeout,
-            bool autoReconnect,
-            IAccount account,
-            IClientInfo clientInfo)
+        public ConnectSocket(int retryTimeout, bool autoReconnect, IAccount account, IClientInfo clientInfo)
         {
             this.retryTimeout = retryTimeout;
             this.autoReconnect = autoReconnect;
-            Accounts.TryAdd(Guid.NewGuid(), account);
+            accounts.TryAdd(Guid.NewGuid(), account);
             this.clientInfo = clientInfo;
         }
 
-        private int retryTimeout;
-        public int RetryTimeout => retryTimeout;
 
-        private bool autoReconnect;
-        public bool AutoReconnect => autoReconnect;
-        HubConnection hubConn;
-        public bool IsConnect => hubConn == null ? false : hubConn.State == HubConnectionState.Connected ? true : false;
+
+        public HubConnection HubConn => hubConnection;
+        public bool IsConnect => hubConnection == null ? false : hubConnection.State == HubConnectionState.Connected ? true : false;
         public event Action<bool> ConnectState;
+
         public bool IsServerActive => isServerActive;
 
 
+        public event Action<bool> ServerActiveState;
 
+        public event Action<string> ReceiveFreeMessageText;
 
-
-
-
-
-
-
-
-
-
-        //public event Action<string> ReceiveData; 
-        public event Action<MessageDbo> ReceiveData;
-        public event Action<string> ReceiveDataText;
-        public event Action<string> ReceiveDataError;
-        public event Action<bool> ReceiveServerActive;
-        public event Action<string> ReceiveRpc;
-
-
-        
-
-        public async Task<R> InvokeAsync<R>(string methodName, object arg)
-            => await hubConn.InvokeAsync<R>(methodName, arg);
-        public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2)
-            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2);
-        //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2});
-        public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2, object arg3)
-            => await hubConn.InvokeAsync<R>(methodName, arg1, arg2, arg3);
-        //=> await hubConn.InvokeCoreAsync<R>(methodName, new[] { arg1, arg2, arg3} );
-
-        public async Task SendAsync(string methodName, object arg)
-            => await hubConn.SendAsync(methodName, arg);
-        public async Task SendAsync(string methodName, object arg1, object arg2)
-            => await hubConn.SendAsync(methodName, arg1, arg2);
-        public async Task SendAsync(string methodName, object arg1, object arg2, object arg3)
-            => await hubConn.SendAsync(methodName, arg1, arg2, arg3);
-
-        
-        
-        
-        
-
-
-
-        
-
-        
-        
-        
-
-        
-
-
-
-
-
-
-
-
-
+        public event Action<Guid, string> ReceiveRpcMessageText;
+        public event Action<Guid, string> ReceiveRpcMessageFunction;
 
         public async Task<bool> ConnectAsync()
         {
             try
             {
-                var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
+                var account = accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
                 masterAccount = account.Value;
                 var responseLogin = await LoginAsync(masterAccount.EndpointLogin.GetEndpoint(), masterAccount.UserName, masterAccount.Password, clientInfo.ClientKey);
 
                 if (responseLogin != null && responseLogin.IsSuccess)
                 {
                     masterAccount.Token = responseLogin.Token;
-                    Accounts.TryUpdate(account.Key, masterAccount, null);
+                    accounts.TryUpdate(account.Key, masterAccount, null);
                 }
                 else
-                    //throw new Exception(getToken.Message);
                     return false;
 
 
-                hubConn = CreateHubConnection();
-
-
-                await hubConn.StartAsync();
+                hubConnection = CreateHubConnection();
+                await hubConnection.StartAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
 
-                if (AutoReconnect)
+                if (autoReconnect)
                 {
-                    isReConnectStarted = true;
+                    isReconnectStarted = true;
                     _ = ReConnectAsync();
                     return false;
                 }
@@ -150,34 +86,11 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
             return true;
         }
-        private Task Reconnecting(Exception arg)
+        Task Reconnecting(Exception arg)
         {
             Task.Run(() => ConnectState?.Invoke(true));
 
             return Task.CompletedTask;
-        }
-        private Task HubConn_Closed(Exception arg)
-        {
-            var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
-            masterAccount.Token = null;
-            Accounts.TryUpdate(account.Key, masterAccount, null);
-
-            _ = Task.Run(() =>
-            {
-                ReceiveServerActiveAction(false);
-                Thread.Sleep(RetryTimeout);
-
-
-                if (isReConnectStarted == false)
-                    _ = ReConnectAsync();
-            });
-
-            return Task.CompletedTask;
-        }
-        private void ReceiveServerActiveAction(bool value)
-        {
-            isServerActive = value;
-            ReceiveServerActive?.Invoke(value);
         }
         private Task HubConn_Reconnected(string arg)
         {
@@ -185,11 +98,11 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
         }
         private async Task ReConnectAsync()
         {
-            ReceiveServerActiveAction(false);
-            var account = Accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
+            ServerActiveStateAction(false);
+            var account = accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
             masterAccount = account.Value;
 
-            if (hubConn.State == HubConnectionState.Disconnected || hubConn.State == HubConnectionState.Reconnecting)
+            if (hubConnection.State == HubConnectionState.Disconnected || hubConnection.State == HubConnectionState.Reconnecting)
             {
                 if (masterAccount.Token == null)
                 {
@@ -197,7 +110,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                     if (responseLogin != null && responseLogin.IsSuccess)
                     {
                         masterAccount.Token = responseLogin.Token;
-                        Accounts.TryUpdate(account.Key, masterAccount, null);
+                        accounts.TryUpdate(account.Key, masterAccount, null);
                     }
                 }
 
@@ -207,21 +120,21 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
                     _ = Task.Run(() =>
                     {
-                        Thread.Sleep(RetryTimeout);
+                        Thread.Sleep(retryTimeout);
                         _ = ReConnectAsync();
                     });
                 }
                 else
                 {
-                    hubConn = CreateHubConnection();
+                    hubConnection = CreateHubConnection();
 
                     try
                     {
-                        await hubConn.StartAsync();
+                        await hubConnection.StartAsync();
 
-                        if (hubConn.State == HubConnectionState.Connected)
+                        if (hubConnection.State == HubConnectionState.Connected)
                         {
-                            isReConnectStarted = false;
+                            isReconnectStarted = false;
                             _ = Task.Run(() => ConnectState?.Invoke(true));
                         }
                         else
@@ -230,7 +143,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
                             _ = Task.Run(() =>
                             {
-                                Thread.Sleep(RetryTimeout);
+                                Thread.Sleep(retryTimeout);
                                 _ = ReConnectAsync();
                             });
                         }
@@ -239,15 +152,38 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                     {
                         _ = Task.Run(() => ConnectState?.Invoke(false));
 
-                        if (AutoReconnect)
+                        if (autoReconnect)
                             _ = Task.Run(() =>
                             {
-                                Thread.Sleep(RetryTimeout);
+                                Thread.Sleep(retryTimeout);
                                 _ = ReConnectAsync();
                             });
                     }
                 }
             }
+        }
+        Task HubConn_Closed(Exception arg)
+        {
+            var account = accounts.FirstOrDefault(x => x.Value.IsMaster == true && x.Value.IsActive == true);
+            masterAccount.Token = null;
+            accounts.TryUpdate(account.Key, masterAccount, null);
+
+            _ = Task.Run(() =>
+            {
+                ServerActiveStateAction(false);
+                Thread.Sleep(retryTimeout);
+
+
+                if (isReconnectStarted == false)
+                    _ = ReConnectAsync();
+            });
+
+            return Task.CompletedTask;
+        }
+        private void ServerActiveStateAction(bool value)
+        {
+            isServerActive = value;
+            ServerActiveState?.Invoke(value);
         }
 
         HubConnection CreateHubConnection()
@@ -257,7 +193,7 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
             TimeSpan[] reconnectTime = new TimeSpan[1];
             reconnectTime[0] = TimeSpan.FromSeconds(1);
 
-            if (AutoReconnect)
+            if (autoReconnect)
             {
                 hub = new HubConnectionBuilder()
                 .WithUrl(masterAccount.EndpointHub.GetEndpoint(), options =>
@@ -284,52 +220,35 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
 
 
 
+            hub.On<string>("ReceiveFreeMessageText", (m) => ReceiveFreeMessageText?.Invoke(m));
+            hub.On<Guid, string>("ReceiveRpcMessageText", (i, m) => ReceiveRpcMessageText?.Invoke(i, m));
+            hub.On<Guid, string>("ReceiveRpcMessageFunction", (i, m) => ReceiveRpcMessageFunction?.Invoke(i, m));
 
-            //hub.On<string>("ReceiveData", (m) => ReceiveData?.Invoke(m));
-            hub.On<MessageDbo>("ReceiveData", (m) => ReceiveData?.Invoke(m));
-            hub.On<string>("ReceiveDataText", (m) => ReceiveDataText?.Invoke(m));
-            hub.On<string>("ReceiveDataError", (m) => ReceiveDataError?.Invoke(m));
-            hub.On<string>("ClusterLoadBalancingEndpointReceive", (m) => ClusterLoadBalancingEndpointReceive(m));
-            hub.On<bool>("ReceiveServerActive", (m) => ReceiveServerActiveAction(m));
-            hub.On<string>("ReceiveRpc", (m) => ReceiveRpc?.Invoke(m));
+
+            hub.On<bool>("ServerActiveState", (m) => ServerActiveStateAction(m));
+
+
 
             return hub;
         }
         HttpConnectionOptions CreateHttpConnectionOptions(HttpConnectionOptions options)
         {
-            //httpConnectionOptions.DefaultTransferFormat = Microsoft.AspNetCore.Connections.TransferFormat.Text;
-            //httpConnectionOptions.DefaultTransferFormat = Microsoft.AspNetCore.Connections.TransferFormat.Binary;
-
             options.AccessTokenProvider = () => Task.FromResult(masterAccount.Token);
-
-            var clientInfoData = new ClientInfoDataModel
-            {
-                ClientType = clientInfo.ClientType,
-                ClientKey = clientInfo.ClientKey,
-                IsOfflineClient = clientInfo.IsOfflineClient,
-                IsClientActive = clientInfo.IsClientActive
-            };
-
+            var clientInfoData = new ClientInfoDataModel(clientInfo.ClientType, clientInfo.ClientKey, clientInfo.IsOfflineClient, clientInfo.IsClientActive);
             options.Headers.Add("ClientInfoData", JsonConvert.SerializeObject(clientInfoData));
-
-            //options.Headers.Add("ClientType", clientInfo.ClientType.ToString());
-            //options.Headers.Add("ClientKey", clientInfo.ClientKey);
-            //options.Headers.Add("ClientGroupKey", clientInfo.ClientGroupKey);
-            //options.Headers.Add("IsOfflineClient", clientInfo.IsOfflineClient.ToString());
-
             return options;
         }
         public async Task<ResponseLoginModel> LoginAsync(string endpoint, string user, string pass, string clientKey)
         {
-            HttpClient HttpClient = new HttpClient();
+            HttpClient httpClient = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri(endpoint));
             var encoding = Encoding.GetEncoding("iso-8859-1");
-            HttpClient.DefaultRequestHeaders.Add("clientKey", clientKey);
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes($"{user}:{pass}")));
+            httpClient.DefaultRequestHeaders.Add("clientKey", clientKey);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(encoding.GetBytes($"{user}:{pass}")));
 
             try
             {
-                var response = await HttpClient.SendAsync(request);
+                var response = await httpClient.SendAsync(request);
                 var content = await response.Content.ReadAsStringAsync();
 
                 return JsonConvert.DeserializeObject<ResponseLoginModel>(content);
@@ -363,7 +282,6 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects)
-                    masterAccount.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -371,12 +289,14 @@ namespace JoberMQ.Client.Net.Implementation.Connect.Default
                 disposedValue = true;
             }
         }
+
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~DfConnect()
+        // ~ConnectSocket()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
         //     Dispose(disposing: false);
         // }
+
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

@@ -23,6 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation - library", "p
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoberMQ.Common", "..\jobermq-common\src\JoberMQ.Common\JoberMQ.Common.csproj", "{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.Client.DotNet", "src\JoberMQ.Client.DotNet\JoberMQ.Client.DotNet.csproj", "{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.DotNetClient.Example.Consumer", "examples\JoberMQ.DotNetClient.Example.Consumer\JoberMQ.DotNetClient.Example.Consumer.csproj", "{0F53B4E7-2A47-4227-88FF-112EF1F2BE94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoberMQ.DotNetClient.Example.Producer", "examples\JoberMQ.DotNetClient.Example.Producer\JoberMQ.DotNetClient.Example.Producer.csproj", "{D0657ABA-94F2-462D-A9C2-DD56510203DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +51,18 @@ Global
 		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F53B4E7-2A47-4227-88FF-112EF1F2BE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F53B4E7-2A47-4227-88FF-112EF1F2BE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F53B4E7-2A47-4227-88FF-112EF1F2BE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F53B4E7-2A47-4227-88FF-112EF1F2BE94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0657ABA-94F2-462D-A9C2-DD56510203DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0657ABA-94F2-462D-A9C2-DD56510203DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0657ABA-94F2-462D-A9C2-DD56510203DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0657ABA-94F2-462D-A9C2-DD56510203DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +73,9 @@ Global
 		{ACF9DA8D-EB31-4F98-B55E-2A9EE6F404D0} = {FB55AB12-FA4C-4EAE-BE8D-FE00CA84CDEB}
 		{040695F4-3CF8-488E-9A1B-5688504FE7AB} = {A4AAA401-E7CB-436C-9F17-C47731B5AD0C}
 		{E1028AD4-1C68-4AAD-8DC5-6093EA4ED77F} = {EF82E716-352C-48EB-8B07-A74629B634A7}
+		{AF82FD3D-729B-4551-A7DE-2B76B2C7A1FC} = {040695F4-3CF8-488E-9A1B-5688504FE7AB}
+		{0F53B4E7-2A47-4227-88FF-112EF1F2BE94} = {FB55AB12-FA4C-4EAE-BE8D-FE00CA84CDEB}
+		{D0657ABA-94F2-462D-A9C2-DD56510203DF} = {FB55AB12-FA4C-4EAE-BE8D-FE00CA84CDEB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49CD25B3-E433-4F77-827E-4AD2DA834E0A}
