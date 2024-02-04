@@ -16,7 +16,7 @@ public static class MessageExtension
 {
     public static MessageExtensionModel<IClient> Message(this IClient client, IMessage message, IMessage resultMessage = null, bool isDbTextSave = ClientConst.IsDbTextSave)
     {
-        var messageDbo = MessageDefault(client);
+        var messageDbo = DefaultMessage(client);
 
         messageDbo.IsDbTextSave = isDbTextSave;
 
@@ -79,7 +79,7 @@ public static class MessageExtension
     public static async Task<ResponseModel> SendAsync(this MessageResultExtensionModel<IClient> messageResultExtensionModel)
         => await messageResultExtensionModel.Client.Connect.InvokeAsync<ResponseModel>("Message", messageResultExtensionModel.Message);
 
-    static MessageDbo MessageDefault(IClient client)
+    static MessageDbo DefaultMessage(IClient client)
         => new MessageDbo
             {
                 Id = Guid.NewGuid(),

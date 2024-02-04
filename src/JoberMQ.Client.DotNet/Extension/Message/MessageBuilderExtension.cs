@@ -1,7 +1,6 @@
 ﻿using JoberMQ.Client.DotNet.Abs;
+using JoberMQ.Common.Dbos;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 public static class MessageBuilderExtension
 {
@@ -12,21 +11,43 @@ public static class MessageBuilderExtension
 public class MessageBuilderModel
 {
     internal IClient client { get; set; }
-    public Guid transactionId { get; set; }
+    internal MessageBuilderModel(IClient client)
+        => this.client = client;
+}
+
+public class MessageFreeClientBuilderModel
+{
+    internal IClient client { get; set; }
     internal string key { get; set; }
     internal string message { get; set; }
-
-    public MessageBuilderModel(IClient client)
-    {
-        this.client = client;
-    }
-    public MessageBuilderModel(IClient client, string key, string message)
+    public MessageFreeClientBuilderModel(IClient client, string key, string message)
     {
         this.client = client;
         this.key = key;
         this.message = message;
     }
-    public MessageBuilderModel(IClient client, Guid transactionId, string key, string message)
+}
+
+public class MessageFreeGroupBuilderModel
+{
+    internal IClient client { get; set; }
+    internal string key { get; set; }
+    internal string message { get; set; }
+    public MessageFreeGroupBuilderModel(IClient client, string key, string message)
+    {
+        this.client = client;
+        this.key = key;
+        this.message = message;
+    }
+}
+
+public class MessageRpcTextBuilderModel
+{
+    internal IClient client { get; set; }
+    public Guid transactionId { get; set; }
+    internal string key { get; set; }
+    internal string message { get; set; }
+    public MessageRpcTextBuilderModel(IClient client, Guid transactionId, string key, string message)
     {
         this.client = client;
         this.transactionId = transactionId;
@@ -34,28 +55,48 @@ public class MessageBuilderModel
         this.message = message;
     }
 }
-public class FreeMessageClientBuilderModel : MessageBuilderModel
+
+public class MessageRpcFunctionBuilderModel
 {
-    public FreeMessageClientBuilderModel(IClient client, string key, string message) : base(client, key, message)
+    internal IClient client { get; set; }
+    public Guid transactionId { get; set; }
+    internal string key { get; set; }
+    internal string message { get; set; }
+    public MessageRpcFunctionBuilderModel(IClient client, Guid transactionId, string key, string message)
     {
-    }
-}
-public class FreeMessageGroupBuilderModel : MessageBuilderModel
-{
-    public FreeMessageGroupBuilderModel(IClient client, string key, string message) : base(client, key, message)
-    {
+        this.client = client;
+        this.transactionId = transactionId;
+        this.key = key;
+        this.message = message;
     }
 }
 
-public class RpcMessageTextBuilderModel : MessageBuilderModel
+
+
+
+public class MessageMessageBuilderModel
 {
-    public RpcMessageTextBuilderModel(IClient client, Guid transactionId, string key, string message) : base(client, transactionId, key, message)
+    internal IClient client { get; set; }
+    internal MessageDbo messageDbo { get; set; }
+    public MessageMessageBuilderModel(IClient client, MessageDbo messageDbo)
     {
+        this.client = client;
+        this.messageDbo = messageDbo;
     }
 }
-public class RpcMessageFunctionBuilderModel : MessageBuilderModel
+public class MessageMessageResultBuilderModel
 {
-    public RpcMessageFunctionBuilderModel(IClient client, Guid transactionId, string key, string message) : base(client, transactionId, key, message)
+    internal IClient client { get; set; }
+    internal MessageDbo messageDbo { get; set; }
+    public MessageMessageResultBuilderModel(IClient client, MessageDbo messageDbo)
     {
+        this.client = client;
+        this.messageDbo = messageDbo;
     }
 }
+
+
+
+
+
+

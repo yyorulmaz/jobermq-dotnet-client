@@ -41,5 +41,12 @@ namespace JoberMQ.Client.DotNet.Constant
 
         internal const string DefaultDistributorDirectKey = "def.dis.direct";
         internal const string DefaultQueueClientKey = "def.que.clientkey.free";
+
+
+        internal const bool IsDbTextSave = false;
+
+
+        internal const bool IsConsumingRetryPause = false;
+        internal const int ConsumingRetryMaxCount = 10;
     }
 }

@@ -215,7 +215,7 @@ namespace JoberMQ.Client.Net.Implementation.Client.Default
 
 
             var response = new RpcResponseModel();
-            response.ResultData = "hayde - ";
+            //response.ResultData = "hayde - ";
 
             _ = connect.InvokeAsync<ResponseModel>("RpcResponse", JsonConvert.SerializeObject(response));
         }

@@ -1,17 +1,15 @@
 ﻿using JoberMQ.Client.DotNet.Abs;
 using JoberMQ.Client.DotNet.Constant;
-using JoberMQ.Client.DotNet.Extension.Consume;
 using JoberMQ.Client.DotNet.Factory;
-using JoberMQ.Common.Helpers;
+using JoberMQ.Common.Dbos;
+using JoberMQ.Common.Enums.Message;
 using JoberMQ.Common.Method.Abstraction;
 using JoberMQ.Common.Method.Enums;
 using JoberMQ.Common.Method.Factories;
-using JoberMQ.Common.Method.Models;
+using JoberMQ.Common.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace JoberMQ.Client.DotNet.Imp
@@ -19,7 +17,6 @@ namespace JoberMQ.Client.DotNet.Imp
     internal class ClientSocket : IClient
     {
         private readonly IConfiguration configuration;
-        IConnect connect;
         public ClientSocket(string clientKey, IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -28,13 +25,16 @@ namespace JoberMQ.Client.DotNet.Imp
             connect = ConnectFactory.Create(ClientConst.ConnectFactory, ClientConst.ConnectionRetryTimeout, ClientConst.AutoReconnect, account, clientInfo);
             method = MethodFactory.Create(MethodFactoryEnum.Default);
 
-            connect.ReceiveFreeMessageText += Connect_ReceiveFreeMessageText;
-            connect.ReceiveRpcMessageText += Connect_ReceiveRpcMessageText;
-            connect.ReceiveRpcMessageFunction += Connect_ReceiveRpcMessageFunction;
+            connect.ReceiveMessageFreeText += Connect_ReceiveMessageFreeText;
+            connect.ReceiveMessageRpcText += Connect_ReceiveMessageRpcText;
+            //connect.ReceiveRpcMessageFunction += Connect_ReceiveRpcMessageFunction;
+            connect.ReceiveMessage +=Connect_ReceiveMessage;
         }
 
+        
 
-
+        IConnect connect;
+        public IConnect Connect => connect;
         IClientInfo clientInfo;
         public IClientInfo ClientInfo => clientInfo;
 
@@ -42,6 +42,10 @@ namespace JoberMQ.Client.DotNet.Imp
         public IMethod Method => method;
 
 
+        public async Task<R> InvokeAsync<R>(string methodName)
+            => await connect.HubConn.InvokeAsync<R>(methodName);
+        public async Task<R> InvokeAsync<R>(string methodName, object arg1)
+            => await connect.HubConn.InvokeAsync<R>(methodName, arg1);
         public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2)
             => await connect.HubConn.InvokeAsync<R>(methodName, arg1, arg2);
         public async Task<R> InvokeAsync<R>(string methodName, object arg1, object arg2, object arg3)
@@ -59,115 +63,76 @@ namespace JoberMQ.Client.DotNet.Imp
 
             if (conn)
             {
-                await this.Consume().SubAsync(ClientConst.DefaultQueueClientKey, true);
+                await this.Consume().QueueSub(ClientConst.DefaultQueueClientKey, true).SendAsync();
             }
 
             return conn;
         }
 
-        public event Action<string> ReceiveFreeMessageText;
-        private void Connect_ReceiveFreeMessageText(string obj) => ReceiveFreeMessageText?.Invoke(obj);
 
 
-        public event Action<Guid, string> ReceiveRpcMessageText;
-        private void Connect_ReceiveRpcMessageFunction(Guid arg1, string arg2)
+
+
+        public event Action<string> ReceiveMessageFreeText;
+        private void Connect_ReceiveMessageFreeText(string obj) => ReceiveMessageFreeText?.Invoke(obj);
+
+
+        public event Action<Guid, string> ReceiveMessageRpcText;
+        private void Connect_ReceiveMessageRpcText(Guid id, string obj) => ReceiveMessageRpcText?.Invoke(id, obj);
+
+        public event Action<string> ReceiveMessage;
+        private void Connect_ReceiveMessage(MessageDbo obj)
         {
-            var returnData = new MethodReturnModel<byte[]>();
+            if (obj == null)
+                return;
 
-            try
+
+            _ = Task.Run(async () =>
             {
-                var methodProperty = JsonConvert.DeserializeObject<MethodPropertyModel>(arg2);
-                var type = Type.GetType(methodProperty.MethodName);
+                #region STARTED
+                //var jobStartedModel = new StartedModel();
+                //jobStartedModel.MessageId = obj.Id;
+                //await connect.HubConn.SendAsync("Started", JsonConvert.SerializeObject(jobStartedModel));
+                #endregion
 
-
-                MethodInfo methodInfo;
-                try
+                if (obj.Message.MessageType == MessageTypeEnum.Funtion)
                 {
-                    methodInfo = type.GetMethod(methodProperty.MethodName);
-                }
-                catch (Exception)
-                {
-                    methodInfo = type.GetMethod(methodProperty.MethodName, Type.EmptyTypes);
-                }
+                    var returnData = method.MethodRun(obj.Message.Message).Result;
 
-                object[] setParameter = new object[methodProperty.ParemeterValues.Count];
-                for (int i = 0; i < methodProperty.ParemeterValues.Count; i++)
-                {
-                    var propertyAssembly = Assembly.Load(new AssemblyName(methodProperty.ParemeterValues[i].ParameterAssemblyName));
-                    var propertyType = propertyAssembly.GetType(methodProperty.ParemeterValues[i].ParameterTypeFullName);
-                    setParameter[i] = JsonConvert.DeserializeObject(methodProperty.ParemeterValues[i].ParameterValue, propertyType);
-                }
+                    var jobCompleted = new CompletedModel();
+                    jobCompleted.MessageId = obj.Id;
 
-                Type typeAsync = typeof(AsyncStateMachineAttribute);
-                var isAsync = (AsyncStateMachineAttribute)methodInfo.GetCustomAttribute(typeAsync);
-
-                if (isAsync == null)
-                {
-                    var rtrnDt = methodInfo.Invoke(this, setParameter);
-
-                    if (rtrnDt != null)
+                    if (returnData.StatusCode == "0")
                     {
-                        var rtrnTyp = rtrnDt.GetType();
-                        returnData.TypeFullName = rtrnTyp.FullName;
-                        returnData.Data = ByteHelper.ObjectToByteArray(rtrnDt);
-                        returnData.StatusCode = "0";
+                        jobCompleted.IsError = false;
+                        jobCompleted.Message = "";
                     }
                     else
                     {
-                        returnData.TypeFullName = null;
-                        returnData.Data = null;
-                        returnData.StatusCode = "0";
+                        jobCompleted.IsError = true;
+                        jobCompleted.Message = returnData.Message;
                     }
+                    jobCompleted.Type = returnData.TypeFullName;
+                    jobCompleted.ReturnData = returnData.Data;
+                    jobCompleted.RoutingType = obj.Message.Routing.RoutingType;
+
+                    //_ = connect.HubConn.SendAsync("Completed", JsonConvert.SerializeObject(jobCompleted));
                 }
-                else
+                else if (obj.Message.MessageType == MessageTypeEnum.Text)
                 {
-                    var task = (Task)methodInfo.Invoke(this, setParameter);
-                    if (task != null)
+                    ReceiveMessage?.Invoke(obj.Message.Message);
+                    if (configuration.TextMessageReceiveAutoCompleted == true)
                     {
-                        //await task.ConfigureAwait(false);
-                        task.ConfigureAwait(false).GetAwaiter();
-                        var resultProperty = task.GetType().GetProperty("Result");
+                        var jobCompleted = new CompletedModel();
+                        jobCompleted.MessageId = obj.Id;
+                        jobCompleted.IsError = false;
+                        jobCompleted.Message = "";
 
-
-                        var rtrnDt = resultProperty.GetValue(task);
-                        var rtrnTyp = rtrnDt.GetType();
-
-                        if (rtrnDt != null)
-                        {
-                            returnData.TypeFullName = rtrnTyp.FullName;
-
-                            if (returnData.TypeFullName == "System.Threading.Tasks.VoidTaskResult")
-                                returnData.Data = null;
-                            else
-                                returnData.Data = ByteHelper.ObjectToByteArray(rtrnDt);
-
-                            returnData.StatusCode = "0";
-                        }
-                        else
-                        {
-                            returnData.TypeFullName = null;
-                            returnData.Data = null;
-                            returnData.StatusCode = "0";
-                        }
-
+                        //_ = connect.HubConn.SendAsync("Completed", JsonConvert.SerializeObject(jobCompleted));
                     }
                 }
-
-
-            }
-            catch (Exception ex)
-            {
-                returnData.IsOperationSuccess = false;
-                returnData.Data = null;
-                returnData.StatusCode = "1";
-                returnData.Message = ex.Message;
-            }
-
-            _ = SendAsync("RpcMessageResponse", arg1, returnData.Data.ToString(), returnData.IsOperationSuccess, returnData.Message);
-
+            });
         }
-
-        private void Connect_ReceiveRpcMessageText(Guid id, string obj) => ReceiveRpcMessageText?.Invoke(id, obj);
 
 
         #region Dispose

@@ -1,4 +1,5 @@
 ﻿using JoberMQ.Client.DotNet.Abs;
+using JoberMQ.Common.Dbos;
 using JoberMQ.Common.Models.Account;
 using JoberMQ.Common.Models.Client;
 using Microsoft.AspNetCore.Http.Connections.Client;
@@ -45,10 +46,10 @@ namespace JoberMQ.Client.DotNet.Imp
 
         public event Action<bool> ServerActiveState;
 
-        public event Action<string> ReceiveFreeMessageText;
-
-        public event Action<Guid, string> ReceiveRpcMessageText;
-        public event Action<Guid, string> ReceiveRpcMessageFunction;
+        public event Action<string> ReceiveMessageFreeText;
+        public event Action<Guid, string> ReceiveMessageRpcText;
+        public event Action<Guid, string> ReceiveMessageRpcFunction;
+        public event Action<MessageDbo> ReceiveMessage;
 
         public async Task<bool> ConnectAsync()
         {
@@ -220,9 +221,10 @@ namespace JoberMQ.Client.DotNet.Imp
 
 
 
-            hub.On<string>("ReceiveFreeMessageText", (m) => ReceiveFreeMessageText?.Invoke(m));
-            hub.On<Guid, string>("ReceiveRpcMessageText", (i, m) => ReceiveRpcMessageText?.Invoke(i, m));
-            hub.On<Guid, string>("ReceiveRpcMessageFunction", (i, m) => ReceiveRpcMessageFunction?.Invoke(i, m));
+            hub.On<string>("ReceiveMessageFreeText", (m) => ReceiveMessageFreeText?.Invoke(m));
+            hub.On<Guid, string>("ReceiveMessageRpcText", (i, m) => ReceiveMessageRpcText?.Invoke(i, m));
+            hub.On<Guid, string>("ReceiveMessageRpcFunction", (i, m) => ReceiveMessageRpcFunction?.Invoke(i, m));
+            hub.On<MessageDbo>("ReceiveMessage", (m) => ReceiveMessage?.Invoke(m));
 
 
             hub.On<bool>("ServerActiveState", (m) => ServerActiveStateAction(m));

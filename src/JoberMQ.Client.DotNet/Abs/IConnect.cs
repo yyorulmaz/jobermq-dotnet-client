@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using JoberMQ.Common.Dbos;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading.Tasks;
 
 namespace JoberMQ.Client.DotNet.Abs
 {
-    internal interface IConnect : IDisposable
+    public interface IConnect : IDisposable
     {
         HubConnection HubConn { get; }
         Task<bool> ConnectAsync();
@@ -15,8 +16,9 @@ namespace JoberMQ.Client.DotNet.Abs
         bool IsServerActive { get; }
         event Action<bool> ServerActiveState;
 
-        event Action<string> ReceiveFreeMessageText;
-        event Action<Guid, string> ReceiveRpcMessageText;
-        event Action<Guid, string> ReceiveRpcMessageFunction;
+        event Action<string> ReceiveMessageFreeText;
+        event Action<Guid, string> ReceiveMessageRpcText;
+        event Action<Guid, string> ReceiveMessageRpcFunction;
+        event Action<MessageDbo> ReceiveMessage;
     }
 }
